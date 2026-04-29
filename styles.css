@@ -40,10 +40,31 @@ a {
   padding: 24px clamp(12px, 2vw, 34px) 58px;
 }
 
+.hero-cover {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  overflow: hidden;
+  color: #fffaf0;
+  background:
+    linear-gradient(90deg, rgba(11, 16, 14, 0.86) 0%, rgba(11, 16, 14, 0.52) 38%, rgba(11, 16, 14, 0.10) 100%),
+    url("./assets/05_ego_trajectory_1s_to_5s_horizon.png") center / cover no-repeat;
+}
+
+.hero-cover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 18% 24%, rgba(255, 105, 180, 0.22), transparent 26rem),
+    linear-gradient(180deg, transparent 68%, rgba(245, 240, 230, 0.96) 100%);
+}
+
 .nav {
   position: sticky;
   top: 18px;
-  z-index: 10;
+  z-index: 12;
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
@@ -76,6 +97,17 @@ a {
   color: #fffaf0;
   transform: translateY(-1px);
   outline: none;
+}
+
+.hero-overlay {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  max-width: 1880px;
+  width: 100%;
+  margin: 0 auto;
+  padding: clamp(42px, 8vw, 120px) 0;
 }
 
 .hero-grid {
@@ -125,6 +157,10 @@ h2 {
   margin: 26px 0 0;
 }
 
+.hero-cover .lead {
+  color: rgba(255, 250, 240, 0.82);
+}
+
 .claim-note {
   max-width: 720px;
   margin-top: 28px;
@@ -134,6 +170,26 @@ h2 {
   color: #79342d;
   background: rgba(255, 255, 255, 0.60);
   line-height: 1.65;
+}
+
+.hero-cover .claim-note {
+  color: rgba(255, 250, 240, 0.86);
+  border-color: rgba(255, 250, 240, 0.20);
+  background: rgba(10, 16, 14, 0.44);
+  backdrop-filter: blur(16px);
+}
+
+.hero-zoom {
+  display: inline-flex;
+  width: auto;
+  margin-top: 22px;
+  padding: 12px 16px;
+  border: 1px solid rgba(255, 250, 240, 0.28);
+  border-radius: 999px;
+  color: #fffaf0;
+  background: rgba(255, 250, 240, 0.12);
+  backdrop-filter: blur(12px);
+  cursor: zoom-in;
 }
 
 .hero-card,
