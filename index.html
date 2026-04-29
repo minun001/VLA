@@ -28,7 +28,7 @@
             <span>Trajectory prior</span>
           </div>
           <div class="claim-note">
-            Visualization-level result · pseudo-metric distance · trajectory prior, not a control command
+            Visualization-level result · pseudo-metric distance · trajectory prior, not a control command or driving decision
           </div>
           <button
             class="hero-zoom image-button"
@@ -62,7 +62,7 @@
           </article>
           <article>
             <strong>Output</strong>
-            <span>TGCA raw trajectory and stabilized trajectory prior</span>
+            <span>TGCA-based trajectory estimation and refined trajectory prior</span>
           </article>
         </div>
       </section>
@@ -153,10 +153,10 @@
         <div class="stage-copy">
           <span class="stage-number">04</span>
           <h2>궤적 예측</h2>
-          <p>TGCA raw 궤적과 stabilized trajectory prior를 비교합니다.</p>
+          <p>TGCA raw trajectory와 refined trajectory prior를 비교합니다.</p>
           <ul class="legend">
             <li><span class="swatch red"></span>빨간색: TGCA raw trajectory</li>
-            <li><span class="swatch pink"></span>핑크색: stabilized trajectory prior</li>
+            <li><span class="swatch pink"></span>핑크색: refined trajectory prior</li>
           </ul>
         </div>
         <figure class="visual-card">
@@ -164,12 +164,12 @@
             class="image-button"
             type="button"
             data-image="./assets/04_bbox_edges_predicted_ego_trajectory_and_3d.png"
-            data-title="TGCA raw trajectory와 stabilized trajectory prior의 3D 표현"
-            aria-label="TGCA raw trajectory와 stabilized trajectory prior 이미지 확대 보기"
+            data-title="TGCA raw trajectory와 refined trajectory prior의 3D 표현"
+            aria-label="TGCA raw trajectory와 refined trajectory prior 이미지 확대 보기"
           >
             <img
               src="./assets/04_bbox_edges_predicted_ego_trajectory_and_3d.png"
-              alt="TGCA raw trajectory와 stabilized trajectory prior가 표시된 pseudo-3D 시각화"
+              alt="TGCA raw trajectory와 refined trajectory prior가 표시된 pseudo-3D 시각화"
               loading="lazy"
               width="2560"
               height="1440"
