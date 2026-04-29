@@ -4,6 +4,8 @@
   --line: rgba(22, 33, 27, 0.16);
   --green: #49ee58;
   --cyan: #52dbe7;
+  --yellow: #ffc400;
+  --blue: #2f80ff;
   --red: #ed302d;
   --pink: #ff69b4;
   --charcoal: #17201d;
@@ -125,7 +127,7 @@ h1,
 h2 {
   margin: 0;
   line-height: 1.04;
-  letter-spacing: -0.055em;
+  letter-spacing: 0;
   overflow-wrap: anywhere;
 }
 
@@ -175,7 +177,7 @@ h2 {
   border-radius: 999px;
   font-size: 0.82rem;
   font-weight: 800;
-  letter-spacing: 0.04em;
+  letter-spacing: 0;
   text-transform: uppercase;
 }
 
@@ -362,6 +364,8 @@ main {
 
 .green { background: var(--green); }
 .cyan { background: var(--cyan); }
+.yellow { background: var(--yellow); }
+.blue { background: var(--blue); }
 .red { background: var(--red); }
 .pink { background: var(--pink); }
 .dark { background: var(--charcoal); }
