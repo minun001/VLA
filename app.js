@@ -4,6 +4,8 @@ const dialogTitle = dialog?.querySelector("h3");
 const closeButton = dialog?.querySelector(".close-button");
 let lastFocusedButton = null;
 
+document.documentElement.classList.add("js");
+
 document.querySelectorAll(".image-button").forEach((button) => {
   button.addEventListener("click", () => {
     if (!dialog || !dialogImage || !dialogTitle) return;

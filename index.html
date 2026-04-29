@@ -18,17 +18,20 @@
 
       <div class="hero-overlay">
         <div class="hero-copy">
-          <h1>전방 장면을 그래프와 ego 궤적 prior로 변환하는 과정</h1>
-          <p class="lead">단안 dashcam frame에서 차량 관계 그래프와 해석 가능한 ego trajectory prior를 시각화합니다.</p>
+          <h1>From vehicle context to a TGCA-based ego trajectory prior</h1>
+          <p class="lead">
+            This visualization shows how a monocular dashcam frame is converted into detected vehicles,
+            graph relations, pseudo-3D context, and an interpretable ego trajectory prior.
+          </p>
           <div class="hero-badges" aria-label="pipeline summary">
             <span>Monocular input</span>
             <span>Vehicle detection</span>
             <span>Edge graph</span>
             <span>Pseudo-3D</span>
-            <span>Trajectory prior</span>
+            <span>TGCA-based prior</span>
           </div>
           <div class="claim-note">
-            Visualization-level result · pseudo-metric distance · trajectory prior, not a control command or driving decision
+            Visualization-level result only · pseudo-metric distance · trajectory prior, not a control command, driving decision, or ground-truth future
           </div>
           <button
             class="hero-zoom image-button"
@@ -46,7 +49,7 @@
     <main>
       <section class="overview" aria-labelledby="overview-title">
         <p class="section-kicker">Pipeline Overview</p>
-        <h2 id="overview-title">이 페이지가 보여주는 것</h2>
+        <h2 id="overview-title">What this page shows</h2>
         <div class="overview-grid">
           <article>
             <strong>Input</strong>
@@ -70,8 +73,8 @@
       <section class="stage" id="stage-1" data-stage="01">
         <div class="stage-copy">
           <span class="stage-number">01</span>
-          <h2>원본 이미지</h2>
-          <p>처리 전 기준 프레임입니다.</p>
+          <h2>Original frame</h2>
+          <p>Starting monocular dashcam image before perception or graph construction.</p>
         </div>
         <figure class="visual-card">
           <button
@@ -88,15 +91,15 @@
               height="1440"
             />
           </button>
-          <figcaption>Input frame before perception and graph construction.</figcaption>
+          <figcaption>Forward-facing monocular dashcam frame used as the input scene.</figcaption>
         </figure>
       </section>
 
       <section class="stage" id="stage-2" data-stage="02">
         <div class="stage-copy">
           <span class="stage-number">02</span>
-          <h2>탐지된 객체 bbox</h2>
-          <p>전방 차량 후보를 bbox로 표시합니다.</p>
+          <h2>Detected vehicle boxes</h2>
+          <p>Detected front-vehicle candidates are represented with bounding boxes.</p>
         </div>
         <figure class="visual-card">
           <button
@@ -114,19 +117,19 @@
               height="1440"
             />
           </button>
-          <figcaption>Vehicle detection result used as observation input.</figcaption>
+          <figcaption>Detected vehicle boxes provide the visual observations used by the interaction graph.</figcaption>
         </figure>
       </section>
 
       <section class="stage" id="stage-3" data-stage="03">
         <div class="stage-copy">
           <span class="stage-number">03</span>
-          <h2>bbox + edge 연결 + 3D 장면</h2>
-          <p>ego-vehicle 및 vehicle-to-vehicle edge와 추정 거리를 표시합니다.</p>
+          <h2>Bounding boxes, edge graph, and pseudo-3D context</h2>
+          <p>Ego-to-vehicle and vehicle-to-vehicle relations are visualized with estimated pseudo-metric distances.</p>
           <ul class="legend">
-            <li><span class="swatch green"></span>초록: ego edge</li>
-            <li><span class="swatch cyan"></span>하늘색/주황: vehicle edge</li>
-            <li><span class="swatch dark"></span>오른쪽: pseudo-3D</li>
+            <li><span class="swatch green"></span>Green: ego-to-vehicle edge</li>
+            <li><span class="swatch cyan"></span>Cyan/orange: vehicle-to-vehicle edge</li>
+            <li><span class="swatch dark"></span>Right panel: pseudo-3D context</li>
           </ul>
         </div>
         <figure class="visual-card">
@@ -145,18 +148,18 @@
               height="1440"
             />
           </button>
-          <figcaption>Edge-gap relation with estimated pseudo-metric distance.</figcaption>
+          <figcaption>Interaction edges show approximate pseudo-metric distance cues, not calibrated 3D reconstruction.</figcaption>
         </figure>
       </section>
 
       <section class="stage" id="stage-4" data-stage="04">
         <div class="stage-copy">
           <span class="stage-number">04</span>
-          <h2>궤적 예측</h2>
-          <p>TGCA raw trajectory와 refined trajectory prior를 비교합니다.</p>
+          <h2>TGCA trajectory prior</h2>
+          <p>TGCA-based temporal interaction modeling is used to estimate a future ego trajectory prior.</p>
           <ul class="legend">
-            <li><span class="swatch red"></span>빨간색: TGCA raw trajectory</li>
-            <li><span class="swatch pink"></span>핑크색: refined trajectory prior</li>
+            <li><span class="swatch red"></span>Red: raw TGCA trajectory</li>
+            <li><span class="swatch pink"></span>Pink: refined trajectory prior</li>
           </ul>
         </div>
         <figure class="visual-card">
@@ -175,15 +178,15 @@
               height="1440"
             />
           </button>
-          <figcaption>Trajectory stabilization/prior visualization, not a control command.</figcaption>
+          <figcaption>TGCA raw trajectory is compared with a refined visualization-level trajectory prior.</figcaption>
         </figure>
       </section>
 
       <section class="stage final" id="stage-5" data-stage="05">
         <div class="stage-copy">
           <span class="stage-number">05</span>
-          <h2>1초부터 5초까지 ego trajectory horizon</h2>
-          <p>1초 간격 horizon marker로 ego trajectory prior를 표시합니다.</p>
+          <h2>1s to 5s ego trajectory horizon</h2>
+          <p>Future ego trajectory prior is visualized with one-second interval markers from 1 s to 5 s.</p>
           <div class="time-strip" aria-label="시간 marker">
             <span>1s</span><span>2s</span><span>3s</span><span>4s</span><span>5s</span>
           </div>
@@ -204,16 +207,17 @@
               height="1440"
             />
           </button>
-          <figcaption>Five-second trajectory prior horizon. This is not a future ground-truth label.</figcaption>
+          <figcaption>Illustrative 1s-5s trajectory-prior horizon. This is not a future ground-truth label.</figcaption>
         </figure>
       </section>
 
       <section class="takeaway" aria-labelledby="takeaway-title">
         <p class="section-kicker">Takeaway</p>
-        <h2 id="takeaway-title">Detected vehicle context → interpretable ego trajectory prior</h2>
+        <h2 id="takeaway-title">Detected vehicle context to interpretable ego trajectory prior</h2>
         <p>
-          이 데모는 TGCA를 대체하거나 직접 제어 명령을 생성하는 것이 아니라, 전방 객체 관계를 해석 가능한
-          trajectory prior 시각화로 연결하는 연구 단계 결과입니다.
+          This page presents a visualization-level research output: detected vehicle context is organized into graph
+          relations, projected into pseudo-3D context, and used to form a TGCA-based ego trajectory prior. The result
+          should be read as an interpretable prior, not as a validated future label, planner output, or autonomous-driving control signal.
         </p>
       </section>
     </main>
