@@ -46,6 +46,33 @@ document.addEventListener("keydown", (event) => {
 
 const stages = [...document.querySelectorAll(".stage")];
 const navLinks = [...document.querySelectorAll(".nav a")];
+const singleLineTexts = [...document.querySelectorAll("main h2, .stage-copy > p")];
+
+function getTextWidth(element) {
+  const range = document.createRange();
+  range.selectNodeContents(element);
+  const width = range.getBoundingClientRect().width;
+  range.detach?.();
+  return width;
+}
+
+function fitSingleLineTexts() {
+  const viewportWidth = document.documentElement.clientWidth;
+
+  singleLineTexts.forEach((heading) => {
+    heading.style.fontSize = "";
+
+    const parentWidth = heading.parentElement?.getBoundingClientRect().width ?? viewportWidth;
+    const availableWidth = Math.max(160, Math.min(parentWidth, viewportWidth));
+    let size = parseFloat(getComputedStyle(heading).fontSize);
+    const minSize = heading.tagName === "H2" ? 13 : 11;
+
+    while (getTextWidth(heading) > availableWidth + 1 && size > minSize) {
+      size = Math.max(minSize, size - 1);
+      heading.style.fontSize = `${size}px`;
+    }
+  });
+}
 
 const observer = new IntersectionObserver(
   (entries) => {
@@ -62,3 +89,6 @@ const observer = new IntersectionObserver(
 );
 
 stages.forEach((stage) => observer.observe(stage));
+
+fitSingleLineTexts();
+window.addEventListener("resize", fitSingleLineTexts);

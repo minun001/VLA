@@ -141,6 +141,18 @@ h2 {
   font-size: clamp(2rem, 4vw, 4.6rem);
 }
 
+main h2 {
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: keep-all;
+}
+
+.stage-copy > p {
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: keep-all;
+}
+
 .lead,
 .stage-copy p,
 .takeaway p {

@@ -12,29 +12,25 @@
       <nav class="nav" aria-label="섹션 이동">
         <a href="#stage-1">원본</a>
         <a href="#stage-2">객체 탐지</a>
-        <a href="#stage-3">Edge + 3D</a>
-        <a href="#stage-4">TGCA Path</a>
-        <a href="#stage-5">5초 Horizon</a>
+        <a href="#stage-3">Lane</a>
+        <a href="#stage-4">Edge + 3D</a>
+        <a href="#stage-5">TGCA</a>
+        <a href="#stage-6">HUD</a>
       </nav>
 
       <div class="hero-overlay">
         <div class="hero-copy">
           <h1>전방 객체 맥락에서 TGCA ego trajectory prior까지</h1>
-          <p class="lead">
-            단안 dashcam 프레임이 차량 탐지, ego distance와 bbox gap edge, pseudo-3D 맥락,
-            TGCA 기반 raw prediction trajectory와 1s-5s horizon prior로 변환되는 과정을 보여줍니다.
-          </p>
+          <p class="lead">차량 탐지, lane context, relation graph, TGCA horizon prior를 단계별로 보여줍니다.</p>
           <div class="hero-badges" aria-label="pipeline summary">
             <span>Monocular input</span>
             <span>Vehicle detection</span>
+            <span>Lane context</span>
             <span>Gap edges</span>
             <span>Pseudo-3D</span>
             <span>TGCA prior</span>
           </div>
-          <div class="claim-note">
-            시각화 수준의 결과 · ego distance/gap은 pseudo-metric 추정 · TGCA trajectory는 control command,
-            driving decision, ground-truth future가 아닌 prior
-          </div>
+          <div class="claim-note">거리와 궤적은 시각화 prior이며, 제어 명령이나 정답 label이 아닙니다.</div>
           <button
             class="hero-zoom image-button"
             type="button"
@@ -59,42 +55,42 @@
           </article>
           <article>
             <strong>Graph</strong>
-            <span>ego-to-vehicle distance / confirmed edge gap / projected fallback 구성</span>
+            <span>ego distance / confirmed edge gap / fallback distance</span>
           </article>
           <article>
-            <strong>Scene</strong>
-            <span>추정 거리와 pseudo-3D 장면 표현</span>
+            <strong>Lane</strong>
+            <span>ego lane 차량 여부와 LC 후보 판단</span>
           </article>
           <article>
             <strong>Output</strong>
-            <span>TGCA 기반 raw prediction trajectory와 1s-5s horizon prior</span>
+            <span>TGCA horizon prior와 HUD overlay</span>
           </article>
         </div>
       </section>
 
       <section class="legend-panel" aria-labelledby="legend-title">
         <p class="section-kicker">Visualization Legend</p>
-        <h2 id="legend-title">relation edge와 TGCA trajectory를 분리해서 읽기</h2>
+        <h2 id="legend-title">색상 의미 요약</h2>
         <div class="legend-grid">
           <article>
             <h3>Relation graph</h3>
             <ul class="legend compact">
-              <li><span class="swatch green"></span>Green solid: ego-to-vehicle distance</li>
-              <li><span class="swatch cyan"></span>Cyan solid: confirmed vehicle-to-vehicle edge gap</li>
-              <li><span class="swatch yellow"></span>Amber dashed: projected bottom-center fallback distance</li>
+              <li><span class="swatch green"></span>Green solid: ego distance</li>
+              <li><span class="swatch cyan"></span>Cyan solid: confirmed edge gap</li>
+              <li><span class="swatch yellow"></span>Amber dashed: projected fallback distance</li>
               <li><span class="swatch red"></span>Red: negative signed gap</li>
             </ul>
           </article>
           <article>
             <h3>Trajectory</h3>
             <ul class="legend compact">
-              <li><span class="swatch blue"></span>Blue arrow/marker: Raw TGCA prediction trajectory</li>
-              <li><span class="swatch blue"></span>1s-5s labels: prediction horizon markers</li>
+              <li><span class="swatch blue"></span>Blue marker: Raw TGCA prediction</li>
+              <li><span class="swatch blue"></span>1s-5s: prediction horizon</li>
             </ul>
           </article>
           <article>
             <h3>Caution</h3>
-            <p>Distances are pseudo-metric visualization cues. TGCA trajectory is a prior, not ground-truth future, planner output, or control command.</p>
+            <p>All distances and trajectories are priors, not GT or control.</p>
           </article>
         </div>
       </section>
@@ -103,7 +99,7 @@
         <div class="stage-copy">
           <span class="stage-number">01</span>
           <h2>원본 이미지</h2>
-          <p>perception 또는 graph 구성이 적용되기 전의 단안 dashcam 입력 장면입니다.</p>
+          <p>bbox, edge, trajectory가 없는 입력 frame입니다.</p>
         </div>
         <figure class="visual-card">
           <button
@@ -120,15 +116,15 @@
               height="720"
             />
           </button>
-          <figcaption>전방 단안 dashcam 입력 프레임입니다.</figcaption>
+          <figcaption>Raw dashcam frame.</figcaption>
         </figure>
       </section>
 
       <section class="stage" id="stage-2" data-stage="02">
         <div class="stage-copy">
           <span class="stage-number">02</span>
-          <h2>탐지된 객체 bbox</h2>
-          <p>전방 차량 후보를 bounding box로 표시합니다. 초록색 bbox는 ego 기준 lead vehicle, 흰색 bbox는 일반 detected vehicle을 의미합니다.</p>
+          <h2>객체 bbox</h2>
+          <p>초록 bbox는 lead vehicle, 흰 bbox는 일반 vehicle입니다.</p>
         </div>
         <figure class="visual-card">
           <button
@@ -146,21 +142,52 @@
               height="720"
             />
           </button>
-          <figcaption>초록색 bbox는 lead vehicle, 흰색 bbox는 일반 detected vehicle 후보를 나타냅니다.</figcaption>
+          <figcaption>Detected vehicle boxes.</figcaption>
         </figure>
       </section>
 
       <section class="stage" id="stage-3" data-stage="03">
         <div class="stage-copy">
           <span class="stage-number">03</span>
-          <h2>bbox + edge graph + pseudo-3D 장면</h2>
-          <p>ego-to-vehicle distance와 vehicle-to-vehicle relation을 2D dashcam frame과 pseudo-3D context에서 함께 시각화합니다.</p>
+          <h2>ego lane</h2>
+          <p>ego-lane 차량/LC 후보를 temporal KG에 보냅니다.</p>
           <ul class="legend">
-            <li><span class="swatch green"></span>초록색 실선: ego-to-vehicle distance</li>
-            <li><span class="swatch cyan"></span>하늘색/청록색 실선: confirmed vehicle-to-vehicle edge gap</li>
-            <li><span class="swatch yellow"></span>노랑/주황색 점선: projected bottom-center fallback distance</li>
-            <li><span class="swatch red"></span>빨간색 계열: negative signed gap</li>
-            <li><span class="swatch dark"></span>오른쪽 패널: calibrated 3D reconstruction이 아닌 pseudo-3D relation context</li>
+            <li><span class="swatch cyan"></span>청록 실선: ego lane boundary</li>
+            <li><span class="swatch cyan"></span>청록 mask: ego lane area</li>
+            <li>KG cue: in_ego_lane / LC_into_ego_lane</li>
+          </ul>
+        </div>
+        <figure class="visual-card">
+          <button
+            class="image-button"
+            type="button"
+            data-image="./assets/06_lane_detection_example.png"
+            data-title="Ego lane detection"
+            aria-label="Ego lane detection 이미지 확대 보기"
+          >
+            <img
+              src="./assets/06_lane_detection_example.png"
+              alt="ego lane boundary와 ego lane mask가 표시된 lane detection 시각화"
+              loading="lazy"
+              width="1280"
+              height="720"
+            />
+          </button>
+          <figcaption>Lane context feeds the temporal ontology KG.</figcaption>
+        </figure>
+      </section>
+
+      <section class="stage" id="stage-4" data-stage="04">
+        <div class="stage-copy">
+          <span class="stage-number">04</span>
+          <h2>edge + pseudo-3D</h2>
+          <p>relation edge를 2D와 pseudo-3D로 봅니다.</p>
+          <ul class="legend">
+            <li><span class="swatch green"></span>초록: ego distance</li>
+            <li><span class="swatch cyan"></span>청록: confirmed edge gap</li>
+            <li><span class="swatch yellow"></span>노랑 점선: fallback distance</li>
+            <li><span class="swatch red"></span>빨강: negative gap</li>
+            <li><span class="swatch dark"></span>오른쪽: pseudo-3D context</li>
           </ul>
         </div>
         <figure class="visual-card">
@@ -168,67 +195,33 @@
             class="image-button"
             type="button"
             data-image="./assets/03_bbox_edges_and_3d.png"
-            data-title="bbox, relation edge graph, pseudo-3D relation context"
-            aria-label="bbox, relation edge graph, pseudo-3D relation context 이미지 확대 보기"
+            data-title="bbox, edge graph, pseudo-3D context"
+            aria-label="bbox, edge graph, pseudo-3D context 이미지 확대 보기"
           >
             <img
               src="./assets/03_bbox_edges_and_3d.png"
-              alt="bbox, ego-to-vehicle distance, confirmed edge gap, projected fallback distance, pseudo-3D relation context가 함께 표시된 시각화"
+              alt="bbox, edge gap, fallback distance, pseudo-3D context 시각화"
               loading="lazy"
               width="2568"
               height="720"
             />
           </button>
-          <figcaption>confirmed edge gap과 projected fallback distance를 구분해 표시합니다. 오른쪽 패널은 graph relation 이해를 위한 pseudo-3D context입니다.</figcaption>
+          <figcaption>Edge colors describe relation cues.</figcaption>
         </figure>
       </section>
 
-      <section class="stage" id="stage-4" data-stage="04">
+      <section class="stage" id="stage-5" data-stage="05">
         <div class="stage-copy">
-          <span class="stage-number">04</span>
-          <h2>TGCA 기반 궤적 prior</h2>
-          <p>TGCA 기반 temporal interaction modeling으로 추정한 raw ego trajectory prior를 기존 relation graph 위에 겹쳐 보여줍니다.</p>
+          <span class="stage-number">05</span>
+          <h2>TGCA 기본 horizon</h2>
+          <p>05 이미지는 1s-5s Raw TGCA horizon prior입니다.</p>
           <ul class="legend">
-            <li><span class="swatch blue"></span>파란색 화살표/마커: Raw TGCA prediction trajectory</li>
-            <li><span class="swatch green"></span>초록색/하늘색/노랑 edge: relation graph context</li>
-            <li>이 trajectory는 control command, planner output, ground-truth future가 아니라 시각화 수준의 trajectory prior입니다.</li>
+            <li><span class="swatch blue"></span>파랑: Raw TGCA horizon</li>
+            <li>1s-5s: prediction step</li>
+            <li>정답/제어가 아닌 prior</li>
           </ul>
         </div>
         <figure class="visual-card">
-          <button
-            class="image-button"
-            type="button"
-            data-image="./assets/04_bbox_edges_predicted_ego_trajectory_and_3d.png"
-            data-title="Raw TGCA prediction trajectory over relation graph context"
-            aria-label="Raw TGCA prediction trajectory over relation graph context 이미지 확대 보기"
-          >
-            <img
-              src="./assets/04_bbox_edges_predicted_ego_trajectory_and_3d.png"
-              alt="relation graph context 위에 파란 Raw TGCA prediction trajectory가 겹쳐진 2D 및 pseudo-3D 시각화"
-              loading="lazy"
-              width="2568"
-              height="720"
-            />
-          </button>
-          <figcaption>파란 화살표/마커는 Raw TGCA prediction trajectory입니다. relation edge 색상과 trajectory 색상은 서로 다른 의미입니다.</figcaption>
-        </figure>
-      </section>
-
-      <section class="stage final" id="stage-5" data-stage="05">
-        <div class="stage-copy">
-          <span class="stage-number">05</span>
-          <h2>1초부터 5초까지 ego trajectory horizon</h2>
-          <p>TGCA 기반 ego trajectory prior를 1초 간격 horizon marker로 시각화합니다.</p>
-          <ul class="legend">
-            <li><span class="swatch blue"></span>파란색 화살표/마커: Raw TGCA prediction horizon</li>
-            <li>1s-5s label: prediction horizon step</li>
-            <li>각 horizon point는 미래 주행 경향을 설명하기 위한 prior이며 validated future label이 아닙니다.</li>
-          </ul>
-          <div class="time-strip" aria-label="horizon label">
-            <span>1s</span><span>2s</span><span>3s</span><span>4s</span><span>5s</span>
-          </div>
-        </div>
-        <figure class="visual-card featured">
           <button
             class="image-button"
             type="button"
@@ -238,24 +231,54 @@
           >
             <img
               src="./assets/05_ego_trajectory_1s_to_5s_horizon.png"
-              alt="파란 Raw TGCA prediction horizon과 1s-5s prediction horizon step label이 표시된 시각화"
+              alt="파란 Raw TGCA prediction horizon과 1s-5s label 시각화"
               loading="lazy"
               width="2568"
               height="720"
             />
           </button>
-          <figcaption>1s-5s marker는 TGCA 기반 ego trajectory horizon prior입니다. validated future label이 아닙니다.</figcaption>
+          <figcaption>Basic TGCA horizon.</figcaption>
+        </figure>
+      </section>
+
+      <section class="stage final" id="stage-6" data-stage="06">
+        <div class="stage-copy">
+          <span class="stage-number">06</span>
+          <h2>TGCA HUD</h2>
+          <p>05-1 HUD overlay로 horizon을 강조합니다.</p>
+          <ul class="legend">
+            <li><span class="swatch blue"></span>파랑: Raw TGCA horizon</li>
+            <li>HUD: marker 가독성 강조</li>
+            <li>validated future label이 아닌 prior</li>
+          </ul>
+          <div class="time-strip" aria-label="horizon label">
+            <span>1s</span><span>2s</span><span>3s</span><span>4s</span><span>5s</span>
+          </div>
+        </div>
+        <figure class="visual-card featured">
+          <button
+            class="image-button"
+            type="button"
+            data-image="./assets/05-1_ego_trajectory_1s_to_5s_horizon_hud.png"
+            data-title="HUD-enhanced TGCA ego trajectory horizon"
+            aria-label="HUD-enhanced TGCA ego trajectory horizon 이미지 확대 보기"
+          >
+            <img
+              src="./assets/05-1_ego_trajectory_1s_to_5s_horizon_hud.png"
+              alt="HUD 스타일로 강조된 파란 Raw TGCA prediction horizon 시각화"
+              loading="lazy"
+              width="2568"
+              height="720"
+            />
+          </button>
+          <figcaption>HUD-emphasized TGCA horizon.</figcaption>
         </figure>
       </section>
 
       <section class="takeaway" aria-labelledby="takeaway-title">
         <p class="section-kicker">Takeaway</p>
         <h2 id="takeaway-title">전방 객체 맥락에서 해석 가능한 ego trajectory prior로</h2>
-        <p>
-          이 페이지는 시각화 수준의 연구 결과를 보여줍니다. 탐지된 차량 맥락을 ego distance와 bbox gap relation으로 구성하고,
-          pseudo-3D relation context로 투영한 뒤, TGCA 기반 Raw prediction trajectory와 1s-5s horizon prior를 표시합니다.
-          이 결과는 validated future label, planner output, autonomous-driving control signal이 아니라 해석 가능한 trajectory prior로 읽어야 합니다.
-        </p>
+        <p>bbox, lane context, relation edge, TGCA horizon을 temporal ontology KG cue로 연결합니다. 결과는 prior이며 정답/제어가 아닙니다.</p>
       </section>
     </main>
 
