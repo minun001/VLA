@@ -53,7 +53,7 @@ img {
   color: var(--cream);
   background:
     linear-gradient(90deg, rgba(11, 16, 14, 0.88) 0%, rgba(11, 16, 14, 0.56) 38%, rgba(11, 16, 14, 0.12) 100%),
-    url("./assets/05-1_ego_trajectory_1s_to_5s_horizon_hud_left50.png") left center / cover no-repeat;
+    url("./assets/05_ego_trajectory_1s_to_5s_horizon_left50.png") left center / cover no-repeat;
 }
 
 .hero-cover::after {
@@ -218,6 +218,7 @@ main {
 }
 
 .overview,
+.legend-panel,
 .takeaway {
   max-width: 1880px;
   margin: 0 auto;
@@ -260,6 +261,38 @@ main {
 .overview-grid span {
   color: var(--muted);
   line-height: 1.55;
+}
+
+.legend-panel h2 {
+  max-width: 1160px;
+  margin-top: 14px;
+}
+
+.legend-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 22px;
+}
+
+.legend-grid article {
+  min-height: 178px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: rgba(255, 250, 240, 0.78);
+  box-shadow: 0 14px 42px rgba(22, 33, 27, 0.08);
+}
+
+.legend-grid h3 {
+  margin: 0 0 14px;
+  font-size: 1rem;
+}
+
+.legend-grid p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
 }
 
 .stage {
@@ -344,6 +377,12 @@ main {
   padding: 0;
   margin: 24px 0 0;
   list-style: none;
+}
+
+.legend.compact {
+  display: grid;
+  gap: 12px;
+  margin-top: 0;
 }
 
 .legend li {
@@ -454,6 +493,10 @@ main {
   .overview-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .legend-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 768px) {
@@ -523,6 +566,7 @@ main {
   }
 
   .overview,
+  .legend-panel,
   .takeaway,
   .stage {
     padding: 34px 0;
