@@ -2,6 +2,7 @@ const dialog = document.querySelector(".lightbox");
 const dialogImage = dialog?.querySelector("img");
 const dialogTitle = dialog?.querySelector("h3");
 const closeButton = dialog?.querySelector(".close-button");
+let lastFocusedButton = null;
 
 document.querySelectorAll(".image-button").forEach((button) => {
   button.addEventListener("click", () => {
@@ -11,9 +12,11 @@ document.querySelectorAll(".image-button").forEach((button) => {
     const title = button.getAttribute("data-title") || "시각화 이미지";
     if (!image) return;
 
+    lastFocusedButton = button;
     dialogImage.src = image;
     dialogImage.alt = title;
     dialogTitle.textContent = title;
+    document.body.style.overflow = "hidden";
     dialog.showModal();
   });
 });
@@ -26,6 +29,11 @@ dialog?.addEventListener("click", (event) => {
   if (event.target === dialog) {
     dialog.close();
   }
+});
+
+dialog?.addEventListener("close", () => {
+  document.body.style.overflow = "";
+  lastFocusedButton?.focus();
 });
 
 document.addEventListener("keydown", (event) => {
