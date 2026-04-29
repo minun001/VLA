@@ -51,7 +51,7 @@ img {
   color: var(--cream);
   background:
     linear-gradient(90deg, rgba(11, 16, 14, 0.88) 0%, rgba(11, 16, 14, 0.56) 38%, rgba(11, 16, 14, 0.12) 100%),
-    url("./assets/05_ego_trajectory_1s_to_5s_horizon_left50.png") left center / cover no-repeat;
+    url("./assets/05-1_ego_trajectory_1s_to_5s_horizon_hud_left50.png") left center / cover no-repeat;
 }
 
 .hero-cover::after {
