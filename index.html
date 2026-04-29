@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LK_LK100_frame120 연구 시각화 전시</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="hero" id="top">
+      <nav class="nav" aria-label="섹션 이동">
+        <a href="#stage-1">원본</a>
+        <a href="#stage-2">객체 탐지</a>
+        <a href="#stage-3">Edge + 3D</a>
+        <a href="#stage-4">TGCA 보정</a>
+        <a href="#stage-5">5초 Horizon</a>
+      </nav>
+
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <h1>전방 장면을 그래프와 ego 궤적 prior로 변환하는 과정</h1>
+          <p class="lead">
+            원본 이미지에서 차량 탐지, edge 관계, 3D 표현, TGCA/AutoSteer 궤적 prior까지 순서대로 봅니다.
+          </p>
+          <div class="claim-note">
+            Example-level visualization. 거리/3D는 pseudo-metric 추정값이며, 궤적은 control command가 아닌 prior입니다.
+          </div>
+        </div>
+
+        <button
+          class="hero-card image-button"
+          type="button"
+          data-image="./assets/05_ego_trajectory_1s_to_5s_horizon.png"
+          data-title="1초부터 5초까지 ego trajectory prior"
+        >
+          <img
+            src="./assets/05_ego_trajectory_1s_to_5s_horizon.png"
+            alt="1초부터 5초까지 ego trajectory prior 시각화"
+          />
+          <span>대표 이미지 확대 보기</span>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="stage" id="stage-1" data-stage="01">
+        <div class="stage-copy">
+          <p class="agent-tag">Step 01 · 입력 프레임</p>
+          <h2>1. 원본 이미지</h2>
+          <p>처리 전 기준 프레임입니다.</p>
+        </div>
+        <figure class="visual-card">
+          <button class="image-button" type="button" data-image="./assets/01_original_image.png" data-title="원본 이미지">
+            <img src="./assets/01_original_image.png" alt="원본 dashcam 이미지" />
+          </button>
+          <figcaption>기준 입력 이미지</figcaption>
+        </figure>
+      </section>
+
+      <section class="stage alt" id="stage-2" data-stage="02">
+        <div class="stage-copy">
+          <p class="agent-tag">Step 02 · 차량 탐지</p>
+          <h2>2. 탐지된 객체 bbox</h2>
+          <p>전방 차량 후보를 bbox로 표시합니다.</p>
+        </div>
+        <figure class="visual-card">
+          <button
+            class="image-button"
+            type="button"
+            data-image="./assets/02_original_with_detected_bbox.png"
+            data-title="탐지된 차량 bbox"
+          >
+            <img src="./assets/02_original_with_detected_bbox.png" alt="탐지된 차량 bbox가 표시된 이미지" />
+          </button>
+          <figcaption>차량 detection 결과</figcaption>
+        </figure>
+      </section>
+
+      <section class="stage" id="stage-3" data-stage="03">
+        <div class="stage-copy">
+          <p class="agent-tag">Step 03 · 관계 그래프와 pseudo-3D</p>
+          <h2>3. bbox + edge 연결 + 3D 장면</h2>
+          <p>ego-vehicle 및 vehicle-to-vehicle edge와 추정 거리를 표시합니다.</p>
+          <ul class="legend">
+            <li><span class="swatch green"></span>초록: ego edge</li>
+            <li><span class="swatch cyan"></span>하늘색/주황: vehicle edge</li>
+            <li><span class="swatch dark"></span>오른쪽: pseudo-3D</li>
+          </ul>
+        </div>
+        <figure class="visual-card">
+          <button
+            class="image-button"
+            type="button"
+            data-image="./assets/03_bbox_edges_and_3d.png"
+            data-title="bbox, edge 연결, pseudo-3D graph"
+          >
+            <img src="./assets/03_bbox_edges_and_3d.png" alt="bbox와 edge 연결 및 pseudo-3D graph 시각화" />
+          </button>
+          <figcaption>edge-gap relation, estimated distance</figcaption>
+        </figure>
+      </section>
+
+      <section class="stage alt" id="stage-4" data-stage="04">
+        <div class="stage-copy">
+          <p class="agent-tag">Step 04 · TGCA prediction + AutoSteer</p>
+          <h2>4. 예측 ego 궤적과 3D 표현</h2>
+          <p>TGCA raw 궤적과 AutoSteer+TGCA stabilized 궤적을 비교합니다.</p>
+          <ul class="legend">
+            <li><span class="swatch red"></span>빨간색: TGCA raw</li>
+            <li><span class="swatch pink"></span>핑크색: AutoSteer+TGCA stabilized</li>
+          </ul>
+        </div>
+        <figure class="visual-card">
+          <button
+            class="image-button"
+            type="button"
+            data-image="./assets/04_bbox_edges_predicted_ego_trajectory_and_3d.png"
+            data-title="TGCA/AutoSteer ego trajectory prior와 3D 표현"
+          >
+            <img
+              src="./assets/04_bbox_edges_predicted_ego_trajectory_and_3d.png"
+              alt="TGCA와 AutoSteer ego trajectory prior 및 pseudo-3D 시각화"
+            />
+          </button>
+          <figcaption>Trajectory prior, not control output</figcaption>
+        </figure>
+      </section>
+
+      <section class="stage final" id="stage-5" data-stage="05">
+        <div class="stage-copy">
+          <p class="agent-tag">Step 05 · 1초부터 5초까지 horizon</p>
+          <h2>5. 1초부터 5초까지 ego trajectory horizon</h2>
+          <p>1초 간격 horizon marker로 ego trajectory prior를 표시합니다.</p>
+          <div class="time-strip" aria-label="시간 marker">
+            <span>1s</span><span>2s</span><span>3s</span><span>4s</span><span>5s</span>
+          </div>
+        </div>
+        <figure class="visual-card featured">
+          <button
+            class="image-button"
+            type="button"
+            data-image="./assets/05_ego_trajectory_1s_to_5s_horizon.png"
+            data-title="1초부터 5초까지 ego trajectory horizon"
+          >
+            <img src="./assets/05_ego_trajectory_1s_to_5s_horizon.png" alt="1초부터 5초까지 ego trajectory horizon 시각화" />
+          </button>
+          <figcaption>1s-5s trajectory horizon</figcaption>
+        </figure>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <a href="#top">맨 위로 이동</a>
+      <p>Hyunsik Min · Affiliation: SAIL, Soonchunhyang University · Email: minun001@sch.ac.kr · 석사과정</p>
+    </footer>
+
+    <dialog class="lightbox" aria-label="이미지 확대 보기">
+      <button class="close-button" type="button" aria-label="닫기">닫기</button>
+      <h3></h3>
+      <img alt="" />
+    </dialog>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
