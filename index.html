@@ -209,6 +209,25 @@
       overflow-wrap: break-word;
     }
 
+    .trial-gallery {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .trial-card .media-head {
+      padding: 12px 14px;
+      font-size: 0.78rem;
+    }
+
+    .trial-card .media-caption {
+      padding: 11px 14px 13px;
+      color: #cbd5e1;
+      font-size: 0.78rem;
+      line-height: 1.45;
+      word-break: keep-all;
+    }
+
     .section {
       padding: 38px 0;
     }
@@ -396,7 +415,8 @@
 
       .metric-grid,
       .two-up,
-      .event-gallery {
+      .event-gallery,
+      .trial-gallery {
         grid-template-columns: 1fr 1fr;
       }
     }
@@ -431,7 +451,8 @@
 
       .metric-grid,
       .two-up,
-      .event-gallery {
+      .event-gallery,
+      .trial-gallery {
         grid-template-columns: 1fr;
       }
 
@@ -470,6 +491,7 @@
         </div>
         <nav class="hero-actions" aria-label="Page sections">
           <a class="pill" href="#event">비교 영상</a>
+          <a class="pill" href="#trials">추가 trials</a>
           <a class="pill" href="#metrics">핵심 지표</a>
           <a class="pill" href="#figures">시각화 결과</a>
           <a class="pill" href="#boundary">해석 범위</a>
@@ -518,6 +540,64 @@
           <img class="hero-gif" src="assets/carla_phase_recovery.gif" alt="No-GUIDANCE와 GUIDANCE 조건의 회복 및 following vehicle string 비교 GIF.">
           <div class="media-caption">
             ego 차량 이후 following vehicle string까지 이어지는 반응을 함께 보여줍니다.
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="trials">
+      <div class="section-title">
+        <div>
+          <p class="section-kicker">Additional trial views</p>
+          <h2>다른 trial 시뮬레이션</h2>
+        </div>
+        <p class="section-note">
+          위 네 장면은 하나의 대표 사건을 단계별로 나눈 것이고, 아래는 서로 다른 side-by-side trial GIF에서 가져온 추가 예시입니다.
+        </p>
+      </div>
+
+      <div class="trial-gallery" aria-label="Additional CARLA trial GIF previews">
+        <article class="media-card trial-card">
+          <div class="media-head">
+            <span>Trial 001</span>
+            <span>paired view</span>
+          </div>
+          <img class="hero-gif" src="assets/carla_trial_001_preview.gif" alt="No-GUIDANCE와 GUIDANCE 조건의 CARLA trial 001 비교 GIF.">
+          <div class="media-caption">
+            다른 trial GIF에서 가져온 초반 cut-in 접근 예시입니다.
+          </div>
+        </article>
+
+        <article class="media-card trial-card">
+          <div class="media-head">
+            <span>Trial 002</span>
+            <span>paired view</span>
+          </div>
+          <img class="hero-gif" src="assets/carla_trial_002_preview.gif" alt="No-GUIDANCE와 GUIDANCE 조건의 CARLA trial 002 비교 GIF.">
+          <div class="media-caption">
+            같은 조건 비교를 다른 trial source에서 다시 확인합니다.
+          </div>
+        </article>
+
+        <article class="media-card trial-card">
+          <div class="media-head">
+            <span>Trial 003</span>
+            <span>paired view</span>
+          </div>
+          <img class="hero-gif" src="assets/carla_trial_003_preview.gif" alt="No-GUIDANCE와 GUIDANCE 조건의 CARLA trial 003 비교 GIF.">
+          <div class="media-caption">
+            cut-in 이후 ego 반응 차이를 다른 시뮬레이션 구간에서 보여줍니다.
+          </div>
+        </article>
+
+        <article class="media-card trial-card">
+          <div class="media-head">
+            <span>Trial 004</span>
+            <span>paired view</span>
+          </div>
+          <img class="hero-gif" src="assets/carla_trial_004_preview.gif" alt="No-GUIDANCE와 GUIDANCE 조건의 CARLA trial 004 비교 GIF.">
+          <div class="media-caption">
+            회복 구간과 following vehicle string 반응을 추가 trial에서 확인합니다.
           </div>
         </article>
       </div>
