@@ -146,6 +146,17 @@
       box-shadow: var(--shadow);
     }
 
+    .event-gallery {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      align-self: center;
+    }
+
+    .event-card {
+      border-radius: 26px;
+    }
+
     .media-head {
       display: flex;
       justify-content: space-between;
@@ -155,6 +166,11 @@
       background: linear-gradient(90deg, rgba(15, 159, 110, 0.35), rgba(15, 23, 42, 0.95));
       font-size: 0.95rem;
       font-weight: 800;
+    }
+
+    .event-card .media-head {
+      padding: 13px 15px;
+      font-size: 0.82rem;
     }
 
     .hero-gif {
@@ -168,6 +184,11 @@
       padding: 18px 22px 22px;
       color: #cbd5e1;
       font-size: 0.96rem;
+    }
+
+    .event-card .media-caption {
+      padding: 12px 15px 15px;
+      font-size: 0.82rem;
     }
 
     .section {
@@ -342,7 +363,8 @@
       }
 
       .metric-grid,
-      .two-up {
+      .two-up,
+      .event-gallery {
         grid-template-columns: 1fr 1fr;
       }
     }
@@ -361,7 +383,8 @@
       }
 
       .metric-grid,
-      .two-up {
+      .two-up,
+      .event-gallery {
         grid-template-columns: 1fr;
       }
 
@@ -372,6 +395,9 @@
 
       .comparison-table {
         font-size: 0.88rem;
+        display: block;
+        max-width: 100%;
+        overflow-x: auto;
       }
 
       .comparison-table th,
@@ -396,23 +422,58 @@
           TTC &lt; 5s 이벤트와 급가속/급감속 proxy를 줄이는 방향을 보였습니다.
         </div>
         <nav class="hero-actions" aria-label="Page sections">
-          <a class="pill" href="#event">Trial 000 영상</a>
+          <a class="pill" href="#event">비교 영상</a>
           <a class="pill" href="#metrics">핵심 지표</a>
           <a class="pill" href="#figures">시각화 결과</a>
           <a class="pill" href="#boundary">해석 범위</a>
         </nav>
       </div>
 
-      <article class="media-card" id="event">
-        <div class="media-head">
-          <span>Trial 000 · same event comparison</span>
-          <span>No-GUIDANCE / GUIDANCE</span>
-        </div>
-        <img class="hero-gif" src="assets/trial_000_no_guidance_vs_guidance.gif" alt="CARLA trial 000 side-by-side GIF comparing No-GUIDANCE and GUIDANCE conditions.">
-        <div class="media-caption">
-          동일한 cut-in event를 두 조건으로 재생한 full-event 요약 GIF입니다. 웹 전시를 위해 원본 GIF를 경량화했습니다.
-        </div>
-      </article>
+      <div class="event-gallery" id="event" aria-label="Representative CARLA event comparisons">
+        <article class="media-card event-card">
+          <div class="media-head">
+            <span>Cut-in comparison</span>
+            <span>Baseline / GUIDANCE</span>
+          </div>
+          <img class="hero-gif" src="assets/carla_event_a.gif" alt="Side-by-side CARLA GIF comparing No-GUIDANCE and GUIDANCE in a representative cut-in event.">
+          <div class="media-caption">
+            동일한 cut-in event에서 두 조건의 ego response를 나란히 비교합니다.
+          </div>
+        </article>
+
+        <article class="media-card event-card">
+          <div class="media-head">
+            <span>Cut-in comparison</span>
+            <span>Baseline / GUIDANCE</span>
+          </div>
+          <img class="hero-gif" src="assets/carla_event_b.gif" alt="Side-by-side CARLA GIF showing another representative cut-in response comparison." loading="lazy">
+          <div class="media-caption">
+            GUIDANCE 조건의 anticipatory speed adaptation이 어떻게 나타나는지 확인할 수 있습니다.
+          </div>
+        </article>
+
+        <article class="media-card event-card">
+          <div class="media-head">
+            <span>Cut-in comparison</span>
+            <span>Baseline / GUIDANCE</span>
+          </div>
+          <img class="hero-gif" src="assets/carla_event_c.gif" alt="Side-by-side CARLA GIF comparing traffic-string response under No-GUIDANCE and GUIDANCE." loading="lazy">
+          <div class="media-caption">
+            ego 차량뿐 아니라 following vehicle string의 반응 차이를 함께 봅니다.
+          </div>
+        </article>
+
+        <article class="media-card event-card">
+          <div class="media-head">
+            <span>Cut-in comparison</span>
+            <span>Baseline / GUIDANCE</span>
+          </div>
+          <img class="hero-gif" src="assets/carla_event_d.gif" alt="Side-by-side CARLA GIF comparing low-TTC cut-in response with and without GUIDANCE." loading="lazy">
+          <div class="media-caption">
+            정량 지표와 함께 볼 수 있는 qualitative event visualization입니다.
+          </div>
+        </article>
+      </div>
     </section>
 
     <section class="section" id="metrics">
