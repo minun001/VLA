@@ -1,298 +1,586 @@
 <!doctype html>
 <html lang="ko">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>VLA</title>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2317201d'/%3E%3Cpath d='M7 22 16 8l9 14h-4l-5-8-5 8z' fill='%232f80ff'/%3E%3C/svg%3E" />
-    <link rel="stylesheet" href="./styles.css" />
-  </head>
-  <body>
-    <header class="hero hero-cover" id="top">
-      <nav class="nav" aria-label="섹션 이동">
-        <a href="#stage-1">원본</a>
-        <a href="#stage-2">객체 탐지</a>
-        <a href="#stage-3">Lane</a>
-        <a href="#stage-4">Edge + 3D</a>
-        <a href="#stage-5">TGCA</a>
-        <a href="#stage-6">Overlay</a>
-      </nav>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VLA</title>
+  <meta name="description" content="GUIDANCE vs No-GUIDANCE CARLA cut-in simulation diagnostic page.">
+  <style>
+    :root {
+      --bg: #f5f7f3;
+      --ink: #111827;
+      --muted: #596273;
+      --line: rgba(17, 24, 39, 0.13);
+      --card: rgba(255, 255, 255, 0.9);
+      --green: #0f9f6e;
+      --green-dark: #057a55;
+      --slate: #667085;
+      --warm: #f4ead7;
+      --shadow: 0 22px 70px rgba(15, 23, 42, 0.12);
+      --radius: 28px;
+    }
 
-      <div class="hero-overlay">
-        <div class="hero-copy">
-          <h1>전방 객체 맥락에서 TGCA ego trajectory prior까지</h1>
-          <p class="lead">차량 탐지, lane context, relation graph, TGCA horizon prior를 단계별로 보여줍니다.</p>
-          <div class="hero-badges" aria-label="pipeline summary">
-            <span>Monocular input</span>
-            <span>Vehicle detection</span>
-            <span>Lane context</span>
-            <span>Gap edges</span>
-            <span>Pseudo-3D</span>
-            <span>TGCA prior</span>
-          </div>
-          <div class="claim-note">거리와 궤적은 시각화 prior이며, 제어 명령이나 정답 label이 아닙니다.</div>
-          <button
-            class="hero-zoom image-button"
-            type="button"
-            data-image="./assets/05_ego_trajectory_1s_to_5s_horizon_left50.png"
-            data-title="대표 이미지"
-            aria-label="대표 이미지 확대 보기"
-          >
-            대표 이미지 확대 보기
-          </button>
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 8%, rgba(15, 159, 110, 0.16), transparent 30%),
+        radial-gradient(circle at 88% 12%, rgba(244, 234, 215, 0.95), transparent 34%),
+        linear-gradient(180deg, #fbfaf4 0%, var(--bg) 45%, #eef4ef 100%);
+      font-family: "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo", "Segoe UI", sans-serif;
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .page {
+      width: min(1480px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .hero {
+      min-height: 94vh;
+      display: grid;
+      grid-template-columns: 0.88fr 1.12fr;
+      gap: 34px;
+      align-items: center;
+      padding: 42px 0 34px;
+    }
+
+    .hero-copy {
+      padding: 28px 0;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 14px;
+      border: 1px solid rgba(15, 159, 110, 0.26);
+      border-radius: 999px;
+      color: var(--green-dark);
+      background: rgba(255, 255, 255, 0.62);
+      font-size: 0.92rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 0 7px rgba(15, 159, 110, 0.14);
+    }
+
+    h1 {
+      margin: 28px 0 18px;
+      font-size: clamp(3.1rem, 6vw, 6.6rem);
+      line-height: 0.92;
+      letter-spacing: -0.08em;
+    }
+
+    .hero-lead {
+      max-width: 700px;
+      color: #2e3746;
+      font-size: clamp(1.08rem, 1.7vw, 1.42rem);
+      font-weight: 520;
+    }
+
+    .claim {
+      margin-top: 26px;
+      padding: 18px 20px;
+      border: 1px solid rgba(15, 159, 110, 0.28);
+      border-left: 6px solid var(--green);
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.7);
+      color: #1f2937;
+      font-weight: 720;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 10px 18px;
+      border: 1px solid rgba(17, 24, 39, 0.12);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.72);
+      color: #172033;
+      font-weight: 800;
+      text-decoration: none;
+      transition: transform 160ms ease, background 160ms ease, box-shadow 160ms ease;
+    }
+
+    .pill:hover {
+      transform: translateY(-2px);
+      background: #fff;
+      box-shadow: 0 10px 24px rgba(17, 24, 39, 0.1);
+    }
+
+    .media-card {
+      overflow: hidden;
+      border: 1px solid rgba(17, 24, 39, 0.13);
+      border-radius: 34px;
+      background: #0b1118;
+      box-shadow: var(--shadow);
+    }
+
+    .media-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 18px 20px;
+      color: #d8efe5;
+      background: linear-gradient(90deg, rgba(15, 159, 110, 0.35), rgba(15, 23, 42, 0.95));
+      font-size: 0.95rem;
+      font-weight: 800;
+    }
+
+    .hero-gif {
+      display: block;
+      width: 100%;
+      height: auto;
+      background: #101820;
+    }
+
+    .media-caption {
+      padding: 18px 22px 22px;
+      color: #cbd5e1;
+      font-size: 0.96rem;
+    }
+
+    .section {
+      padding: 42px 0;
+    }
+
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      align-items: end;
+      margin-bottom: 18px;
+    }
+
+    .section-kicker {
+      margin: 0 0 8px;
+      color: var(--green-dark);
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-size: 0.82rem;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(2rem, 3.2vw, 3.8rem);
+      line-height: 1.02;
+      letter-spacing: -0.06em;
+    }
+
+    .section-note {
+      max-width: 520px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.02rem;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .metric {
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: var(--card);
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.07);
+    }
+
+    .metric span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 800;
+    }
+
+    .metric strong {
+      display: block;
+      margin-top: 8px;
+      color: var(--green-dark);
+      font-size: clamp(1.5rem, 2.3vw, 2.4rem);
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+
+    .metric small {
+      display: block;
+      margin-top: 10px;
+      color: #334155;
+    }
+
+    .visual-stack {
+      display: grid;
+      gap: 24px;
+    }
+
+    .figure-card {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.84);
+      box-shadow: var(--shadow);
+    }
+
+    .figure-card img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .figure-caption {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 18px 22px;
+      border-top: 1px solid rgba(17, 24, 39, 0.1);
+      color: #334155;
+      font-size: 0.98rem;
+    }
+
+    .figure-caption strong {
+      color: var(--ink);
+    }
+
+    .two-up {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 24px;
+      background: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .comparison-table th,
+    .comparison-table td {
+      padding: 16px 18px;
+      border-bottom: 1px solid rgba(17, 24, 39, 0.1);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .comparison-table th {
+      color: var(--green-dark);
+      background: #eaf8f1;
+      font-size: 0.94rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .comparison-table td:nth-child(2) {
+      color: var(--slate);
+      font-weight: 800;
+    }
+
+    .comparison-table td:nth-child(3) {
+      color: var(--green-dark);
+      font-weight: 900;
+    }
+
+    .boundary {
+      margin: 44px 0 70px;
+      padding: 28px;
+      border: 1px solid rgba(17, 24, 39, 0.14);
+      border-radius: 28px;
+      background: linear-gradient(135deg, #fff 0%, #f7efe3 100%);
+      color: #2f3a49;
+      box-shadow: var(--shadow);
+    }
+
+    .boundary h2 {
+      font-size: clamp(1.7rem, 2.6vw, 3rem);
+    }
+
+    footer {
+      padding: 28px 0 46px;
+      color: var(--muted);
+      border-top: 1px solid rgba(17, 24, 39, 0.1);
+    }
+
+    @media (max-width: 1100px) {
+      .hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .metric-grid,
+      .two-up {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .page {
+        width: min(100% - 24px, 1480px);
+      }
+
+      .hero {
+        padding-top: 26px;
+      }
+
+      h1 {
+        font-size: 3.2rem;
+      }
+
+      .metric-grid,
+      .two-up {
+        grid-template-columns: 1fr;
+      }
+
+      .section-title,
+      .figure-caption {
+        display: block;
+      }
+
+      .comparison-table {
+        font-size: 0.88rem;
+      }
+
+      .comparison-table th,
+      .comparison-table td {
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero" id="top">
+      <div class="hero-copy">
+        <span class="eyebrow">CARLA P2 adjacent cut-in diagnostic</span>
+        <h1>GUIDANCE vs No-GUIDANCE</h1>
+        <p class="hero-lead">
+          전방 cut-in 상황에서 GUIDANCE trajectory-prior 조건이 No-GUIDANCE baseline보다
+          ego 차량과 following vehicle string의 반응을 더 선제적이고 부드러운 방향으로 바꾸는지 비교합니다.
+        </p>
+        <div class="claim">
+          핵심 결과: 150 paired randomized CARLA trials에서 GUIDANCE는 TTC margin을 키우고,
+          TTC &lt; 5s 이벤트와 급가속/급감속 proxy를 줄이는 방향을 보였습니다.
+        </div>
+        <nav class="hero-actions" aria-label="Page sections">
+          <a class="pill" href="#event">Trial 000 영상</a>
+          <a class="pill" href="#metrics">핵심 지표</a>
+          <a class="pill" href="#figures">시각화 결과</a>
+          <a class="pill" href="#boundary">해석 범위</a>
+        </nav>
+      </div>
+
+      <article class="media-card" id="event">
+        <div class="media-head">
+          <span>Trial 000 · same event comparison</span>
+          <span>No-GUIDANCE / GUIDANCE</span>
+        </div>
+        <img class="hero-gif" src="assets/trial_000_no_guidance_vs_guidance.gif" alt="CARLA trial 000 side-by-side GIF comparing No-GUIDANCE and GUIDANCE conditions.">
+        <div class="media-caption">
+          동일한 cut-in event를 두 조건으로 재생한 full-event 요약 GIF입니다. 웹 전시를 위해 원본 GIF를 경량화했습니다.
+        </div>
+      </article>
+    </section>
+
+    <section class="section" id="metrics">
+      <div class="section-title">
+        <div>
+          <p class="section-kicker">150 paired trials</p>
+          <h2>핵심 지표 비교</h2>
+        </div>
+        <p class="section-note">
+          모든 값은 같은 randomized scenario parameter를 공유하는 No-GUIDANCE / GUIDANCE paired trial에서 계산했습니다.
+        </p>
+      </div>
+
+      <div class="metric-grid">
+        <div class="metric">
+          <span>Min TTC mean</span>
+          <strong>2.13s → 5.01s</strong>
+          <small>GUIDANCE 조건에서 평균 최소 TTC 증가</small>
+        </div>
+        <div class="metric">
+          <span>TTC &lt; 5s ratio</span>
+          <strong>0.0795 → 0.0038</strong>
+          <small>low-TTC event ratio 감소</small>
+        </div>
+        <div class="metric">
+          <span>Excessive acceleration</span>
+          <strong>294.27 → 247.49</strong>
+          <small>급가속 proxy 감소</small>
+        </div>
+        <div class="metric">
+          <span>Excessive deceleration</span>
+          <strong>70.65 → 43.03</strong>
+          <small>급감속 proxy 감소</small>
         </div>
       </div>
-    </header>
+    </section>
 
-    <main>
-      <section class="overview" aria-labelledby="overview-title">
-        <p class="section-kicker">Pipeline Overview</p>
-        <h2 id="overview-title">이 페이지가 보여주는 것</h2>
-        <div class="overview-grid">
-          <article>
-            <strong>Input</strong>
-            <span>단안 dashcam 입력 프레임</span>
-          </article>
-          <article>
-            <strong>Graph</strong>
-            <span>ego distance / confirmed edge gap / fallback distance</span>
-          </article>
-          <article>
-            <strong>Lane</strong>
-            <span>ego lane 차량 여부와 LC 후보 판단</span>
-          </article>
-          <article>
-            <strong>Output</strong>
-            <span>TGCA horizon prior와 overlay view</span>
-          </article>
+    <section class="section" id="figures">
+      <div class="section-title">
+        <div>
+          <p class="section-kicker">Visual evidence</p>
+          <h2>표와 그래프로 보는 결과</h2>
         </div>
-      </section>
+        <p class="section-note">
+          표는 전체 결과를 요약하고, 그래프는 지표별 차이와 paired-trial 안정성을 보여줍니다.
+        </p>
+      </div>
 
-      <section class="legend-panel" aria-labelledby="legend-title">
-        <p class="section-kicker">Visualization Legend</p>
-        <h2 id="legend-title">색상 의미 요약</h2>
-        <div class="legend-grid">
-          <article>
-            <h3>Relation graph</h3>
-            <ul class="legend compact">
-              <li><span class="swatch green"></span>Green solid: ego distance</li>
-              <li><span class="swatch cyan"></span>Cyan solid: confirmed edge gap</li>
-              <li><span class="swatch yellow"></span>Amber dashed: projected fallback distance</li>
-              <li><span class="swatch red"></span>Red: negative signed gap</li>
-            </ul>
-          </article>
-          <article>
-            <h3>Trajectory</h3>
-            <ul class="legend compact">
-              <li><span class="swatch blue"></span>Blue marker: Raw TGCA prediction</li>
-              <li><span class="swatch blue"></span>1s-5s: prediction horizon</li>
-            </ul>
-          </article>
-          <article>
-            <h3>Caution</h3>
-            <p>All distances and trajectories are priors, not GT or control.</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="stage" id="stage-1" data-stage="01">
-        <div class="stage-copy">
-          <span class="stage-number">01</span>
-          <h2>원본 이미지</h2>
-          <p>bbox, edge, trajectory가 없는 입력 frame입니다.</p>
-        </div>
-        <figure class="visual-card">
-          <button
-            class="image-button"
-            type="button"
-            data-image="./assets/01_original_image.png"
-            data-title="원본 이미지"
-            aria-label="원본 이미지 확대 보기"
-          >
-            <img
-              src="./assets/01_original_image.png"
-              alt="처리 전 원본 dashcam 프레임"
-              width="1280"
-              height="720"
-            />
-          </button>
-          <figcaption>Raw dashcam frame.</figcaption>
+      <div class="visual-stack">
+        <figure class="figure-card">
+          <img src="assets/05_summary_table.png" alt="Summary table comparing No-GUIDANCE and GUIDANCE across 150 paired CARLA trials.">
+          <figcaption class="figure-caption">
+            <strong>Summary table</strong>
+            <span>No-GUIDANCE baseline과 GUIDANCE condition의 핵심 지표를 직접 비교합니다.</span>
+          </figcaption>
         </figure>
-      </section>
 
-      <section class="stage" id="stage-2" data-stage="02">
-        <div class="stage-copy">
-          <span class="stage-number">02</span>
-          <h2>객체 bbox</h2>
-          <p>초록 bbox는 lead vehicle, 흰 bbox는 일반 vehicle입니다.</p>
-        </div>
-        <figure class="visual-card">
-          <button
-            class="image-button"
-            type="button"
-            data-image="./assets/02_original_with_detected_bbox.png"
-            data-title="탐지된 차량 bbox"
-            aria-label="탐지된 차량 bbox 이미지 확대 보기"
-          >
-            <img
-              src="./assets/02_original_with_detected_bbox.png"
-              alt="전방 차량 bbox가 표시된 dashcam 프레임"
-              loading="lazy"
-              width="1280"
-              height="720"
-            />
-          </button>
-          <figcaption>Detected vehicle boxes.</figcaption>
+        <figure class="figure-card">
+          <img src="assets/01_core_metric_comparison.png" alt="Bar charts comparing core metrics between No-GUIDANCE and GUIDANCE.">
+          <figcaption class="figure-caption">
+            <strong>Core metric comparison</strong>
+            <span>TTC, 급가속/급감속, jerk, delay proxy의 평균 차이를 시각화했습니다.</span>
+          </figcaption>
         </figure>
-      </section>
 
-      <section class="stage" id="stage-3" data-stage="03">
-        <div class="stage-copy">
-          <span class="stage-number">03</span>
-          <h2>ego lane</h2>
-          <p>ego-lane 차량/LC 후보를 temporal KG에 보냅니다.</p>
-          <ul class="legend">
-            <li><span class="swatch cyan"></span>청록 실선: ego lane boundary</li>
-            <li><span class="swatch cyan"></span>청록 mask: ego lane area</li>
-            <li>KG cue: in_ego_lane / LC_into_ego_lane</li>
-          </ul>
+        <div class="two-up">
+          <figure class="figure-card">
+            <img src="assets/02_relative_change_summary.png" alt="Relative change summary showing favorable GUIDANCE-side changes.">
+            <figcaption class="figure-caption">
+              <strong>Relative change</strong>
+              <span>TTC 개선 신호가 가장 강하고, comfort/efficiency proxy는 보조적 개선으로 해석합니다.</span>
+            </figcaption>
+          </figure>
+
+          <figure class="figure-card">
+            <img src="assets/03_paired_trial_robustness.png" alt="Paired trial robustness chart for GUIDANCE versus No-GUIDANCE.">
+            <figcaption class="figure-caption">
+              <strong>Paired robustness</strong>
+              <span>같은 trial에서 GUIDANCE가 더 좋은 방향을 보인 횟수를 정리했습니다.</span>
+            </figcaption>
+          </figure>
         </div>
-        <figure class="visual-card">
-          <button
-            class="image-button"
-            type="button"
-            data-image="./assets/06_lane_detection_example.png"
-            data-title="Ego lane detection"
-            aria-label="Ego lane detection 이미지 확대 보기"
-          >
-            <img
-              src="./assets/06_lane_detection_example.png"
-              alt="ego lane boundary와 ego lane mask가 표시된 lane detection 시각화"
-              loading="lazy"
-              width="1280"
-              height="720"
-            />
-          </button>
-          <figcaption>Lane context feeds the temporal ontology KG.</figcaption>
-        </figure>
-      </section>
 
-      <section class="stage" id="stage-4" data-stage="04">
-        <div class="stage-copy">
-          <span class="stage-number">04</span>
-          <h2>edge + pseudo-3D</h2>
-          <p>relation edge를 2D와 pseudo-3D로 봅니다.</p>
-          <ul class="legend">
-            <li><span class="swatch green"></span>초록: ego distance</li>
-            <li><span class="swatch cyan"></span>청록: confirmed edge gap</li>
-            <li><span class="swatch yellow"></span>노랑 점선: fallback distance</li>
-            <li><span class="swatch red"></span>빨강: negative gap</li>
-            <li><span class="swatch dark"></span>오른쪽: pseudo-3D context</li>
-          </ul>
+        <figure class="figure-card">
+          <img src="assets/04_vehicle_order_ttc.png" alt="Vehicle-order TTC comparison between No-GUIDANCE and GUIDANCE.">
+          <figcaption class="figure-caption">
+            <strong>Vehicle-order TTC</strong>
+            <span>ego 차량과 첫 번째 following vehicle에서 GUIDANCE 효과가 가장 크게 나타납니다.</span>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title">
+        <div>
+          <p class="section-kicker">Main reading</p>
+          <h2>분석 결과</h2>
         </div>
-        <figure class="visual-card">
-          <button
-            class="image-button"
-            type="button"
-            data-image="./assets/03_bbox_edges_and_3d.png"
-            data-title="bbox, edge graph, pseudo-3D context"
-            aria-label="bbox, edge graph, pseudo-3D context 이미지 확대 보기"
-          >
-            <img
-              src="./assets/03_bbox_edges_and_3d.png"
-              alt="bbox, edge gap, fallback distance, pseudo-3D context 시각화"
-              loading="lazy"
-              width="2568"
-              height="720"
-            />
-          </button>
-          <figcaption>Edge colors describe relation cues.</figcaption>
-        </figure>
-      </section>
+      </div>
 
-      <section class="stage" id="stage-5" data-stage="05">
-        <div class="stage-copy">
-          <span class="stage-number">05</span>
-          <h2>TGCA 기본 horizon</h2>
-          <p>05 이미지는 1s-5s Raw TGCA horizon prior입니다.</p>
-          <ul class="legend">
-            <li><span class="swatch blue"></span>파랑: Raw TGCA horizon</li>
-            <li>1s-5s: prediction step</li>
-            <li>정답/제어가 아닌 prior</li>
-          </ul>
-        </div>
-        <figure class="visual-card">
-          <button
-            class="image-button"
-            type="button"
-            data-image="./assets/05_ego_trajectory_1s_to_5s_horizon.png"
-            data-title="1s-5s TGCA ego trajectory horizon"
-            aria-label="1s-5s TGCA ego trajectory horizon 이미지 확대 보기"
-          >
-            <img
-              src="./assets/05_ego_trajectory_1s_to_5s_horizon.png"
-              alt="파란 Raw TGCA prediction horizon과 1s-5s label 시각화"
-              loading="lazy"
-              width="2568"
-              height="720"
-            />
-          </button>
-          <figcaption>Basic TGCA horizon.</figcaption>
-        </figure>
-      </section>
+      <table class="comparison-table" aria-label="No-GUIDANCE and GUIDANCE metric comparison">
+        <thead>
+          <tr>
+            <th>Metric</th>
+            <th>No-GUIDANCE</th>
+            <th>GUIDANCE</th>
+            <th>Reading</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Min TTC mean</td>
+            <td>2.1347 s</td>
+            <td>5.0056 s</td>
+            <td>GUIDANCE 조건에서 전방 위험 접근에 대한 시간 여유가 증가했습니다.</td>
+          </tr>
+          <tr>
+            <td>TTC &lt; 5s ratio</td>
+            <td>0.0795</td>
+            <td>0.0038</td>
+            <td>low-TTC 이벤트가 크게 감소했습니다.</td>
+          </tr>
+          <tr>
+            <td>Excessive acceleration</td>
+            <td>294.27</td>
+            <td>247.49</td>
+            <td>급가속 proxy가 감소했습니다.</td>
+          </tr>
+          <tr>
+            <td>Excessive deceleration</td>
+            <td>70.65</td>
+            <td>43.03</td>
+            <td>급감속 proxy가 감소했습니다.</td>
+          </tr>
+          <tr>
+            <td>Mean absolute jerk</td>
+            <td>15.02</td>
+            <td>14.36</td>
+            <td>jerk는 완만하게 감소했습니다.</td>
+          </tr>
+          <tr>
+            <td>Delay proxy</td>
+            <td>8.2644</td>
+            <td>8.1841</td>
+            <td>traffic efficiency proxy는 소폭 개선 방향을 보였습니다.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
 
-      <section class="stage final" id="stage-6" data-stage="06">
-        <div class="stage-copy">
-          <span class="stage-number">06</span>
-          <h2>TGCA overlay view</h2>
-          <p>05-1 이미지는 같은 horizon을 overlay로 강조합니다.</p>
-          <ul class="legend">
-            <li><span class="swatch blue"></span>파랑: Raw TGCA horizon</li>
-            <li>Overlay: marker 가독성 강조</li>
-            <li>validated future label이 아닌 prior</li>
-          </ul>
-          <div class="time-strip" aria-label="horizon label">
-            <span>1s</span><span>2s</span><span>3s</span><span>4s</span><span>5s</span>
-          </div>
-        </div>
-        <figure class="visual-card featured">
-          <button
-            class="image-button"
-            type="button"
-            data-image="./assets/05-1_ego_trajectory_1s_to_5s_horizon_overlay.png"
-            data-title="Overlay-emphasized TGCA ego trajectory horizon"
-            aria-label="Overlay-emphasized TGCA ego trajectory horizon 이미지 확대 보기"
-          >
-            <img
-              src="./assets/05-1_ego_trajectory_1s_to_5s_horizon_overlay.png"
-              alt="overlay로 강조된 파란 Raw TGCA prediction horizon 시각화"
-              loading="lazy"
-              width="2568"
-              height="720"
-            />
-          </button>
-          <figcaption>Overlay-emphasized TGCA horizon.</figcaption>
-        </figure>
-      </section>
+    <section class="boundary" id="boundary">
+      <p class="section-kicker">Claim boundary</p>
+      <h2>해석 범위</h2>
+      <p>
+        이 페이지의 결과는 controlled CARLA simulation diagnostic입니다.
+        GUIDANCE가 이 P2 adjacent cut-in scenario에서 No-GUIDANCE보다 더 큰 TTC margin과 낮은 harsh-driving proxy를 보였다는
+        시뮬레이션 기반 근거를 제공합니다.
+      </p>
+      <p>
+        다만 이것은 아직 실제 차량 제어 성능 인증이나 모든 주행 상황에 대한 일반화 검증은 아닙니다.
+        이후 lead sudden braking, cut-out reveal, dense traffic string, curved road, visibility stress scenario까지 확장해야 합니다.
+      </p>
+    </section>
+  </main>
 
-      <section class="takeaway" aria-labelledby="takeaway-title">
-        <p class="section-kicker">Takeaway</p>
-        <h2 id="takeaway-title">전방 객체 맥락에서 해석 가능한 ego trajectory prior로</h2>
-        <p>bbox, lane context, relation edge, TGCA horizon을 temporal ontology KG cue로 연결합니다. 결과는 prior이며 정답/제어가 아닙니다.</p>
-      </section>
-    </main>
-
-    <footer class="footer">
-      <a href="#top">맨 위로 이동</a>
-      <p>Hyunsik Min · Affiliation: SAIL, Soonchunhyang University · Email: minun001@sch.ac.kr · 석사과정</p>
-    </footer>
-
-    <dialog class="lightbox" aria-labelledby="lightbox-title">
-      <button class="close-button" type="button" aria-label="닫기">닫기</button>
-      <h3 id="lightbox-title"></h3>
-      <img alt="" />
-    </dialog>
-
-    <script src="./app.js"></script>
-  </body>
+  <footer class="page">
+    <strong>Hyunsik Min</strong> · SAIL, Soonchunhyang University · minun001@sch.ac.kr
+  </footer>
+</body>
 </html>
