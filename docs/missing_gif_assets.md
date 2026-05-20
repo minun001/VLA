@@ -1,21 +1,27 @@
 # Missing GIF Assets Checklist
 
-The current repository contains usable side-by-side CARLA GIFs, but they are named generically and do not encode final scenario provenance.
+## Status
 
-For stronger paper/demo traceability, generate and add scenario-labeled GIFs such as:
+The two core scenario-labeled GIF assets for the public final comparison page have been generated and are now available:
 
 - `assets/ramp_merge_trial_000_side_by_side.gif`
-  - Shows No-GUIDANCE vs GUIDANCE for a Ramp merge event from the final 150-trial study.
-  - Should include enough frames to show pre-merge approach, merge/cut-in, ego response, and post-event gap stabilization.
-
-- `assets/ramp_merge_trial_001_side_by_side.gif`
-  - Additional Ramp merge event with different initial gap/speed parameters.
+  - Source run: `C:\Users\user\Desktop\VLA\main\CALAR\02_arterial_motorway\arterial_ramp_merge\runs\web_gif_ramp_merge_trial_000_20260521`
+  - Scenario case: `p10_ramp_merge`
+  - Trial: `trial_000`
+  - Purpose: side-by-side No-GUIDANCE vs GUIDANCE Ramp merge visualization.
 
 - `assets/speed_gap_stress_trial_000_side_by_side.gif`
-  - Shows No-GUIDANCE vs GUIDANCE under relative-speed closing risk.
-  - Should show No-GUIDANCE late reaction and GUIDANCE proactive gap creation.
+  - Source run: `C:\Users\user\Desktop\VLA\main\CALAR\02_arterial_motorway\arterial_speed_gap_stress\runs\web_gif_speed_gap_stress_trial_000_20260521`
+  - Scenario case: `p7_speed_gap_stress`
+  - Trial: `trial_000`
+  - Purpose: side-by-side No-GUIDANCE vs GUIDANCE Speed-gap stress visualization.
 
+## Optional Future Assets
+
+If the page later needs more visual examples, generate additional scenario-labeled GIFs instead of using generic filenames:
+
+- `assets/ramp_merge_trial_001_side_by_side.gif`
 - `assets/speed_gap_stress_trial_001_side_by_side.gif`
-  - Additional Speed-gap stress event with different initial speed/gap parameters.
+- case-labeled GIFs for other CALAR scenario families if they become main-page evidence.
 
-Until these are generated, the page uses existing non-broken `carla_event_a-d.gif` assets and keeps the claim boundary limited to controlled CARLA simulation diagnostics.
+The current public page should not reference old generic `carla_event_*`, `carla_phase_*`, or `carla_trial_*` GIFs.

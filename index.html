@@ -729,7 +729,7 @@
                 <span>Ramp merge simulation GIF</span>
                 <span>No-GUIDANCE / GUIDANCE side-by-side</span>
               </figcaption>
-              <img src="assets/carla_event_a.gif" alt="Side-by-side CARLA visualization for Ramp merge No-GUIDANCE and GUIDANCE comparison.">
+              <img src="assets/ramp_merge_trial_000_side_by_side.gif" alt="Case-labeled Ramp merge trial 000 side-by-side CARLA visualization comparing No-GUIDANCE and GUIDANCE.">
             </figure>
           </div>
           <div class="scenario-caption">
@@ -749,7 +749,7 @@
                 <span>Speed-gap stress simulation GIF</span>
                 <span>No-GUIDANCE / GUIDANCE side-by-side</span>
               </figcaption>
-              <img src="assets/carla_event_c.gif" alt="Side-by-side CARLA visualization for Speed-gap stress No-GUIDANCE and GUIDANCE comparison." loading="lazy">
+              <img src="assets/speed_gap_stress_trial_000_side_by_side.gif" alt="Case-labeled Speed-gap stress trial 000 side-by-side CARLA visualization comparing No-GUIDANCE and GUIDANCE." loading="lazy">
             </figure>
           </div>
           <div class="scenario-caption">
@@ -760,7 +760,8 @@
       </div>
 
       <div class="asset-note">
-        Asset note: 현재 GIF 파일명은 `carla_event_a-d.gif`로 generic합니다. scenario-labeled final GIF가 필요하면 `docs/missing_gif_assets.md`의 체크리스트를 기준으로 추가 생성하면 됩니다.
+        GIF provenance: Ramp merge는 `p10_ramp_merge`, Speed-gap stress는 `p7_speed_gap_stress`를
+        final case 설정 기반 `trial_000`, `record_gif=true`로 다시 실행해 생성한 side-by-side 영상입니다.
       </div>
     </section>
 
@@ -818,27 +819,9 @@
         </article>
       </div>
 
-      <div class="example-strip" aria-label="Representative simulation examples">
-        <figure class="example-card">
-          <img src="assets/carla_event_a.gif" alt="Representative CARLA simulation example for No-GUIDANCE and GUIDANCE comparison.">
-          <figcaption>대표 시뮬레이션 예시 A: 두 조건의 반응 시점 비교</figcaption>
-        </figure>
-        <figure class="example-card">
-          <img src="assets/carla_event_b.gif" alt="Second representative CARLA simulation example for No-GUIDANCE and GUIDANCE comparison." loading="lazy">
-          <figcaption>대표 시뮬레이션 예시 B: gap 형성 과정 확인</figcaption>
-        </figure>
-        <figure class="example-card">
-          <img src="assets/carla_event_c.gif" alt="Third representative CARLA simulation example for No-GUIDANCE and GUIDANCE comparison." loading="lazy">
-          <figcaption>대표 시뮬레이션 예시 C: traffic response 비교</figcaption>
-        </figure>
-        <figure class="example-card">
-          <img src="assets/carla_event_d.gif" alt="Fourth representative CARLA simulation example for No-GUIDANCE and GUIDANCE comparison." loading="lazy">
-          <figcaption>대표 시뮬레이션 예시 D: 위험 접근 구간 비교</figcaption>
-        </figure>
-      </div>
-
       <div class="asset-note">
-        현재 공개 asset은 대표 GIF 4개입니다. case별 provenance가 명확한 GIF를 추가하면 위 12개 case 각각에 대응하는 사례 카드로 확장할 수 있습니다.
+        영상 asset은 위 두 핵심 case의 case-labeled GIF만 사용합니다. 다른 10개 case는 metric/config 중심으로 정리되어 있으며,
+        웹 전시용 영상이 필요하면 같은 방식으로 case-labeled GIF를 추가 생성할 수 있습니다.
       </div>
     </section>
 

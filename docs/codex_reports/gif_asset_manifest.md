@@ -1,17 +1,13 @@
 # GIF Asset Manifest
 
-## Search result
+## Active Public Page GIFs
 
-The VLA page currently has four existing GIF files under `assets/`:
-
-| Asset path | Scenario use | Recommended section | Why it is usable | Caption / alt guidance |
+| Asset path | Scenario use | Source run | Dimensions / frames | Why it is appropriate |
 |---|---|---|---|---|
-| `assets/carla_event_a.gif` | Ramp merge visual sample | Ramp merge block | Existing side-by-side CARLA event GIF; no broken link risk. | Caption should connect to Ramp merge metrics but should not claim real-world validation. Alt: `Side-by-side CARLA visualization for No-GUIDANCE and GUIDANCE comparison.` |
-| `assets/carla_event_b.gif` | Ramp merge additional sample | Ramp merge block | Existing side-by-side CARLA event GIF; can provide a second visual example. | Alt: `Additional side-by-side CARLA visualization for Ramp merge comparison.` |
-| `assets/carla_event_c.gif` | Speed-gap stress visual sample | Speed-gap stress block | Existing side-by-side CARLA event GIF; no broken link risk. | Alt: `Side-by-side CARLA visualization for Speed-gap stress comparison.` |
-| `assets/carla_event_d.gif` | Speed-gap stress additional sample | Speed-gap stress block | Existing side-by-side CARLA event GIF; can provide a second visual example. | Alt: `Additional side-by-side CARLA visualization for Speed-gap stress comparison.` |
+| `assets/ramp_merge_trial_000_side_by_side.gif` | Ramp merge | `C:\Users\user\Desktop\VLA\main\CALAR\02_arterial_motorway\arterial_ramp_merge\runs\web_gif_ramp_merge_trial_000_20260521` | 1920x540 / 48 frames | Generated from `p10_ramp_merge`, `trial_000`, `record_gif=true`; shows side-by-side No-GUIDANCE vs GUIDANCE for the Ramp merge case. |
+| `assets/speed_gap_stress_trial_000_side_by_side.gif` | Speed-gap stress | `C:\Users\user\Desktop\VLA\main\CALAR\02_arterial_motorway\arterial_speed_gap_stress\runs\web_gif_speed_gap_stress_trial_000_20260521` | 1920x540 / 44 frames | Generated from `p7_speed_gap_stress`, `trial_000`, `record_gif=true`; shows side-by-side No-GUIDANCE vs GUIDANCE for the Speed-gap stress case. |
 
-## Recommended Korean captions
+## Korean Captions
 
 Ramp merge:
 
@@ -21,6 +17,15 @@ Speed-gap stress:
 
 > Speed-gap stress 조건에서 No-GUIDANCE는 속도 차이로 인해 closing risk가 커졌고, TTC < 5s ratio 0.484와 collision trial rate 0.853을 보였습니다. GUIDANCE는 TTC < 5s ratio와 collision trial rate를 모두 0으로 낮추며 위험 구간을 제거했습니다.
 
-## Uncertainty
+## Retired Generic GIFs
 
-The existing GIF filenames are generic (`carla_event_a-d.gif`) and do not encode the final scenario name or trial ID. They are safe to reference because they exist, but a scenario-labeled GIF export would make the page more auditable.
+The previous generic GIF assets were removed from the public website asset folder to avoid scenario ambiguity:
+
+- `assets/carla_event_a.gif`
+- `assets/carla_event_b.gif`
+- `assets/carla_event_c.gif`
+- `assets/carla_event_d.gif`
+- `assets/carla_phase_*.gif`
+- `assets/carla_trial_*.gif`
+
+Use only scenario-labeled GIF filenames for public comparison evidence.

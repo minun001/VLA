@@ -5,7 +5,7 @@
 - Repository: `C:\Users\user\VLA-project-deploy`
 - Framework: static HTML/CSS/JS GitHub Pages project site.
 - VLA page implementation: static standalone HTML at `index.html` with inline CSS.
-- No `package.json` or Jekyll build step is required for this project repo. The site is served from the `main` branch root with `.nojekyll`.
+- The site is served from the `main` branch root with `.nojekyll`.
 
 ## Entry point file(s)
 
@@ -16,25 +16,23 @@
 
 - VLA assets: `assets/`
 
-## Current VLA page sections before update
+## Current VLA page sections
 
-- Hero section for previous `CARLA P2 adjacent cut-in diagnostic`.
-- Four side-by-side CARLA GIF cards.
-- Previous 150 paired-trial metric cards for adjacent cut-in.
-- Static PNG figure section using old comparison charts.
-- Previous metric table.
-- Claim boundary section for adjacent cut-in.
+- Hero section for final 150-trial No-GUIDANCE vs GUIDANCE comparison.
+- Scenario visuals for Ramp merge and Speed-gap stress.
+- Simulation coverage summary with scenario families and cases.
+- Final metric table.
+- CSS-only metric visualizations.
+- Claim boundary section.
 
-## Existing GIF/image asset inventory
+## Active GIF/image asset inventory
 
-VLA-specific GIFs:
+VLA-specific active GIFs:
 
-- `assets/carla_event_a.gif`
-- `assets/carla_event_b.gif`
-- `assets/carla_event_c.gif`
-- `assets/carla_event_d.gif`
+- `assets/ramp_merge_trial_000_side_by_side.gif`
+- `assets/speed_gap_stress_trial_000_side_by_side.gif`
 
-VLA-specific PNGs:
+VLA-specific PNGs retained for archive / non-main use:
 
 - `assets/01_core_metric_comparison.png`
 - `assets/02_relative_change_summary.png`
@@ -42,26 +40,20 @@ VLA-specific PNGs:
 - `assets/04_vehicle_order_ttc.png`
 - `assets/05_summary_table.png`
 
-Note: existing GIF names are generic and do not encode whether the visual is Ramp merge or Speed-gap stress.
+## Recommended file changes completed
 
-## Recommended file changes
-
-- Replace `index.html` content with the final 150-trial Ramp merge / Speed-gap stress comparison.
-- Keep existing `assets/carla_event_a-d.gif` references only where paths exist.
-- Do not reuse old metric PNGs as final evidence because they correspond to the previous adjacent cut-in result.
-- Add/update `AGENTS.md` with VLA website rules.
-- Add subagent reports under `docs/codex_reports/`.
-- Add `docs/missing_gif_assets.md` to document scenario-labeled GIF gaps.
+- Replaced generic `carla_event_*` page references with case-labeled GIFs.
+- Removed old generic GIF assets from the website asset folder.
+- Updated reports under `docs/codex_reports/`.
+- Updated `docs/missing_gif_assets.md` to mark the two core GIFs as resolved.
 
 ## Build/test/lint commands
 
-- No package/build command is required.
+- No package, Gemfile, or Makefile build command was discovered.
+- Static validation command used: Python HTML asset and metric check.
 - Optional local preview: `powershell -ExecutionPolicy Bypass -File .\serve.ps1`
-
-No Node/Vite/React commands were discovered.
 
 ## Risks or uncertainties
 
-- Existing GIFs are valid files, but their filenames do not prove scenario-specific provenance.
-- Old PNG metric charts should not be shown as the final Ramp merge / Speed-gap stress evidence unless regenerated with final source-of-truth data.
-- The project-site repo is dedicated to the VLA page, but changes should still remain scoped to public page content, docs, and existing assets.
+- The current public page includes only two case-labeled visual examples. Other CALAR cases are documented by metric/config structure, not by public GIF footage.
+- The result remains controlled CARLA simulation diagnostic evidence, not real-world safety certification.

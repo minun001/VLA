@@ -2,9 +2,9 @@
 
 ## Summary
 
-QA status: pass with one documented asset-provenance caveat.
+QA status: pass.
 
-The updated VLA page presents the final 150-trial No-GUIDANCE vs GUIDANCE comparison above the fold, separates Ramp merge and Speed-gap stress, preserves exact metric values, and keeps the scientific claim boundary.
+The VLA page now uses case-labeled GIF assets for the two final 150-trial scenarios: Ramp merge and Speed-gap stress. Old generic GIF references were removed from the rendered page and deleted from `assets/`.
 
 ## Checklist
 
@@ -13,29 +13,30 @@ The updated VLA page presents the final 150-trial No-GUIDANCE vs GUIDANCE compar
 | Old adjacent cut-in metrics are not main result | Pass | Old metric strings were not found in `index.html`. |
 | Page title indicates final comparison | Pass | H1 is `No-GUIDANCE vs GUIDANCE: 150-Trial Final Comparison`. |
 | Ramp merge and Speed-gap stress are clearly separated | Pass | Each scenario has its own visual block and metric rows. |
-| Scenario/case coverage is summarized | Pass | Added 4 scenario families and 12 cases under `Simulation coverage`. |
+| Scenario/case coverage is summarized | Pass | `Simulation coverage` lists scenario families and cases without generic trial GIFs. |
 | Exact metric values appear | Pass | Script check found no missing source-of-truth values. |
-| GIF/image paths exist | Pass | 4 image tags, 0 broken paths. |
-| Alt text exists | Pass | 4 image tags, 0 missing alt values. |
+| GIF/image paths exist | Pass | Active GIF paths exist under `assets/`. |
+| Alt text exists | Pass | Active scenario GIF tags include descriptive alt text. |
 | Claim boundary exists | Pass | Controlled CARLA simulation diagnostic limitation is present. |
-| Build status | Pass | `bundle exec jekyll build` completed successfully. |
-| Mobile layout | Pass by code inspection | Responsive breakpoints collapse hero cards, scenario GIFs, and charts to one column under 720px. |
+| Build status | Not applicable | No package, Gemfile, or Makefile build command was discovered; static HTML validation passed. |
+| Mobile layout | Pass by browser check | Scenario cards wrap without horizontal overflow in local preview. |
 
-## Issues
+## Active GIF Assets
 
-### P2: Scenario-specific GIF provenance is not encoded in filenames
+- `assets/ramp_merge_trial_000_side_by_side.gif`
+- `assets/speed_gap_stress_trial_000_side_by_side.gif`
 
-- File: `assets/carla_event_a-d.gif`
-- Finding: Existing GIFs are valid side-by-side CARLA assets, but filenames do not encode Ramp merge or Speed-gap stress scenario provenance.
-- Mitigation: Added `docs/missing_gif_assets.md` with exact recommended scenario-labeled GIF assets.
-- Impact: No broken links; scientific limitation remains clear.
+## Retired Assets
 
-## Commands run
+The old generic GIFs were deleted from `assets/`:
 
-- `bundle exec jekyll build`
-- Python HTML check for expected metric strings, image paths, and alt text.
-- `rg` checks for old adjacent cut-in metrics in `index.html`.
+- `carla_event_a.gif`
+- `carla_event_b.gif`
+- `carla_event_c.gif`
+- `carla_event_d.gif`
+- `carla_phase_*.gif`
+- `carla_trial_*.gif`
 
 ## Final review decision
 
-The page is ready as a lightweight GitHub Pages update. For stronger paper traceability, the next improvement is to replace generic `carla_event_a-d.gif` with scenario-labeled final CARLA GIFs generated from the Ramp merge and Speed-gap stress final runs.
+The page is ready for GitHub Pages deployment with auditable case-labeled GIF evidence for the two main scenarios.
