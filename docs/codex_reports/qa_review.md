@@ -26,6 +26,12 @@ The VLA page now uses case-labeled GIF assets for the two final 150-trial scenar
 - `assets/ramp_merge_trial_000_side_by_side.gif`
 - `assets/speed_gap_stress_trial_000_side_by_side.gif`
 
+## Visual Distinctness Check
+
+- Ramp merge uses the original `p10_ramp_merge` representative trial.
+- Speed-gap stress was replaced with a distinct `p7_speed_gap_stress` representative trial from `web_gif_speed_gap_stress_trial_000_distinct_20260521`.
+- Frame-level audit confirmed the two GIF assets are not identical and the Speed-gap stress GIF shows a closer visible vehicle / stronger closing-risk setup than the Ramp merge GIF.
+
 ## Retired Assets
 
 The old generic GIFs were deleted from `assets/`:

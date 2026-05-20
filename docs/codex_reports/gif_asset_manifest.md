@@ -5,7 +5,7 @@
 | Asset path | Scenario use | Source run | Dimensions / frames | Why it is appropriate |
 |---|---|---|---|---|
 | `assets/ramp_merge_trial_000_side_by_side.gif` | Ramp merge | `C:\Users\user\Desktop\VLA\main\CALAR\02_arterial_motorway\arterial_ramp_merge\runs\web_gif_ramp_merge_trial_000_20260521` | 1920x540 / 48 frames | Generated from `p10_ramp_merge`, `trial_000`, `record_gif=true`; shows side-by-side No-GUIDANCE vs GUIDANCE for the Ramp merge case. |
-| `assets/speed_gap_stress_trial_000_side_by_side.gif` | Speed-gap stress | `C:\Users\user\Desktop\VLA\main\CALAR\02_arterial_motorway\arterial_speed_gap_stress\runs\web_gif_speed_gap_stress_trial_000_20260521` | 1920x540 / 44 frames | Generated from `p7_speed_gap_stress`, `trial_000`, `record_gif=true`; shows side-by-side No-GUIDANCE vs GUIDANCE for the Speed-gap stress case. |
+| `assets/speed_gap_stress_trial_000_side_by_side.gif` | Speed-gap stress | `C:\Users\user\Desktop\VLA\main\CALAR\02_arterial_motorway\arterial_speed_gap_stress\runs\web_gif_speed_gap_stress_trial_000_distinct_20260521` | 1920x540 / 48 frames | Generated from `p7_speed_gap_stress`, `trial_000`, `record_gif=true`; selected because the closer visible vehicle and relative-speed/gap pressure are visually distinct from the Ramp merge GIF. |
 
 ## Korean Captions
 

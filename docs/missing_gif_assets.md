@@ -11,10 +11,10 @@ The two core scenario-labeled GIF assets for the public final comparison page ha
   - Purpose: side-by-side No-GUIDANCE vs GUIDANCE Ramp merge visualization.
 
 - `assets/speed_gap_stress_trial_000_side_by_side.gif`
-  - Source run: `C:\Users\user\Desktop\VLA\main\CALAR\02_arterial_motorway\arterial_speed_gap_stress\runs\web_gif_speed_gap_stress_trial_000_20260521`
+  - Source run: `C:\Users\user\Desktop\VLA\main\CALAR\02_arterial_motorway\arterial_speed_gap_stress\runs\web_gif_speed_gap_stress_trial_000_distinct_20260521`
   - Scenario case: `p7_speed_gap_stress`
   - Trial: `trial_000`
-  - Purpose: side-by-side No-GUIDANCE vs GUIDANCE Speed-gap stress visualization.
+  - Purpose: side-by-side No-GUIDANCE vs GUIDANCE Speed-gap stress visualization with a closer visible front/adjacent vehicle and stronger relative-speed/gap stress.
 
 ## Optional Future Assets
 
