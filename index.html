@@ -367,6 +367,9 @@
 
     .scenario-card {
       overflow: hidden;
+      width: min(1920px, calc(100vw - 44px));
+      margin-left: 50%;
+      transform: translateX(-50%);
     }
 
     .scenario-head {
@@ -390,6 +393,7 @@
       display: grid;
       grid-template-columns: 1fr;
       gap: 0;
+      overflow: hidden;
       background: #0b1118;
     }
 
@@ -417,6 +421,9 @@
       display: block;
       width: 100%;
       height: auto;
+      max-height: none;
+      object-fit: contain;
+      object-position: center center;
       background: #111827;
     }
 
@@ -617,6 +624,10 @@
     @media (max-width: 720px) {
       .page {
         width: min(100% - 24px, 1500px);
+      }
+
+      .scenario-card {
+        width: calc(100vw - 24px);
       }
 
       .hero {
