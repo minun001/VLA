@@ -1,22 +1,26 @@
 <!doctype html>
 <html lang="ko">
 <head>
+  <!-- deploy-refresh: 2026-05-20T20:13:00+09:00 -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>VLA</title>
-  <meta name="description" content="GUIDANCE vs No-GUIDANCE CARLA cut-in simulation diagnostic page.">
+  <meta name="description" content="No-GUIDANCE vs GUIDANCE final 150-trial controlled CARLA simulation comparison for Ramp merge and Speed-gap stress.">
   <style>
     :root {
-      --bg: #f5f7f3;
-      --ink: #111827;
-      --muted: #596273;
-      --line: rgba(17, 24, 39, 0.13);
-      --card: rgba(255, 255, 255, 0.9);
-      --green: #0f9f6e;
-      --green-dark: #057a55;
-      --slate: #667085;
-      --warm: #f4ead7;
-      --shadow: 0 22px 70px rgba(15, 23, 42, 0.12);
+      --bg: #f4f7f2;
+      --ink: #101828;
+      --muted: #5d6678;
+      --line: rgba(16, 24, 40, 0.13);
+      --card: rgba(255, 255, 255, 0.92);
+      --guidance: #0f9f6e;
+      --guidance-dark: #047857;
+      --baseline: #ef4444;
+      --baseline-dark: #b42318;
+      --amber: #f59e0b;
+      --blue: #2563eb;
+      --cream: #fff7ed;
+      --shadow: 0 24px 72px rgba(15, 23, 42, 0.12);
       --radius: 28px;
     }
 
@@ -32,9 +36,9 @@
       margin: 0;
       color: var(--ink);
       background:
-        radial-gradient(circle at 12% 8%, rgba(15, 159, 110, 0.16), transparent 30%),
-        radial-gradient(circle at 88% 12%, rgba(244, 234, 215, 0.95), transparent 34%),
-        linear-gradient(180deg, #fbfaf4 0%, var(--bg) 45%, #eef4ef 100%);
+        radial-gradient(circle at 8% 4%, rgba(15, 159, 110, 0.2), transparent 30%),
+        radial-gradient(circle at 88% 8%, rgba(245, 158, 11, 0.18), transparent 32%),
+        linear-gradient(180deg, #fbfbf4 0%, var(--bg) 46%, #edf4ee 100%);
       font-family: "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo", "Segoe UI", sans-serif;
       line-height: 1.65;
       overflow-x: hidden;
@@ -45,21 +49,16 @@
     }
 
     .page {
-      width: min(1520px, calc(100% - 44px));
+      width: min(1500px, calc(100% - 44px));
       margin: 0 auto;
     }
 
     .hero {
-      min-height: auto;
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 28px;
+      grid-template-columns: minmax(0, 1.04fr) minmax(420px, 0.96fr);
+      gap: 32px;
       align-items: center;
-      padding: 46px 0 34px;
-    }
-
-    .hero-copy {
-      padding: 22px 0;
+      padding: 48px 0 34px;
     }
 
     .eyebrow {
@@ -67,12 +66,12 @@
       align-items: center;
       gap: 10px;
       padding: 9px 14px;
-      border: 1px solid rgba(15, 159, 110, 0.26);
+      border: 1px solid rgba(15, 159, 110, 0.28);
       border-radius: 999px;
-      color: var(--green-dark);
-      background: rgba(255, 255, 255, 0.62);
-      font-size: 0.92rem;
-      font-weight: 800;
+      color: var(--guidance-dark);
+      background: rgba(255, 255, 255, 0.7);
+      font-size: 0.9rem;
+      font-weight: 900;
       letter-spacing: 0.02em;
     }
 
@@ -80,38 +79,52 @@
       content: "";
       width: 9px;
       height: 9px;
-      border-radius: 50%;
-      background: var(--green);
+      border-radius: 999px;
+      background: var(--guidance);
       box-shadow: 0 0 0 7px rgba(15, 159, 110, 0.14);
     }
 
     h1 {
-      margin: 26px 0 18px;
-      font-size: clamp(3.4rem, 5vw, 5.2rem);
-      line-height: 0.94;
+      margin: 24px 0 18px;
+      max-width: 980px;
+      font-size: clamp(2.85rem, 5.1vw, 5.7rem);
+      line-height: 0.96;
       letter-spacing: -0.075em;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(2rem, 3.5vw, 3.9rem);
+      line-height: 1.02;
+      letter-spacing: -0.06em;
+    }
+
+    h3 {
+      margin: 0;
+      font-size: clamp(1.42rem, 2vw, 2.1rem);
+      line-height: 1.12;
+      letter-spacing: -0.04em;
     }
 
     .hero-lead {
       max-width: 900px;
-      color: #2e3746;
+      color: #293241;
       font-size: clamp(1.05rem, 1.35vw, 1.24rem);
-      font-weight: 520;
+      font-weight: 600;
       line-height: 1.72;
       word-break: keep-all;
       overflow-wrap: break-word;
     }
 
     .claim {
-      margin-top: 26px;
+      margin-top: 24px;
       padding: 18px 20px;
       border: 1px solid rgba(15, 159, 110, 0.28);
-      border-left: 6px solid var(--green);
+      border-left: 6px solid var(--guidance);
       border-radius: 20px;
-      background: rgba(255, 255, 255, 0.7);
+      background: rgba(255, 255, 255, 0.72);
       color: #1f2937;
-      font-weight: 720;
-      max-width: 660px;
+      font-weight: 760;
       line-height: 1.7;
       word-break: keep-all;
       overflow-wrap: break-word;
@@ -130,11 +143,11 @@
       justify-content: center;
       min-height: 44px;
       padding: 10px 18px;
-      border: 1px solid rgba(17, 24, 39, 0.12);
+      border: 1px solid rgba(16, 24, 40, 0.12);
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.72);
+      background: rgba(255, 255, 255, 0.74);
       color: #172033;
-      font-weight: 800;
+      font-weight: 850;
       text-decoration: none;
       white-space: nowrap;
       transition: transform 160ms ease, background 160ms ease, box-shadow 160ms ease;
@@ -143,93 +156,94 @@
     .pill:hover {
       transform: translateY(-2px);
       background: #fff;
-      box-shadow: 0 10px 24px rgba(17, 24, 39, 0.1);
+      box-shadow: 0 10px 24px rgba(16, 24, 40, 0.1);
     }
 
-    .media-card {
-      overflow: hidden;
-      border: 1px solid rgba(17, 24, 39, 0.13);
-      border-radius: 34px;
-      background: #0b1118;
-      box-shadow: var(--shadow);
+    .hero-panel {
+      display: grid;
+      gap: 14px;
     }
 
-    .event-gallery {
+    .metric-card-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 18px;
-      align-self: center;
-    }
-
-    .event-card {
-      border-radius: 26px;
-      box-shadow: 0 18px 44px rgba(15, 23, 42, 0.16);
-    }
-
-    .media-head {
-      display: flex;
-      justify-content: space-between;
       gap: 14px;
-      align-items: center;
-      padding: 18px 20px;
-      color: #d8efe5;
-      background: linear-gradient(90deg, rgba(15, 159, 110, 0.35), rgba(15, 23, 42, 0.95));
-      font-size: 0.95rem;
-      font-weight: 800;
     }
 
-    .media-head span {
+    .highlight {
+      position: relative;
+      overflow: hidden;
+      min-height: 150px;
+      padding: 21px;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: var(--card);
+      box-shadow: 0 14px 40px rgba(15, 23, 42, 0.08);
+    }
+
+    .highlight::after {
+      content: "";
+      position: absolute;
+      inset: auto -16% -42% auto;
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: rgba(15, 159, 110, 0.14);
+    }
+
+    .highlight span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 850;
+    }
+
+    .highlight strong {
+      display: block;
+      margin-top: 12px;
+      color: var(--guidance-dark);
+      font-size: clamp(1.55rem, 2.3vw, 2.55rem);
+      line-height: 1;
+      letter-spacing: -0.05em;
       white-space: nowrap;
     }
 
-    .event-card .media-head {
-      padding: 12px 14px;
-      font-size: 0.8rem;
-      letter-spacing: -0.01em;
-    }
-
-    .hero-gif {
+    .highlight small {
       display: block;
-      width: 100%;
-      height: auto;
-      background: #101820;
-    }
-
-    .media-caption {
-      padding: 18px 22px 22px;
-      color: #cbd5e1;
-      font-size: 0.96rem;
-    }
-
-    .event-card .media-caption {
-      padding: 11px 14px 13px;
-      font-size: 0.8rem;
-      line-height: 1.45;
+      margin-top: 12px;
+      color: #344054;
       word-break: keep-all;
-      overflow-wrap: break-word;
     }
 
-    .trial-gallery {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 16px;
+    .mini-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.68);
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 760;
     }
 
-    .trial-card .media-head {
-      padding: 12px 14px;
-      font-size: 0.78rem;
+    .legend-dot {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
     }
 
-    .trial-card .media-caption {
-      padding: 11px 14px 13px;
-      color: #cbd5e1;
-      font-size: 0.78rem;
-      line-height: 1.45;
-      word-break: keep-all;
+    .legend-dot::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--dot);
     }
 
     .section {
-      padding: 38px 0;
+      padding: 42px 0;
     }
 
     .section-title {
@@ -237,27 +251,20 @@
       justify-content: space-between;
       gap: 24px;
       align-items: end;
-      margin-bottom: 18px;
+      margin-bottom: 22px;
     }
 
     .section-kicker {
       margin: 0 0 8px;
-      color: var(--green-dark);
-      font-weight: 900;
+      color: var(--guidance-dark);
+      font-weight: 950;
       letter-spacing: 0.04em;
       text-transform: uppercase;
       font-size: 0.82rem;
     }
 
-    h2 {
-      margin: 0;
-      font-size: clamp(2rem, 3.2vw, 3.8rem);
-      line-height: 1.02;
-      letter-spacing: -0.06em;
-    }
-
     .section-note {
-      max-width: 520px;
+      max-width: 600px;
       margin: 0;
       color: var(--muted);
       font-size: 1.02rem;
@@ -265,130 +272,305 @@
       overflow-wrap: break-word;
     }
 
-    .metric-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .metric {
-      padding: 22px;
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      background: var(--card);
-      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.07);
-    }
-
-    .metric span {
-      display: block;
-      color: var(--muted);
-      font-size: 0.92rem;
-      font-weight: 800;
-    }
-
-    .metric strong {
-      display: block;
-      margin-top: 8px;
-      color: var(--green-dark);
-      font-size: clamp(1.45rem, 2.05vw, 2.18rem);
-      line-height: 1;
-      letter-spacing: -0.04em;
-      white-space: nowrap;
-    }
-
-    .metric small {
-      display: block;
-      margin-top: 10px;
-      color: #334155;
-    }
-
-    .visual-stack {
-      display: grid;
-      gap: 24px;
-    }
-
-    .figure-card {
-      overflow: hidden;
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      background: rgba(255, 255, 255, 0.84);
-      box-shadow: var(--shadow);
-    }
-
-    .figure-card img {
-      display: block;
-      width: 100%;
-      height: auto;
-    }
-
-    .figure-caption {
-      display: flex;
-      justify-content: space-between;
-      gap: 18px;
-      padding: 15px 20px;
-      border-top: 1px solid rgba(17, 24, 39, 0.1);
-      color: #334155;
-      font-size: 0.94rem;
-      line-height: 1.5;
-      word-break: keep-all;
-      overflow-wrap: break-word;
-    }
-
-    .figure-caption strong {
-      color: var(--ink);
-    }
-
-    .two-up {
+    .scenario-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 24px;
     }
 
-    .comparison-table {
-      width: 100%;
-      border-collapse: collapse;
-      overflow: hidden;
+    .coverage-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .coverage-card {
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+      padding: 22px;
+      border: 1px solid var(--line);
       border-radius: 24px;
-      background: #fff;
+      background: rgba(255, 255, 255, 0.86);
+      box-shadow: 0 14px 42px rgba(15, 23, 42, 0.08);
+    }
+
+    .coverage-count {
+      display: inline-flex;
+      width: fit-content;
+      margin: 13px 0 15px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      color: var(--guidance-dark);
+      background: rgba(15, 159, 110, 0.12);
+      font-size: 0.84rem;
+      font-weight: 900;
+    }
+
+    .case-list {
+      display: grid;
+      gap: 9px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      color: #344054;
+      font-size: 0.95rem;
+      font-weight: 720;
+      word-break: keep-all;
+    }
+
+    .case-list li {
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(16, 24, 40, 0.045);
+    }
+
+    .example-strip {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .example-card {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: #0b1118;
+      box-shadow: 0 14px 38px rgba(15, 23, 42, 0.11);
+    }
+
+    .example-card img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .example-card figcaption {
+      padding: 12px 14px;
+      color: #dbeafe;
+      font-size: 0.84rem;
+      font-weight: 800;
+      word-break: keep-all;
+    }
+
+    .scenario-card,
+    .chart-card,
+    .table-card,
+    .narrative-card,
+    .boundary {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.86);
       box-shadow: var(--shadow);
     }
 
-    .comparison-table th,
-    .comparison-table td {
-      padding: 16px 18px;
-      border-bottom: 1px solid rgba(17, 24, 39, 0.1);
+    .scenario-card {
+      overflow: hidden;
+    }
+
+    .scenario-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: center;
+      padding: 20px 22px;
+      color: #d8efe5;
+      background: linear-gradient(100deg, rgba(4, 120, 87, 0.98), rgba(15, 23, 42, 0.94));
+    }
+
+    .scenario-head span {
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 0.9rem;
+      font-weight: 820;
+      white-space: nowrap;
+    }
+
+    .gif-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      background: #0b1118;
+    }
+
+    .gif-frame {
+      min-width: 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .gif-frame + .gif-frame {
+      border-left: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .gif-label {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      color: #dbeafe;
+      background: rgba(15, 23, 42, 0.94);
+      font-size: 0.78rem;
+      font-weight: 850;
+    }
+
+    .gif-frame img {
+      display: block;
+      width: 100%;
+      height: auto;
+      background: #111827;
+    }
+
+    .scenario-caption {
+      padding: 18px 22px 22px;
+      color: #344054;
+      font-size: 0.98rem;
+      font-weight: 620;
+      word-break: keep-all;
+      overflow-wrap: break-word;
+    }
+
+    .asset-note {
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: #fff7ed;
+      color: #7c2d12;
+      font-size: 0.88rem;
+      font-weight: 720;
+    }
+
+    .metric-table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: var(--radius);
+      background: #fff;
+    }
+
+    .metric-table th,
+    .metric-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(16, 24, 40, 0.1);
       text-align: left;
       vertical-align: top;
       word-break: keep-all;
       overflow-wrap: break-word;
     }
 
-    .comparison-table th {
-      color: var(--green-dark);
-      background: #eaf8f1;
-      font-size: 0.94rem;
+    .metric-table th {
+      color: var(--guidance-dark);
+      background: #e9f8f1;
+      font-size: 0.88rem;
       text-transform: uppercase;
       letter-spacing: 0.03em;
     }
 
-    .comparison-table td:nth-child(2) {
-      color: var(--slate);
-      font-weight: 800;
+    .metric-table tr.group-row td {
+      padding: 12px 16px;
+      color: #7c2d12;
+      background: #fff7ed;
+      font-size: 0.9rem;
+      font-weight: 950;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
     }
 
-    .comparison-table td:nth-child(3) {
-      color: var(--green-dark);
+    .metric-table td:nth-child(3) {
+      color: var(--baseline-dark);
       font-weight: 900;
+    }
+
+    .metric-table td:nth-child(4) {
+      color: var(--guidance-dark);
+      font-weight: 900;
+    }
+
+    .table-card {
+      overflow: hidden;
+    }
+
+    .chart-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+    }
+
+    .chart-card {
+      padding: 22px;
+    }
+
+    .chart-card h3 {
+      margin-bottom: 16px;
+    }
+
+    .chart-note {
+      margin: -6px 0 16px;
+      color: var(--muted);
+      font-size: 0.94rem;
+      word-break: keep-all;
+    }
+
+    .bar-group {
+      display: grid;
+      gap: 14px;
+    }
+
+    .bar-item {
+      display: grid;
+      gap: 8px;
+    }
+
+    .bar-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: #344054;
+      font-size: 0.92rem;
+      font-weight: 850;
+    }
+
+    .bar-track {
+      height: 18px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(16, 24, 40, 0.08);
+    }
+
+    .bar-fill {
+      display: block;
+      width: var(--w);
+      height: 100%;
+      border-radius: inherit;
+      background: var(--color);
+    }
+
+    .paired-bars {
+      display: grid;
+      gap: 6px;
+    }
+
+    .narrative-card {
+      padding: 26px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(236, 253, 245, 0.92));
+    }
+
+    .narrative-card p {
+      margin: 0;
+      color: #293241;
+      font-size: clamp(1.02rem, 1.25vw, 1.16rem);
+      font-weight: 720;
+      word-break: keep-all;
     }
 
     .boundary {
       margin: 44px 0 70px;
       padding: 28px;
-      border: 1px solid rgba(17, 24, 39, 0.14);
-      border-radius: 28px;
-      background: linear-gradient(135deg, #fff 0%, #f7efe3 100%);
+      background: linear-gradient(135deg, #fff 0%, #fff7ed 100%);
       color: #2f3a49;
-      box-shadow: var(--shadow);
+    }
+
+    .boundary h2 {
+      font-size: clamp(1.7rem, 2.7vw, 3rem);
     }
 
     .boundary p {
@@ -396,80 +578,81 @@
       overflow-wrap: break-word;
     }
 
-    .boundary h2 {
-      font-size: clamp(1.7rem, 2.6vw, 3rem);
-    }
-
     footer {
       padding: 28px 0 46px;
       color: var(--muted);
-      border-top: 1px solid rgba(17, 24, 39, 0.1);
+      border-top: 1px solid rgba(16, 24, 40, 0.1);
     }
 
-    @media (max-width: 1100px) {
+    @media (max-width: 1180px) {
       .hero {
         grid-template-columns: 1fr;
-        min-height: auto;
-        gap: 28px;
       }
 
-      .metric-grid,
-      .two-up,
-      .event-gallery,
-      .trial-gallery {
-        grid-template-columns: 1fr 1fr;
+      .hero-panel {
+        max-width: 920px;
       }
     }
 
-    @media (min-width: 1101px) {
-      h1 {
-        white-space: nowrap;
+    @media (max-width: 900px) {
+      .scenario-grid,
+      .chart-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .coverage-grid,
+      .example-strip {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .section-title {
+        display: block;
+      }
+
+      .section-note {
+        margin-top: 12px;
       }
     }
 
     @media (max-width: 720px) {
       .page {
-        width: min(100% - 24px, 1480px);
+        width: min(100% - 24px, 1500px);
       }
 
       .hero {
-        padding-top: 26px;
+        padding-top: 28px;
       }
 
       h1 {
-        font-size: clamp(2.75rem, 13vw, 3.35rem);
-        line-height: 0.98;
+        font-size: clamp(2.35rem, 11vw, 3.25rem);
+        letter-spacing: -0.065em;
       }
 
-      .hero-lead {
-        font-size: 1.02rem;
-      }
-
-      .claim {
-        padding: 16px 18px;
-      }
-
-      .metric-grid,
-      .two-up,
-      .event-gallery,
-      .trial-gallery {
+      .metric-card-grid,
+      .coverage-grid,
+      .example-strip,
+      .gif-row {
         grid-template-columns: 1fr;
       }
 
-      .section-title,
-      .figure-caption {
-        display: block;
+      .gif-frame + .gif-frame {
+        border-left: 0;
       }
 
-      .comparison-table {
-        font-size: 0.88rem;
+      .highlight {
+        min-height: auto;
+      }
+
+      .metric-table {
         display: block;
         max-width: 100%;
         overflow-x: auto;
+        font-size: 0.88rem;
       }
 
-      .comparison-table th,
-      .comparison-table td {
+      .metric-table th,
+      .metric-table td {
+        min-width: 136px;
         padding: 12px;
       }
     }
@@ -479,290 +662,474 @@
   <main class="page">
     <section class="hero" id="top">
       <div class="hero-copy">
-        <span class="eyebrow">CARLA P2 adjacent cut-in diagnostic</span>
-        <h1>GUIDANCE vs No-GUIDANCE</h1>
+        <span class="eyebrow">Controlled CARLA simulation diagnostic</span>
+        <h1>No-GUIDANCE vs GUIDANCE: 150-Trial Final Comparison</h1>
         <p class="hero-lead">
-          전방 cut-in 상황에서 GUIDANCE trajectory-prior 조건이 No-GUIDANCE baseline보다
-          ego 차량과 following vehicle string의 반응을 더 선제적이고 부드러운 방향으로 바꾸는지 비교합니다.
+          VLM output을 GUIDANCE trajectory-prior로 변환해 CARLA에서 No-GUIDANCE와 같은 시나리오로 비교합니다.
         </p>
-        <div class="claim">
-          핵심 결과: 150 paired randomized CARLA trials에서 GUIDANCE는 TTC margin을 키우고,
-          TTC &lt; 5s 이벤트와 급가속/급감속 proxy를 줄이는 방향을 보였습니다.
-        </div>
         <nav class="hero-actions" aria-label="Page sections">
-          <a class="pill" href="#event">비교 영상</a>
-          <a class="pill" href="#trials">추가 trials</a>
-          <a class="pill" href="#metrics">핵심 지표</a>
-          <a class="pill" href="#figures">시각화 결과</a>
+          <a class="pill" href="#scenarios">시나리오</a>
+          <a class="pill" href="#coverage">실험 범위</a>
+          <a class="pill" href="#metrics">지표 표</a>
+          <a class="pill" href="#charts">시각화</a>
           <a class="pill" href="#boundary">해석 범위</a>
         </nav>
       </div>
 
-      <div class="event-gallery" id="event" aria-label="Representative CARLA event comparisons">
-        <article class="media-card event-card">
-          <div class="media-head">
-            <span>접근 구간</span>
-            <span>Baseline / GUIDANCE</span>
+      <aside class="hero-panel" aria-label="Final comparison headline metrics">
+        <div class="metric-card-grid">
+          <div class="highlight">
+            <span>Ramp merge · min TTC</span>
+            <strong>1.31s → 7.05s</strong>
+            <small>GUIDANCE 조건에서 ego TTC margin이 증가했습니다.</small>
           </div>
-          <img class="hero-gif" src="assets/carla_phase_approach.gif" alt="No-GUIDANCE와 GUIDANCE 조건의 CARLA 접근 구간 비교 GIF.">
-          <div class="media-caption">
-            동일 사건의 초반 접근 구간에서 두 조건의 주행 반응을 나란히 보여줍니다.
+          <div class="highlight">
+            <span>Ramp merge · collision trial rate</span>
+            <strong>0.560 → 0.013</strong>
+            <small>Merge 상황의 collision trial rate가 크게 낮아졌습니다.</small>
           </div>
-        </article>
-
-        <article class="media-card event-card">
-          <div class="media-head">
-            <span>Cut-in 진입</span>
-            <span>Baseline / GUIDANCE</span>
+          <div class="highlight">
+            <span>Speed-gap stress · min TTC</span>
+            <strong>0.96s → 15.62s</strong>
+            <small>속도 차이로 인한 closing risk가 완화되었습니다.</small>
           </div>
-          <img class="hero-gif" src="assets/carla_phase_cutin_onset.gif" alt="No-GUIDANCE와 GUIDANCE 조건의 cut-in 진입 구간 비교 GIF.">
-          <div class="media-caption">
-            인접 차량이 ego lane으로 들어오는 시점의 차이를 확인할 수 있습니다.
+          <div class="highlight">
+            <span>Speed-gap stress · collision trial rate</span>
+            <strong>0.853 → 0.000</strong>
+            <small>해당 controlled setting에서 collision trial이 제거되었습니다.</small>
           </div>
-        </article>
-
-        <article class="media-card event-card">
-          <div class="media-head">
-            <span>선제 감속 반응</span>
-            <span>Baseline / GUIDANCE</span>
-          </div>
-          <img class="hero-gif" src="assets/carla_phase_response.gif" alt="No-GUIDANCE와 GUIDANCE 조건의 선제 감속 반응 비교 GIF.">
-          <div class="media-caption">
-            GUIDANCE 조건에서 TTC margin을 확보하는 방향의 반응을 시각적으로 비교합니다.
-          </div>
-        </article>
-
-        <article class="media-card event-card">
-          <div class="media-head">
-            <span>회복 구간</span>
-            <span>Baseline / GUIDANCE</span>
-          </div>
-          <img class="hero-gif" src="assets/carla_phase_recovery.gif" alt="No-GUIDANCE와 GUIDANCE 조건의 회복 및 following vehicle string 비교 GIF.">
-          <div class="media-caption">
-            ego 차량 이후 following vehicle string까지 이어지는 반응을 함께 보여줍니다.
-          </div>
-        </article>
-      </div>
+        </div>
+        <div class="mini-legend" aria-label="Chart legend">
+          <span class="legend-dot" style="--dot: var(--baseline);">No-GUIDANCE: late-reactive baseline</span>
+          <span class="legend-dot" style="--dot: var(--guidance);">GUIDANCE: proactive gap formation</span>
+        </div>
+      </aside>
     </section>
 
-    <section class="section" id="trials">
+    <section class="section" id="scenarios">
       <div class="section-title">
         <div>
-          <p class="section-kicker">Additional trial views</p>
-          <h2>다른 trial 시뮬레이션</h2>
+          <p class="section-kicker">Scenario visuals</p>
+          <h2>두 가지 핵심 조건</h2>
         </div>
         <p class="section-note">
-          위 네 장면은 하나의 대표 사건을 단계별로 나눈 것이고, 아래는 서로 다른 side-by-side trial GIF에서 가져온 추가 예시입니다.
+          GIF는 repo에 존재하는 side-by-side CARLA event asset만 사용했습니다. 수치 해석은 아래 표의 final 150-trial source-of-truth에 따릅니다.
         </p>
       </div>
 
-      <div class="trial-gallery" aria-label="Additional CARLA trial GIF previews">
-        <article class="media-card trial-card">
-          <div class="media-head">
-            <span>Trial 001</span>
-            <span>paired view</span>
+      <div class="scenario-grid">
+        <article class="scenario-card">
+          <div class="scenario-head">
+            <h3>Ramp merge</h3>
+            <span>merge 이후 late reaction vs proactive gap</span>
           </div>
-          <img class="hero-gif" src="assets/carla_trial_001_preview.gif" alt="No-GUIDANCE와 GUIDANCE 조건의 CARLA trial 001 비교 GIF.">
-          <div class="media-caption">
-            다른 trial GIF에서 가져온 초반 cut-in 접근 예시입니다.
+          <div class="gif-row">
+            <figure class="gif-frame">
+              <figcaption class="gif-label">
+                <span>Representative event A</span>
+                <span>No-GUIDANCE / GUIDANCE</span>
+              </figcaption>
+              <img src="assets/carla_event_a.gif" alt="Side-by-side CARLA visualization for Ramp merge No-GUIDANCE and GUIDANCE comparison.">
+            </figure>
+            <figure class="gif-frame">
+              <figcaption class="gif-label">
+                <span>Representative event B</span>
+                <span>No-GUIDANCE / GUIDANCE</span>
+              </figcaption>
+              <img src="assets/carla_event_b.gif" alt="Additional side-by-side CARLA visualization for Ramp merge No-GUIDANCE and GUIDANCE comparison." loading="lazy">
+            </figure>
           </div>
-        </article>
-
-        <article class="media-card trial-card">
-          <div class="media-head">
-            <span>Trial 002</span>
-            <span>paired view</span>
-          </div>
-          <img class="hero-gif" src="assets/carla_trial_002_preview.gif" alt="No-GUIDANCE와 GUIDANCE 조건의 CARLA trial 002 비교 GIF.">
-          <div class="media-caption">
-            같은 조건 비교를 다른 trial source에서 다시 확인합니다.
-          </div>
-        </article>
-
-        <article class="media-card trial-card">
-          <div class="media-head">
-            <span>Trial 003</span>
-            <span>paired view</span>
-          </div>
-          <img class="hero-gif" src="assets/carla_trial_003_preview.gif" alt="No-GUIDANCE와 GUIDANCE 조건의 CARLA trial 003 비교 GIF.">
-          <div class="media-caption">
-            cut-in 이후 ego 반응 차이를 다른 시뮬레이션 구간에서 보여줍니다.
+          <div class="scenario-caption">
+            Ramp merge 조건에서 No-GUIDANCE는 merge 이후 짧은 TTC와 높은 collision trial rate를 보였습니다.
+            GUIDANCE는 선제적으로 gap을 만들며 min TTC를 1.31s에서 7.05s로 높이고 collision trial rate를 0.560에서 0.013으로 낮췄습니다.
           </div>
         </article>
 
-        <article class="media-card trial-card">
-          <div class="media-head">
-            <span>Trial 004</span>
-            <span>paired view</span>
+        <article class="scenario-card">
+          <div class="scenario-head">
+            <h3>Speed-gap stress</h3>
+            <span>closing risk vs gap-first response</span>
           </div>
-          <img class="hero-gif" src="assets/carla_trial_004_preview.gif" alt="No-GUIDANCE와 GUIDANCE 조건의 CARLA trial 004 비교 GIF.">
-          <div class="media-caption">
-            회복 구간과 following vehicle string 반응을 추가 trial에서 확인합니다.
+          <div class="gif-row">
+            <figure class="gif-frame">
+              <figcaption class="gif-label">
+                <span>Representative event C</span>
+                <span>No-GUIDANCE / GUIDANCE</span>
+              </figcaption>
+              <img src="assets/carla_event_c.gif" alt="Side-by-side CARLA visualization for Speed-gap stress No-GUIDANCE and GUIDANCE comparison." loading="lazy">
+            </figure>
+            <figure class="gif-frame">
+              <figcaption class="gif-label">
+                <span>Representative event D</span>
+                <span>No-GUIDANCE / GUIDANCE</span>
+              </figcaption>
+              <img src="assets/carla_event_d.gif" alt="Additional side-by-side CARLA visualization for Speed-gap stress No-GUIDANCE and GUIDANCE comparison." loading="lazy">
+            </figure>
+          </div>
+          <div class="scenario-caption">
+            Speed-gap stress 조건에서 No-GUIDANCE는 속도 차이로 인해 closing risk가 커졌고, TTC &lt; 5s ratio 0.484와 collision trial rate 0.853을 보였습니다.
+            GUIDANCE는 TTC &lt; 5s ratio와 collision trial rate를 모두 0으로 낮추며 위험 구간을 제거했습니다.
           </div>
         </article>
+      </div>
+
+      <div class="asset-note">
+        Asset note: 현재 GIF 파일명은 `carla_event_a-d.gif`로 generic합니다. scenario-labeled final GIF가 필요하면 `docs/missing_gif_assets.md`의 체크리스트를 기준으로 추가 생성하면 됩니다.
+      </div>
+    </section>
+
+    <section class="section" id="coverage">
+      <div class="section-title">
+        <div>
+          <p class="section-kicker">Simulation coverage</p>
+          <h2>전체 시뮬레이션 상황과 case 구성</h2>
+        </div>
+        <p class="section-note">
+          현재 CARLA 실험 저장소는 4개 상황 계열과 12개 case로 구성되어 있습니다.
+          이 페이지의 final 150-trial 정량 결과는 그중 Ramp merge와 Speed-gap stress 두 case를 대표 비교로 제시합니다.
+        </p>
+      </div>
+
+      <div class="coverage-grid" aria-label="CARLA simulation scenario family and case inventory">
+        <article class="coverage-card">
+          <h3>도심 주행</h3>
+          <span class="coverage-count">3 cases</span>
+          <ul class="case-list">
+            <li>Urban adjacent cut-in</li>
+            <li>Urban lead sudden braking</li>
+            <li>Urban stop-and-go reveal</li>
+          </ul>
+        </article>
+
+        <article class="coverage-card">
+          <h3>자동차 전용도로</h3>
+          <span class="coverage-count">3 cases · final focus</span>
+          <ul class="case-list">
+            <li>Moving lead following</li>
+            <li>Ramp merge</li>
+            <li>Speed-gap stress</li>
+          </ul>
+        </article>
+
+        <article class="coverage-card">
+          <h3>고속도로</h3>
+          <span class="coverage-count">3 cases</span>
+          <ul class="case-list">
+            <li>Highway adjacent cut-in</li>
+            <li>Highway dense traffic string</li>
+            <li>Highway moving lead following</li>
+          </ul>
+        </article>
+
+        <article class="coverage-card">
+          <h3>인식 품질 저하</h3>
+          <span class="coverage-count">3 cases</span>
+          <ul class="case-list">
+            <li>Fog cut-in degraded perception</li>
+            <li>Rain cut-in degraded perception</li>
+            <li>Perception noise cut-in</li>
+          </ul>
+        </article>
+      </div>
+
+      <div class="example-strip" aria-label="Representative simulation examples">
+        <figure class="example-card">
+          <img src="assets/carla_event_a.gif" alt="Representative CARLA simulation example for No-GUIDANCE and GUIDANCE comparison.">
+          <figcaption>대표 시뮬레이션 예시 A: 두 조건의 반응 시점 비교</figcaption>
+        </figure>
+        <figure class="example-card">
+          <img src="assets/carla_event_b.gif" alt="Second representative CARLA simulation example for No-GUIDANCE and GUIDANCE comparison." loading="lazy">
+          <figcaption>대표 시뮬레이션 예시 B: gap 형성 과정 확인</figcaption>
+        </figure>
+        <figure class="example-card">
+          <img src="assets/carla_event_c.gif" alt="Third representative CARLA simulation example for No-GUIDANCE and GUIDANCE comparison." loading="lazy">
+          <figcaption>대표 시뮬레이션 예시 C: traffic response 비교</figcaption>
+        </figure>
+        <figure class="example-card">
+          <img src="assets/carla_event_d.gif" alt="Fourth representative CARLA simulation example for No-GUIDANCE and GUIDANCE comparison." loading="lazy">
+          <figcaption>대표 시뮬레이션 예시 D: 위험 접근 구간 비교</figcaption>
+        </figure>
+      </div>
+
+      <div class="asset-note">
+        현재 공개 asset은 대표 GIF 4개입니다. case별 provenance가 명확한 GIF를 추가하면 위 12개 case 각각에 대응하는 사례 카드로 확장할 수 있습니다.
       </div>
     </section>
 
     <section class="section" id="metrics">
       <div class="section-title">
         <div>
-          <p class="section-kicker">150 paired trials</p>
-          <h2>핵심 지표 비교</h2>
+          <p class="section-kicker">Exact source-of-truth metrics</p>
+          <h2>150-trial 지표 비교</h2>
         </div>
         <p class="section-note">
-          모든 값은 같은 randomized scenario parameter를 공유하는 No-GUIDANCE / GUIDANCE paired trial에서 계산했습니다.
+          Safety-critical metric을 먼저 배치하고, 그 다음 comfort/control proxy를 정리했습니다.
+          Min TTC는 높을수록 좋고, 나머지 risk/proxy 지표는 낮을수록 좋습니다.
         </p>
       </div>
 
-      <div class="metric-grid">
-        <div class="metric">
-          <span>Min TTC mean</span>
-          <strong>2.13s → 5.01s</strong>
-          <small>GUIDANCE 조건에서 평균 최소 TTC 증가</small>
-        </div>
-        <div class="metric">
-          <span>TTC &lt; 5s ratio</span>
-          <strong>0.0795 → 0.0038</strong>
-          <small>low-TTC event ratio 감소</small>
-        </div>
-        <div class="metric">
-          <span>Excessive acceleration</span>
-          <strong>294.27 → 247.49</strong>
-          <small>급가속 proxy 감소</small>
-        </div>
-        <div class="metric">
-          <span>Excessive deceleration</span>
-          <strong>70.65 → 43.03</strong>
-          <small>급감속 proxy 감소</small>
-        </div>
+      <div class="table-card">
+        <table class="metric-table" aria-label="Final 150-trial No-GUIDANCE and GUIDANCE metric comparison">
+          <thead>
+            <tr>
+              <th>Case</th>
+              <th>Metric</th>
+              <th>No-GUIDANCE</th>
+              <th>GUIDANCE</th>
+              <th>변화</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Ramp merge</td>
+              <td>Ego min TTC</td>
+              <td>1.31s</td>
+              <td>7.05s</td>
+              <td>안전 여유 증가</td>
+            </tr>
+            <tr>
+              <td>Ramp merge</td>
+              <td>Ego TTC &lt; 5s ratio</td>
+              <td>0.454</td>
+              <td>0.029</td>
+              <td>위험 구간 감소</td>
+            </tr>
+            <tr>
+              <td>Ramp merge</td>
+              <td>Ego TTC &lt; 1.5s ratio</td>
+              <td>0.045</td>
+              <td>0.0007</td>
+              <td>고위험 구간 거의 제거</td>
+            </tr>
+            <tr>
+              <td>Ramp merge</td>
+              <td>Ego collision trial rate</td>
+              <td>0.560</td>
+              <td>0.013</td>
+              <td>충돌 trial 크게 감소</td>
+            </tr>
+            <tr>
+              <td>Ramp merge</td>
+              <td>Ego excessive accel</td>
+              <td>212.7</td>
+              <td>77.0</td>
+              <td>급가속 감소</td>
+            </tr>
+            <tr>
+              <td>Ramp merge</td>
+              <td>Ego excessive decel</td>
+              <td>66.8</td>
+              <td>2.1</td>
+              <td>급감속 크게 감소</td>
+            </tr>
+            <tr>
+              <td>Ramp merge</td>
+              <td>Ego jerk</td>
+              <td>4.53</td>
+              <td>2.59</td>
+              <td>승차감 proxy 개선</td>
+            </tr>
+            <tr>
+              <td>Speed-gap stress</td>
+              <td>Ego min TTC</td>
+              <td>0.96s</td>
+              <td>15.62s</td>
+              <td>안전 여유 크게 증가</td>
+            </tr>
+            <tr>
+              <td>Speed-gap stress</td>
+              <td>Ego TTC &lt; 5s ratio</td>
+              <td>0.484</td>
+              <td>0.000</td>
+              <td>위험 구간 제거</td>
+            </tr>
+            <tr>
+              <td>Speed-gap stress</td>
+              <td>Ego TTC &lt; 1.5s ratio</td>
+              <td>0.093</td>
+              <td>0.000</td>
+              <td>고위험 구간 제거</td>
+            </tr>
+            <tr>
+              <td>Speed-gap stress</td>
+              <td>Ego collision trial rate</td>
+              <td>0.853</td>
+              <td>0.000</td>
+              <td>충돌 trial 제거</td>
+            </tr>
+            <tr>
+              <td>Speed-gap stress</td>
+              <td>Ego excessive accel</td>
+              <td>227.2</td>
+              <td>114.6</td>
+              <td>급가속 감소</td>
+            </tr>
+            <tr>
+              <td>Speed-gap stress</td>
+              <td>Ego excessive decel</td>
+              <td>50.6</td>
+              <td>36.6</td>
+              <td>급감속 감소</td>
+            </tr>
+            <tr>
+              <td>Speed-gap stress</td>
+              <td>Ego jerk</td>
+              <td>10.55</td>
+              <td>5.21</td>
+              <td>승차감 proxy 개선</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </section>
 
-    <section class="section" id="figures">
+    <section class="section" id="charts">
       <div class="section-title">
         <div>
-          <p class="section-kicker">Visual evidence</p>
-          <h2>표와 그래프로 보는 결과</h2>
+          <p class="section-kicker">Visual comparison</p>
+          <h2>수치 변화 시각화</h2>
         </div>
         <p class="section-note">
-          표는 전체 결과를 요약하고, 그래프는 지표별 차이와 paired-trial 안정성을 보여줍니다.
+          아래 chart는 dependency 없이 CSS bar로 구현했습니다. 빨간색은 No-GUIDANCE, 초록색은 GUIDANCE입니다.
         </p>
       </div>
 
-      <div class="visual-stack">
-        <figure class="figure-card">
-          <img src="assets/05_summary_table.png" alt="Summary table comparing No-GUIDANCE and GUIDANCE across 150 paired CARLA trials.">
-          <figcaption class="figure-caption">
-            <strong>Summary table</strong>
-            <span>No-GUIDANCE baseline과 GUIDANCE condition의 핵심 지표를 직접 비교합니다.</span>
-          </figcaption>
-        </figure>
+      <div class="chart-grid">
+        <article class="chart-card">
+          <h3>TTC margin</h3>
+          <p class="chart-note">Min TTC는 높을수록 안전 margin이 큽니다.</p>
+          <div class="bar-group">
+            <div class="bar-item">
+              <div class="bar-meta"><span>Ramp merge · No-GUIDANCE</span><span>1.31s</span></div>
+              <div class="bar-track"><span class="bar-fill" style="--w: 8.4%; --color: var(--baseline);"></span></div>
+              <div class="bar-meta"><span>Ramp merge · GUIDANCE</span><span>7.05s</span></div>
+              <div class="bar-track"><span class="bar-fill" style="--w: 45.1%; --color: var(--guidance);"></span></div>
+            </div>
+            <div class="bar-item">
+              <div class="bar-meta"><span>Speed-gap · No-GUIDANCE</span><span>0.96s</span></div>
+              <div class="bar-track"><span class="bar-fill" style="--w: 6.1%; --color: var(--baseline);"></span></div>
+              <div class="bar-meta"><span>Speed-gap · GUIDANCE</span><span>15.62s</span></div>
+              <div class="bar-track"><span class="bar-fill" style="--w: 100%; --color: var(--guidance);"></span></div>
+            </div>
+          </div>
+        </article>
 
-        <figure class="figure-card">
-          <img src="assets/01_core_metric_comparison.png" alt="Bar charts comparing core metrics between No-GUIDANCE and GUIDANCE.">
-          <figcaption class="figure-caption">
-            <strong>Core metric comparison</strong>
-            <span>TTC, 급가속/급감속, jerk, delay proxy의 평균 차이를 시각화했습니다.</span>
-          </figcaption>
-        </figure>
+        <article class="chart-card">
+          <h3>Collision trial rate</h3>
+          <p class="chart-note">낮을수록 좋습니다. GUIDANCE는 두 scenario 모두에서 크게 낮아졌습니다.</p>
+          <div class="bar-group">
+            <div class="bar-item">
+              <div class="bar-meta"><span>Ramp merge · No-GUIDANCE</span><span>0.560</span></div>
+              <div class="bar-track"><span class="bar-fill" style="--w: 65.7%; --color: var(--baseline);"></span></div>
+              <div class="bar-meta"><span>Ramp merge · GUIDANCE</span><span>0.013</span></div>
+              <div class="bar-track"><span class="bar-fill" style="--w: 1.5%; --color: var(--guidance);"></span></div>
+            </div>
+            <div class="bar-item">
+              <div class="bar-meta"><span>Speed-gap · No-GUIDANCE</span><span>0.853</span></div>
+              <div class="bar-track"><span class="bar-fill" style="--w: 100%; --color: var(--baseline);"></span></div>
+              <div class="bar-meta"><span>Speed-gap · GUIDANCE</span><span>0.000</span></div>
+              <div class="bar-track"><span class="bar-fill" style="--w: 0%; --color: var(--guidance);"></span></div>
+            </div>
+          </div>
+        </article>
 
-        <div class="two-up">
-          <figure class="figure-card">
-            <img src="assets/02_relative_change_summary.png" alt="Relative change summary showing favorable GUIDANCE-side changes.">
-            <figcaption class="figure-caption">
-              <strong>Relative change</strong>
-              <span>TTC 개선 신호가 가장 강하고, comfort/efficiency proxy는 보조적 개선으로 해석합니다.</span>
-            </figcaption>
-          </figure>
+        <article class="chart-card">
+          <h3>TTC risk ratio</h3>
+          <p class="chart-note">TTC &lt; 5s와 TTC &lt; 1.5s 모두 낮을수록 좋습니다.</p>
+          <div class="bar-group">
+            <div class="bar-item">
+              <div class="bar-meta"><span>Ramp · TTC &lt; 5s</span><span>0.454 → 0.029</span></div>
+              <div class="paired-bars">
+                <div class="bar-track"><span class="bar-fill" style="--w: 93.8%; --color: var(--baseline);"></span></div>
+                <div class="bar-track"><span class="bar-fill" style="--w: 6.0%; --color: var(--guidance);"></span></div>
+              </div>
+            </div>
+            <div class="bar-item">
+              <div class="bar-meta"><span>Ramp · TTC &lt; 1.5s</span><span>0.045 → 0.0007</span></div>
+              <div class="paired-bars">
+                <div class="bar-track"><span class="bar-fill" style="--w: 9.3%; --color: var(--baseline);"></span></div>
+                <div class="bar-track"><span class="bar-fill" style="--w: 0.1%; --color: var(--guidance);"></span></div>
+              </div>
+            </div>
+            <div class="bar-item">
+              <div class="bar-meta"><span>Speed-gap · TTC &lt; 5s</span><span>0.484 → 0.000</span></div>
+              <div class="paired-bars">
+                <div class="bar-track"><span class="bar-fill" style="--w: 100%; --color: var(--baseline);"></span></div>
+                <div class="bar-track"><span class="bar-fill" style="--w: 0%; --color: var(--guidance);"></span></div>
+              </div>
+            </div>
+            <div class="bar-item">
+              <div class="bar-meta"><span>Speed-gap · TTC &lt; 1.5s</span><span>0.093 → 0.000</span></div>
+              <div class="paired-bars">
+                <div class="bar-track"><span class="bar-fill" style="--w: 19.2%; --color: var(--baseline);"></span></div>
+                <div class="bar-track"><span class="bar-fill" style="--w: 0%; --color: var(--guidance);"></span></div>
+              </div>
+            </div>
+          </div>
+        </article>
 
-          <figure class="figure-card">
-            <img src="assets/03_paired_trial_robustness.png" alt="Paired trial robustness chart for GUIDANCE versus No-GUIDANCE.">
-            <figcaption class="figure-caption">
-              <strong>Paired robustness</strong>
-              <span>같은 trial에서 GUIDANCE가 더 좋은 방향을 보인 횟수를 정리했습니다.</span>
-            </figcaption>
-          </figure>
-        </div>
-
-        <figure class="figure-card">
-          <img src="assets/04_vehicle_order_ttc.png" alt="Vehicle-order TTC comparison between No-GUIDANCE and GUIDANCE.">
-          <figcaption class="figure-caption">
-            <strong>Vehicle-order TTC</strong>
-            <span>ego 차량과 첫 번째 following vehicle에서 GUIDANCE 효과가 가장 크게 나타납니다.</span>
-          </figcaption>
-        </figure>
+        <article class="chart-card">
+          <h3>Comfort proxy</h3>
+          <p class="chart-note">
+            GUIDANCE는 안전 지표뿐 아니라 excessive accel/decel과 jerk도 함께 낮췄습니다.
+            이는 gap 형성이 급격한 제어 반응을 줄이고 더 부드러운 주행 패턴을 만든다는 보조 근거로 해석할 수 있습니다.
+          </p>
+          <div class="bar-group">
+            <div class="bar-item">
+              <div class="bar-meta"><span>Ramp accel</span><span>212.7 → 77.0</span></div>
+              <div class="paired-bars">
+                <div class="bar-track"><span class="bar-fill" style="--w: 93.6%; --color: var(--baseline);"></span></div>
+                <div class="bar-track"><span class="bar-fill" style="--w: 33.9%; --color: var(--guidance);"></span></div>
+              </div>
+            </div>
+            <div class="bar-item">
+              <div class="bar-meta"><span>Ramp decel</span><span>66.8 → 2.1</span></div>
+              <div class="paired-bars">
+                <div class="bar-track"><span class="bar-fill" style="--w: 100%; --color: var(--baseline);"></span></div>
+                <div class="bar-track"><span class="bar-fill" style="--w: 3.1%; --color: var(--guidance);"></span></div>
+              </div>
+            </div>
+            <div class="bar-item">
+              <div class="bar-meta"><span>Speed-gap accel</span><span>227.2 → 114.6</span></div>
+              <div class="paired-bars">
+                <div class="bar-track"><span class="bar-fill" style="--w: 100%; --color: var(--baseline);"></span></div>
+                <div class="bar-track"><span class="bar-fill" style="--w: 50.4%; --color: var(--guidance);"></span></div>
+              </div>
+            </div>
+            <div class="bar-item">
+              <div class="bar-meta"><span>Speed-gap jerk</span><span>10.55 → 5.21</span></div>
+              <div class="paired-bars">
+                <div class="bar-track"><span class="bar-fill" style="--w: 100%; --color: var(--baseline);"></span></div>
+                <div class="bar-track"><span class="bar-fill" style="--w: 49.4%; --color: var(--guidance);"></span></div>
+              </div>
+            </div>
+          </div>
+        </article>
       </div>
     </section>
 
     <section class="section">
-      <div class="section-title">
-        <div>
-          <p class="section-kicker">Main reading</p>
-          <h2>분석 결과</h2>
-        </div>
+      <div class="narrative-card">
+        <p>
+          Ramp merge에서 GUIDANCE는 min TTC를 1.31s에서 7.05s로 높이고, collision trial rate를 0.560에서 0.013으로 낮췄습니다.
+          이는 merge 상황에서 선제적으로 gap을 만든 결과로 해석할 수 있습니다.
+          Speed-gap stress에서는 min TTC를 0.96s에서 15.62s로 크게 높이고, TTC &lt; 5s ratio와 collision trial rate를 0으로 낮췄습니다.
+          속도 차이로 인한 closing risk가 GUIDANCE 조건에서 제거된 것으로 해석됩니다.
+        </p>
       </div>
-
-      <table class="comparison-table" aria-label="No-GUIDANCE and GUIDANCE metric comparison">
-        <thead>
-          <tr>
-            <th>Metric</th>
-            <th>No-GUIDANCE</th>
-            <th>GUIDANCE</th>
-            <th>Reading</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Min TTC mean</td>
-            <td>2.1347 s</td>
-            <td>5.0056 s</td>
-            <td>GUIDANCE 조건에서 전방 위험 접근에 대한 시간 여유가 증가했습니다.</td>
-          </tr>
-          <tr>
-            <td>TTC &lt; 5s ratio</td>
-            <td>0.0795</td>
-            <td>0.0038</td>
-            <td>low-TTC 이벤트가 크게 감소했습니다.</td>
-          </tr>
-          <tr>
-            <td>Excessive acceleration</td>
-            <td>294.27</td>
-            <td>247.49</td>
-            <td>급가속 proxy가 감소했습니다.</td>
-          </tr>
-          <tr>
-            <td>Excessive deceleration</td>
-            <td>70.65</td>
-            <td>43.03</td>
-            <td>급감속 proxy가 감소했습니다.</td>
-          </tr>
-          <tr>
-            <td>Mean absolute jerk</td>
-            <td>15.02</td>
-            <td>14.36</td>
-            <td>jerk는 완만하게 감소했습니다.</td>
-          </tr>
-          <tr>
-            <td>Delay proxy</td>
-            <td>8.2644</td>
-            <td>8.1841</td>
-            <td>traffic efficiency proxy는 소폭 개선 방향을 보였습니다.</td>
-          </tr>
-        </tbody>
-      </table>
     </section>
 
     <section class="boundary" id="boundary">
       <p class="section-kicker">Claim boundary</p>
       <h2>해석 범위</h2>
       <p>
-        이 페이지의 결과는 controlled CARLA simulation diagnostic입니다.
-        GUIDANCE가 이 P2 adjacent cut-in scenario에서 No-GUIDANCE보다 더 큰 TTC margin과 낮은 harsh-driving proxy를 보였다는
+        본 결과는 controlled CARLA simulation diagnostic입니다. GUIDANCE가 Ramp merge와 Speed-gap stress 조건에서
+        No-GUIDANCE보다 더 큰 TTC margin, 더 낮은 collision trial rate, 더 낮은 harsh-driving proxy를 보였다는
         시뮬레이션 기반 근거를 제공합니다.
       </p>
       <p>
-        다만 이것은 아직 실제 차량 제어 성능 인증이나 모든 주행 상황에 대한 일반화 검증은 아닙니다.
-        이후 lead sudden braking, cut-out reveal, dense traffic string, curved road, visibility stress scenario까지 확장해야 합니다.
+        다만 실제 차량 제어 성능 인증이나 모든 주행 상황에 대한 일반화 검증은 아니며,
+        추가 scenario family와 real-world validation이 필요합니다.
       </p>
     </section>
   </main>
