@@ -120,6 +120,10 @@
       letter-spacing: -0.018em;
     }
 
+    .one-line {
+      white-space: nowrap;
+    }
+
     .hero-actions {
       display: flex;
       flex-wrap: wrap;
@@ -220,6 +224,40 @@
       height: 11px;
       border-radius: 999px;
       background: var(--dot);
+    }
+
+    .video-legend {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+      padding: 14px 16px;
+      border: 1px solid rgba(17, 24, 39, 0.1);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.78);
+      color: #334155;
+      font-size: 0.92rem;
+      font-weight: 800;
+    }
+
+    .video-legend strong {
+      color: var(--ink);
+      font-weight: 1000;
+    }
+
+    .legend-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .legend-marker {
+      width: 13px;
+      height: 13px;
+      flex: 0 0 13px;
+      margin-top: 5px;
+      border-radius: 999px;
+      background: var(--dot);
+      box-shadow: 0 0 0 5px color-mix(in srgb, var(--dot) 18%, transparent);
     }
 
     .section {
@@ -558,6 +596,10 @@
         min-height: 40px;
         padding: 9px 14px;
       }
+
+      .one-line {
+        white-space: normal;
+      }
     }
   </style>
 </head>
@@ -568,7 +610,7 @@
         <div class="eyebrow">Controlled CARLA simulation diagnostic</div>
         <h1>GUIDANCE CARLA Scenario Matrix</h1>
         <p class="hero-lead">
-          VLM trajectory-prior를 CARLA control candidate로 변환해 No-GUIDANCE baseline과 GUIDANCE 조건을 같은 traffic event에서 비교합니다.
+          <span class="one-line">VLM prior를 CARLA control candidate로 변환해 같은 사건에서 두 조건을 비교합니다.</span>
         </p>
         <nav class="hero-actions" aria-label="Page navigation">
           <a class="pill" href="#taxonomy">실험 구성</a>
@@ -582,22 +624,22 @@
       <aside class="hero-panel" aria-label="Key final metrics">
         <div class="metric-card-grid">
           <article class="highlight">
-            <span class="label">Ramp merge - min TTC</span>
+            <span class="label">진입로 합류 - min TTC</span>
             <strong>1.31s → 7.05s</strong>
             <small>GUIDANCE 조건에서 ego TTC margin이 증가했습니다.</small>
           </article>
           <article class="highlight">
-            <span class="label">Ramp merge - collision</span>
+            <span class="label">진입로 합류 - collision</span>
             <strong>0.560 → 0.013</strong>
-            <small>Merge 상황의 collision trial rate가 낮아졌습니다.</small>
+            <small>합류 상황의 collision trial rate가 낮아졌습니다.</small>
           </article>
           <article class="highlight">
-            <span class="label">Speed-gap stress - min TTC</span>
+            <span class="label">속도-간격 압박 - min TTC</span>
             <strong>0.96s → 15.62s</strong>
             <small>속도 차이로 인한 closing risk가 완화됐습니다.</small>
           </article>
           <article class="highlight">
-            <span class="label">Speed-gap stress - collision</span>
+            <span class="label">속도-간격 압박 - collision</span>
             <strong>0.853 → 0.000</strong>
             <small>해당 controlled setting에서 collision trial이 제거됐습니다.</small>
           </article>
@@ -605,6 +647,11 @@
         <div class="mini-legend" aria-label="Condition legend">
           <span class="legend-dot" style="--dot: var(--baseline);">No-GUIDANCE: late-reactive baseline</span>
           <span class="legend-dot" style="--dot: var(--guidance);">GUIDANCE: proactive gap formation</span>
+        </div>
+        <div class="video-legend" aria-label="Video color legend">
+          <strong>영상 속 색상 의미</strong>
+          <span class="legend-row"><span class="legend-marker" style="--dot: var(--baseline);"></span><span>빨간색 점/궤적은 No-GUIDANCE 조건입니다. 위험이 커진 뒤 늦게 반응하는 baseline을 의미합니다.</span></span>
+          <span class="legend-row"><span class="legend-marker" style="--dot: var(--guidance);"></span><span>초록색 점/궤적은 GUIDANCE 조건입니다. VLM trajectory-prior를 바탕으로 먼저 gap을 만드는 반응을 의미합니다.</span></span>
         </div>
       </aside>
     </section>
@@ -633,8 +680,8 @@
           <h3>자동차 전용도로</h3>
           <ul class="case-list">
             <li>arterial_moving_lead_following - 기본 car-following</li>
-            <li>arterial_ramp_merge - ramp merge</li>
-            <li>arterial_speed_gap_stress - 속도 차이와 gap 압박</li>
+            <li>arterial_ramp_merge - 진입로 합류</li>
+            <li>arterial_speed_gap_stress - 속도-간격 압박</li>
           </ul>
         </article>
         <article class="taxonomy-card">
@@ -670,7 +717,7 @@
           <h2>핵심 150-trial 조건의 대표 GIF</h2>
         </div>
         <p class="section-note">
-          Ramp merge와 speed-gap stress는 정량 비교의 핵심 case입니다. 아래 GIF는 새로 생성한 24초 side-by-side 대표 trial입니다.
+          <span class="one-line">진입로 합류와 속도-간격 압박은 정량 비교의 핵심 case입니다.</span> 아래 GIF는 새로 생성한 24초 side-by-side 대표 trial입니다.
         </p>
       </div>
 
@@ -678,28 +725,28 @@
         <article class="scenario-card">
           <div class="scenario-head">
             <div>
-              <h3>Ramp merge</h3>
+              <h3>진입로 합류</h3>
               <span class="case-meta">p10_ramp_merge</span>
             </div>
             <span class="tag important">150-trial 핵심</span>
           </div>
-          <img src="assets/carla_cases/arterial_ramp_merge_trial_000_side_by_side.gif" alt="Ramp merge 상황에서 No-GUIDANCE와 GUIDANCE 조건을 나란히 비교한 24초 CARLA GIF">
+          <img src="assets/carla_cases/arterial_ramp_merge_trial_000_side_by_side.gif" alt="진입로 합류 상황에서 No-GUIDANCE와 GUIDANCE 조건을 나란히 비교한 24초 CARLA GIF">
           <p class="caption">
-            Ramp merge 조건에서 No-GUIDANCE는 merge 이후 늦게 반응하며 짧은 TTC와 높은 collision trial rate를 보입니다. GUIDANCE는 선제적으로 gap을 만들며 TTC margin을 확보합니다.
+            진입로 합류 조건에서 No-GUIDANCE는 합류 이후 늦게 반응하며 짧은 TTC와 높은 collision trial rate를 보입니다. GUIDANCE는 선제적으로 gap을 만들며 TTC margin을 확보합니다.
           </p>
         </article>
 
         <article class="scenario-card">
           <div class="scenario-head">
             <div>
-              <h3>Speed-gap stress</h3>
+              <h3>속도-간격 압박</h3>
               <span class="case-meta">p7_speed_gap_stress</span>
             </div>
             <span class="tag important">150-trial 핵심</span>
           </div>
-          <img src="assets/carla_cases/arterial_speed_gap_stress_trial_000_side_by_side.gif" alt="Speed-gap stress 상황에서 No-GUIDANCE와 GUIDANCE 조건을 나란히 비교한 24초 CARLA GIF">
+          <img src="assets/carla_cases/arterial_speed_gap_stress_trial_000_side_by_side.gif" alt="속도-간격 압박 상황에서 No-GUIDANCE와 GUIDANCE 조건을 나란히 비교한 24초 CARLA GIF">
           <p class="caption">
-            Speed-gap stress 조건에서 No-GUIDANCE는 속도 차이로 closing risk가 커집니다. GUIDANCE는 gap을 먼저 확보해 TTC &lt; 5s와 collision trial을 줄이는 방향을 보입니다.
+            속도-간격 압박 조건에서 No-GUIDANCE는 속도 차이로 closing risk가 커집니다. GUIDANCE는 gap을 먼저 확보해 TTC &lt; 5s와 collision trial을 줄이는 방향을 보입니다.
           </p>
         </article>
       </div>
@@ -749,7 +796,7 @@
             <p class="section-kicker">02 Arterial motorway</p>
             <h2>자동차 전용도로</h2>
           </div>
-          <p class="section-note">중고속 조건에서 기본 following, ramp merge, speed-gap stress를 확인합니다.</p>
+          <p class="section-note">중고속 조건에서 기본 following, 진입로 합류, 속도-간격 압박을 확인합니다.</p>
         </div>
         <div class="case-grid">
           <article class="case-card">
@@ -758,13 +805,13 @@
             <p class="caption">정상 following 상황에서 불필요한 강개입 없이 안정적인 차간 반응을 보는 보조 case입니다.</p>
           </article>
           <article class="case-card featured">
-            <div class="case-head"><div><h3>Arterial ramp merge</h3><span class="case-meta">p10_ramp_merge</span></div><span class="tag important">핵심</span></div>
-            <img src="assets/carla_cases/arterial_ramp_merge_trial_000_side_by_side.gif" alt="자동차 전용도로 ramp merge 핵심 case의 No-GUIDANCE와 GUIDANCE side-by-side GIF">
+            <div class="case-head"><div><h3>자동차 전용도로 진입로 합류</h3><span class="case-meta">p10_ramp_merge</span></div><span class="tag important">핵심</span></div>
+            <img src="assets/carla_cases/arterial_ramp_merge_trial_000_side_by_side.gif" alt="자동차 전용도로 진입로 합류 핵심 case의 No-GUIDANCE와 GUIDANCE side-by-side GIF">
             <p class="caption">합류 차량이 ego lane에 들어오는 상황에서 선제적 gap formation이 나타나는지 확인합니다.</p>
           </article>
           <article class="case-card featured">
-            <div class="case-head"><div><h3>Arterial speed-gap stress</h3><span class="case-meta">p7_speed_gap_stress</span></div><span class="tag important">핵심</span></div>
-            <img src="assets/carla_cases/arterial_speed_gap_stress_trial_000_side_by_side.gif" alt="자동차 전용도로 speed-gap stress 핵심 case의 No-GUIDANCE와 GUIDANCE side-by-side GIF">
+            <div class="case-head"><div><h3>자동차 전용도로 속도-간격 압박</h3><span class="case-meta">p7_speed_gap_stress</span></div><span class="tag important">핵심</span></div>
+            <img src="assets/carla_cases/arterial_speed_gap_stress_trial_000_side_by_side.gif" alt="자동차 전용도로 속도-간격 압박 핵심 case의 No-GUIDANCE와 GUIDANCE side-by-side GIF">
             <p class="caption">속도 차이와 짧은 gap으로 closing risk가 커지는 stress 조건입니다.</p>
           </article>
         </div>
@@ -836,7 +883,7 @@
           <h2>핵심 2개 case의 150-trial 정량 비교</h2>
         </div>
         <p class="section-note">
-          현재 정량 claim은 Ramp merge와 Speed-gap stress 두 case에 한정합니다. 다른 case GIF는 scenario coverage와 qualitative visual evidence입니다.
+          현재 정량 claim은 진입로 합류와 속도-간격 압박 두 case에 한정합니다. 다른 case GIF는 scenario coverage와 qualitative visual evidence입니다.
         </p>
       </div>
 
@@ -852,20 +899,20 @@
             </tr>
           </thead>
           <tbody>
-            <tr><td>Ramp merge</td><td>Ego min TTC</td><td>1.31s</td><td>7.05s</td><td>안전 여유 증가</td></tr>
-            <tr><td>Ramp merge</td><td>Ego TTC &lt; 5s ratio</td><td>0.454</td><td>0.029</td><td>위험 구간 감소</td></tr>
-            <tr><td>Ramp merge</td><td>Ego TTC &lt; 1.5s ratio</td><td>0.045</td><td>0.0007</td><td>고위험 구간 거의 제거</td></tr>
-            <tr><td>Ramp merge</td><td>Ego collision trial rate</td><td>0.560</td><td>0.013</td><td>충돌 trial 크게 감소</td></tr>
-            <tr><td>Ramp merge</td><td>Ego excessive accel</td><td>212.7</td><td>77.0</td><td>급가속 감소</td></tr>
-            <tr><td>Ramp merge</td><td>Ego excessive decel</td><td>66.8</td><td>2.1</td><td>급감속 크게 감소</td></tr>
-            <tr><td>Ramp merge</td><td>Ego jerk</td><td>4.53</td><td>2.59</td><td>승차감 proxy 개선</td></tr>
-            <tr><td>Speed-gap stress</td><td>Ego min TTC</td><td>0.96s</td><td>15.62s</td><td>안전 여유 크게 증가</td></tr>
-            <tr><td>Speed-gap stress</td><td>Ego TTC &lt; 5s ratio</td><td>0.484</td><td>0.000</td><td>위험 구간 제거</td></tr>
-            <tr><td>Speed-gap stress</td><td>Ego TTC &lt; 1.5s ratio</td><td>0.093</td><td>0.000</td><td>고위험 구간 제거</td></tr>
-            <tr><td>Speed-gap stress</td><td>Ego collision trial rate</td><td>0.853</td><td>0.000</td><td>충돌 trial 제거</td></tr>
-            <tr><td>Speed-gap stress</td><td>Ego excessive accel</td><td>227.2</td><td>114.6</td><td>급가속 감소</td></tr>
-            <tr><td>Speed-gap stress</td><td>Ego excessive decel</td><td>50.6</td><td>36.6</td><td>급감속 감소</td></tr>
-            <tr><td>Speed-gap stress</td><td>Ego jerk</td><td>10.55</td><td>5.21</td><td>승차감 proxy 개선</td></tr>
+            <tr><td>진입로 합류</td><td>Ego min TTC</td><td>1.31s</td><td>7.05s</td><td>안전 여유 증가</td></tr>
+            <tr><td>진입로 합류</td><td>Ego TTC &lt; 5s ratio</td><td>0.454</td><td>0.029</td><td>위험 구간 감소</td></tr>
+            <tr><td>진입로 합류</td><td>Ego TTC &lt; 1.5s ratio</td><td>0.045</td><td>0.0007</td><td>고위험 구간 거의 제거</td></tr>
+            <tr><td>진입로 합류</td><td>Ego collision trial rate</td><td>0.560</td><td>0.013</td><td>충돌 trial 크게 감소</td></tr>
+            <tr><td>진입로 합류</td><td>Ego excessive accel</td><td>212.7</td><td>77.0</td><td>급가속 감소</td></tr>
+            <tr><td>진입로 합류</td><td>Ego excessive decel</td><td>66.8</td><td>2.1</td><td>급감속 크게 감소</td></tr>
+            <tr><td>진입로 합류</td><td>Ego jerk</td><td>4.53</td><td>2.59</td><td>승차감 proxy 개선</td></tr>
+            <tr><td>속도-간격 압박</td><td>Ego min TTC</td><td>0.96s</td><td>15.62s</td><td>안전 여유 크게 증가</td></tr>
+            <tr><td>속도-간격 압박</td><td>Ego TTC &lt; 5s ratio</td><td>0.484</td><td>0.000</td><td>위험 구간 제거</td></tr>
+            <tr><td>속도-간격 압박</td><td>Ego TTC &lt; 1.5s ratio</td><td>0.093</td><td>0.000</td><td>고위험 구간 제거</td></tr>
+            <tr><td>속도-간격 압박</td><td>Ego collision trial rate</td><td>0.853</td><td>0.000</td><td>충돌 trial 제거</td></tr>
+            <tr><td>속도-간격 압박</td><td>Ego excessive accel</td><td>227.2</td><td>114.6</td><td>급가속 감소</td></tr>
+            <tr><td>속도-간격 압박</td><td>Ego excessive decel</td><td>50.6</td><td>36.6</td><td>급감속 감소</td></tr>
+            <tr><td>속도-간격 압박</td><td>Ego jerk</td><td>10.55</td><td>5.21</td><td>승차감 proxy 개선</td></tr>
           </tbody>
         </table>
       </div>
@@ -878,7 +925,7 @@
           <h2>안전성과 comfort proxy 변화</h2>
         </div>
         <p class="section-note">
-          빨간색은 No-GUIDANCE, 초록색은 GUIDANCE입니다. Min TTC는 높을수록 좋고, 나머지 risk/proxy 값은 낮을수록 좋습니다.
+          빨간색은 No-GUIDANCE, 초록색은 GUIDANCE입니다. 영상 속 점/궤적과 아래 chart 색상이 같은 의미를 갖습니다.
         </p>
       </div>
 
@@ -888,15 +935,15 @@
           <p class="chart-note">GUIDANCE 조건에서 두 핵심 case 모두 TTC margin이 커졌습니다.</p>
           <div class="bar-group">
             <div>
-              <div class="bar-meta"><span>Ramp merge - No-GUIDANCE</span><span>1.31s</span></div>
+              <div class="bar-meta"><span>진입로 합류 - No-GUIDANCE</span><span>1.31s</span></div>
               <div class="bar-track"><span class="bar-fill" style="--w: 8.4%; --color: var(--baseline);"></span></div>
-              <div class="bar-meta"><span>Ramp merge - GUIDANCE</span><span>7.05s</span></div>
+              <div class="bar-meta"><span>진입로 합류 - GUIDANCE</span><span>7.05s</span></div>
               <div class="bar-track"><span class="bar-fill" style="--w: 45.1%; --color: var(--guidance);"></span></div>
             </div>
             <div>
-              <div class="bar-meta"><span>Speed-gap - No-GUIDANCE</span><span>0.96s</span></div>
+              <div class="bar-meta"><span>속도-간격 압박 - No-GUIDANCE</span><span>0.96s</span></div>
               <div class="bar-track"><span class="bar-fill" style="--w: 6.1%; --color: var(--baseline);"></span></div>
-              <div class="bar-meta"><span>Speed-gap - GUIDANCE</span><span>15.62s</span></div>
+              <div class="bar-meta"><span>속도-간격 압박 - GUIDANCE</span><span>15.62s</span></div>
               <div class="bar-track"><span class="bar-fill" style="--w: 100%; --color: var(--guidance);"></span></div>
             </div>
           </div>
@@ -907,15 +954,15 @@
           <p class="chart-note">GUIDANCE 조건에서 collision trial rate가 크게 낮아졌습니다.</p>
           <div class="bar-group">
             <div>
-              <div class="bar-meta"><span>Ramp merge - No-GUIDANCE</span><span>0.560</span></div>
+              <div class="bar-meta"><span>진입로 합류 - No-GUIDANCE</span><span>0.560</span></div>
               <div class="bar-track"><span class="bar-fill" style="--w: 65.7%; --color: var(--baseline);"></span></div>
-              <div class="bar-meta"><span>Ramp merge - GUIDANCE</span><span>0.013</span></div>
+              <div class="bar-meta"><span>진입로 합류 - GUIDANCE</span><span>0.013</span></div>
               <div class="bar-track"><span class="bar-fill" style="--w: 1.5%; --color: var(--guidance);"></span></div>
             </div>
             <div>
-              <div class="bar-meta"><span>Speed-gap - No-GUIDANCE</span><span>0.853</span></div>
+              <div class="bar-meta"><span>속도-간격 압박 - No-GUIDANCE</span><span>0.853</span></div>
               <div class="bar-track"><span class="bar-fill" style="--w: 100%; --color: var(--baseline);"></span></div>
-              <div class="bar-meta"><span>Speed-gap - GUIDANCE</span><span>0.000</span></div>
+              <div class="bar-meta"><span>속도-간격 압박 - GUIDANCE</span><span>0.000</span></div>
               <div class="bar-track"><span class="bar-fill" style="--w: 0%; --color: var(--guidance);"></span></div>
             </div>
           </div>
@@ -926,14 +973,14 @@
           <p class="chart-note">TTC &lt; 5s와 TTC &lt; 1.5s 비율은 낮을수록 안전합니다.</p>
           <div class="bar-group">
             <div>
-              <div class="bar-meta"><span>Ramp - TTC &lt; 5s</span><span>0.454 → 0.029</span></div>
+              <div class="bar-meta"><span>진입로 합류 - TTC &lt; 5s</span><span>0.454 → 0.029</span></div>
               <div class="paired-bars">
                 <div class="bar-track"><span class="bar-fill" style="--w: 93.8%; --color: var(--baseline);"></span></div>
                 <div class="bar-track"><span class="bar-fill" style="--w: 6.0%; --color: var(--guidance);"></span></div>
               </div>
             </div>
             <div>
-              <div class="bar-meta"><span>Speed-gap - TTC &lt; 5s</span><span>0.484 → 0.000</span></div>
+              <div class="bar-meta"><span>속도-간격 압박 - TTC &lt; 5s</span><span>0.484 → 0.000</span></div>
               <div class="paired-bars">
                 <div class="bar-track"><span class="bar-fill" style="--w: 100%; --color: var(--baseline);"></span></div>
                 <div class="bar-track"><span class="bar-fill" style="--w: 0%; --color: var(--guidance);"></span></div>
@@ -947,14 +994,14 @@
           <p class="chart-note">GUIDANCE는 excessive accel/decel과 jerk도 함께 낮추는 방향을 보였습니다.</p>
           <div class="bar-group">
             <div>
-              <div class="bar-meta"><span>Ramp accel</span><span>212.7 → 77.0</span></div>
+              <div class="bar-meta"><span>진입로 합류 급가속</span><span>212.7 → 77.0</span></div>
               <div class="paired-bars">
                 <div class="bar-track"><span class="bar-fill" style="--w: 93.6%; --color: var(--baseline);"></span></div>
                 <div class="bar-track"><span class="bar-fill" style="--w: 33.9%; --color: var(--guidance);"></span></div>
               </div>
             </div>
             <div>
-              <div class="bar-meta"><span>Speed-gap jerk</span><span>10.55 → 5.21</span></div>
+              <div class="bar-meta"><span>속도-간격 압박 jerk</span><span>10.55 → 5.21</span></div>
               <div class="paired-bars">
                 <div class="bar-track"><span class="bar-fill" style="--w: 100%; --color: var(--baseline);"></span></div>
                 <div class="bar-track"><span class="bar-fill" style="--w: 49.4%; --color: var(--guidance);"></span></div>
@@ -969,7 +1016,7 @@
       <p class="section-kicker">Claim boundary</p>
       <h2>해석 범위</h2>
       <p>
-        본 결과는 controlled CARLA simulation diagnostic입니다. GUIDANCE가 Ramp merge와 Speed-gap stress 조건에서 No-GUIDANCE보다 더 큰 TTC margin, 더 낮은 collision trial rate, 더 낮은 harsh-driving proxy를 보였다는 시뮬레이션 기반 근거를 제공합니다.
+        본 결과는 controlled CARLA simulation diagnostic입니다. GUIDANCE가 진입로 합류와 속도-간격 압박 조건에서 No-GUIDANCE보다 더 큰 TTC margin, 더 낮은 collision trial rate, 더 낮은 harsh-driving proxy를 보였다는 시뮬레이션 기반 근거를 제공합니다.
       </p>
       <p>
         다만 실제 차량 제어 성능 인증이나 모든 주행 상황에 대한 일반화 검증은 아니며, 추가 scenario family와 real-world validation이 필요합니다.
