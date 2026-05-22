@@ -1,0 +1,155 @@
+{
+  "schema_version": "vla_web_24s_gif_asset_update_v1",
+  "source_manifest": "C:\\Users\\user\\Desktop\\VLA\\main\\CALAR\\GIF\\reports\\long_gif_manifest_long_gif_20260522_60s.json",
+  "source_run_id": "long_gif_20260522_60s",
+  "output_root": "C:\\Users\\user\\VLA-project-deploy\\assets\\carla_cases",
+  "case_count": 12,
+  "all_duration_24s": true,
+  "all_frames_120": true,
+  "items": [
+    {
+      "case_id": "urban_adjacent_cutin",
+      "source": "C:\\Users\\user\\Desktop\\VLA\\main\\CALAR\\GIF\\01_urban_downtown\\urban_adjacent_cutin\\runs\\long_gif_20260522_60s\\side_by_side_trial_000.gif",
+      "output": "C:\\Users\\user\\VLA-project-deploy\\assets\\carla_cases\\urban_adjacent_cutin_trial_000_side_by_side.gif",
+      "frames": 120,
+      "duration_s": 24.0,
+      "size_mb": 21.05,
+      "resolution": [
+        960,
+        270
+      ]
+    },
+    {
+      "case_id": "urban_lead_sudden_braking",
+      "source": "C:\\Users\\user\\Desktop\\VLA\\main\\CALAR\\GIF\\01_urban_downtown\\urban_lead_sudden_braking\\runs\\long_gif_20260522_60s\\side_by_side_trial_000.gif",
+      "output": "C:\\Users\\user\\VLA-project-deploy\\assets\\carla_cases\\urban_lead_sudden_braking_trial_000_side_by_side.gif",
+      "frames": 120,
+      "duration_s": 24.0,
+      "size_mb": 20.98,
+      "resolution": [
+        960,
+        270
+      ]
+    },
+    {
+      "case_id": "urban_stop_and_go_reveal",
+      "source": "C:\\Users\\user\\Desktop\\VLA\\main\\CALAR\\GIF\\01_urban_downtown\\urban_stop_and_go_reveal\\runs\\long_gif_20260522_60s\\side_by_side_trial_000.gif",
+      "output": "C:\\Users\\user\\VLA-project-deploy\\assets\\carla_cases\\urban_stop_and_go_reveal_trial_000_side_by_side.gif",
+      "frames": 120,
+      "duration_s": 24.0,
+      "size_mb": 21.16,
+      "resolution": [
+        960,
+        270
+      ]
+    },
+    {
+      "case_id": "arterial_moving_lead_following",
+      "source": "C:\\Users\\user\\Desktop\\VLA\\main\\CALAR\\GIF\\02_arterial_motorway\\arterial_moving_lead_following\\runs\\long_gif_20260522_60s\\side_by_side_trial_000.gif",
+      "output": "C:\\Users\\user\\VLA-project-deploy\\assets\\carla_cases\\arterial_moving_lead_following_trial_000_side_by_side.gif",
+      "frames": 120,
+      "duration_s": 24.0,
+      "size_mb": 15.82,
+      "resolution": [
+        960,
+        270
+      ]
+    },
+    {
+      "case_id": "arterial_ramp_merge",
+      "source": "C:\\Users\\user\\Desktop\\VLA\\main\\CALAR\\GIF\\02_arterial_motorway\\arterial_ramp_merge\\runs\\long_gif_20260522_60s\\side_by_side_trial_000.gif",
+      "output": "C:\\Users\\user\\VLA-project-deploy\\assets\\carla_cases\\arterial_ramp_merge_trial_000_side_by_side.gif",
+      "frames": 120,
+      "duration_s": 24.0,
+      "size_mb": 16.0,
+      "resolution": [
+        960,
+        270
+      ]
+    },
+    {
+      "case_id": "arterial_speed_gap_stress",
+      "source": "C:\\Users\\user\\Desktop\\VLA\\main\\CALAR\\GIF\\02_arterial_motorway\\arterial_speed_gap_stress\\runs\\long_gif_20260522_60s\\side_by_side_trial_000.gif",
+      "output": "C:\\Users\\user\\VLA-project-deploy\\assets\\carla_cases\\arterial_speed_gap_stress_trial_000_side_by_side.gif",
+      "frames": 120,
+      "duration_s": 24.0,
+      "size_mb": 16.24,
+      "resolution": [
+        960,
+        270
+      ]
+    },
+    {
+      "case_id": "highway_adjacent_cutin",
+      "source": "C:\\Users\\user\\Desktop\\VLA\\main\\CALAR\\GIF\\03_highway\\highway_adjacent_cutin\\runs\\long_gif_20260522_60s\\side_by_side_trial_000.gif",
+      "output": "C:\\Users\\user\\VLA-project-deploy\\assets\\carla_cases\\highway_adjacent_cutin_trial_000_side_by_side.gif",
+      "frames": 120,
+      "duration_s": 24.0,
+      "size_mb": 15.85,
+      "resolution": [
+        960,
+        270
+      ]
+    },
+    {
+      "case_id": "highway_dense_traffic_string",
+      "source": "C:\\Users\\user\\Desktop\\VLA\\main\\CALAR\\GIF\\03_highway\\highway_dense_traffic_string\\runs\\long_gif_20260522_60s\\side_by_side_trial_000.gif",
+      "output": "C:\\Users\\user\\VLA-project-deploy\\assets\\carla_cases\\highway_dense_traffic_string_trial_000_side_by_side.gif",
+      "frames": 120,
+      "duration_s": 24.0,
+      "size_mb": 15.87,
+      "resolution": [
+        960,
+        270
+      ]
+    },
+    {
+      "case_id": "highway_moving_lead_following",
+      "source": "C:\\Users\\user\\Desktop\\VLA\\main\\CALAR\\GIF\\03_highway\\highway_moving_lead_following\\runs\\long_gif_20260522_60s\\side_by_side_trial_000.gif",
+      "output": "C:\\Users\\user\\VLA-project-deploy\\assets\\carla_cases\\highway_moving_lead_following_trial_000_side_by_side.gif",
+      "frames": 120,
+      "duration_s": 24.0,
+      "size_mb": 15.81,
+      "resolution": [
+        960,
+        270
+      ]
+    },
+    {
+      "case_id": "fog_cutin_degraded_perception",
+      "source": "C:\\Users\\user\\Desktop\\VLA\\main\\CALAR\\GIF\\04_visibility_and_perception\\fog_cutin_degraded_perception\\runs\\long_gif_20260522_60s\\side_by_side_trial_000.gif",
+      "output": "C:\\Users\\user\\VLA-project-deploy\\assets\\carla_cases\\fog_cutin_degraded_perception_trial_000_side_by_side.gif",
+      "frames": 120,
+      "duration_s": 24.0,
+      "size_mb": 20.17,
+      "resolution": [
+        960,
+        270
+      ]
+    },
+    {
+      "case_id": "perception_noise_cutin",
+      "source": "C:\\Users\\user\\Desktop\\VLA\\main\\CALAR\\GIF\\04_visibility_and_perception\\perception_noise_cutin\\runs\\long_gif_20260522_60s\\side_by_side_trial_000.gif",
+      "output": "C:\\Users\\user\\VLA-project-deploy\\assets\\carla_cases\\perception_noise_cutin_trial_000_side_by_side.gif",
+      "frames": 120,
+      "duration_s": 24.0,
+      "size_mb": 21.08,
+      "resolution": [
+        960,
+        270
+      ]
+    },
+    {
+      "case_id": "rain_cutin_degraded_perception",
+      "source": "C:\\Users\\user\\Desktop\\VLA\\main\\CALAR\\GIF\\04_visibility_and_perception\\rain_cutin_degraded_perception\\runs\\long_gif_20260522_60s\\side_by_side_trial_000.gif",
+      "output": "C:\\Users\\user\\VLA-project-deploy\\assets\\carla_cases\\rain_cutin_degraded_perception_trial_000_side_by_side.gif",
+      "frames": 120,
+      "duration_s": 24.0,
+      "size_mb": 19.21,
+      "resolution": [
+        960,
+        270
+      ]
+    }
+  ]
+}
