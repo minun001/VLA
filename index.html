@@ -449,12 +449,13 @@
       border: 1px solid var(--line);
       border-radius: var(--radius-lg);
       background: rgba(255, 255, 255, 0.84);
+      box-shadow: 0 18px 48px rgba(15, 23, 42, 0.08);
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 860px;
+      min-width: 1180px;
     }
 
     th, td {
@@ -476,14 +477,98 @@
 
     tr:last-child td { border-bottom: 0; }
 
-    td:nth-child(3) {
+    .metrics-table tbody tr {
+      transition: background 0.18s ease, transform 0.18s ease;
+    }
+
+    .metrics-table tbody tr:nth-child(even) {
+      background: rgba(248, 250, 252, 0.72);
+    }
+
+    .metrics-table tbody tr:hover {
+      background: rgba(236, 253, 245, 0.48);
+    }
+
+    .env-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      color: #0f172a;
+      background: rgba(15, 23, 42, 0.07);
+      font-size: 0.78rem;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .case-name {
+      display: block;
+      color: #0f172a;
+      font-weight: 1000;
+      white-space: nowrap;
+    }
+
+    .case-sub {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .metric-pair {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 5px 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.72);
+      font-weight: 950;
+      white-space: nowrap;
+    }
+
+    .metric-pair .from {
       color: var(--baseline-dark);
+    }
+
+    .metric-pair .arrow {
+      color: #94a3b8;
       font-weight: 900;
     }
 
-    td:nth-child(4) {
+    .metric-pair .to {
       color: var(--guidance-dark);
-      font-weight: 900;
+    }
+
+    .verdict {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 78px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 1000;
+      white-space: nowrap;
+    }
+
+    .verdict.good {
+      color: #047857;
+      background: rgba(16, 185, 129, 0.14);
+    }
+
+    .verdict.mixed {
+      color: #92400e;
+      background: rgba(245, 158, 11, 0.16);
+    }
+
+    .table-note {
+      margin: 14px 16px 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+      font-weight: 780;
+      line-height: 1.65;
     }
 
     .chart-grid {
@@ -905,42 +990,48 @@
     <section class="section" id="metrics">
       <div class="section-title">
         <div>
-          <p class="section-kicker">Exact source-of-truth metrics</p>
-          <h2>핵심 2개 case의 150-trial 정량 비교</h2>
+          <p class="section-kicker">Full case-level metrics</p>
+          <h2>전체 12개 case의 150-trial 정량 비교</h2>
         </div>
         <p class="section-note">
-          현재 정량 claim은 진입로 합류와 속도-간격 압박 두 case에 한정합니다. 다른 case GIF는 scenario coverage와 qualitative visual evidence입니다.
+          각 행은 같은 case에서 No-GUIDANCE와 GUIDANCE를 paired 조건으로 비교한 ego 기준 요약입니다. Min TTC는 높을수록 좋고, TTC ratio, collision rate, 급가속/급감속, jerk는 낮을수록 좋습니다.
         </p>
       </div>
 
       <div class="table-card">
-        <table aria-label="Final 150-trial No-GUIDANCE and GUIDANCE metric comparison">
+        <table class="metrics-table" aria-label="Full 12-case 150-trial No-GUIDANCE and GUIDANCE metric comparison">
           <thead>
             <tr>
+              <th>환경</th>
               <th>Case</th>
-              <th>Metric</th>
-              <th>No-GUIDANCE</th>
-              <th>GUIDANCE</th>
-              <th>변화</th>
+              <th>Min TTC</th>
+              <th>TTC &lt; 5s</th>
+              <th>TTC &lt; 1.5s</th>
+              <th>Collision</th>
+              <th>급가속</th>
+              <th>급감속</th>
+              <th>Jerk</th>
+              <th>판정</th>
             </tr>
           </thead>
           <tbody>
-            <tr><td>진입로 합류</td><td>Ego min TTC</td><td>1.31s</td><td>7.05s</td><td>안전 여유 증가</td></tr>
-            <tr><td>진입로 합류</td><td>Ego TTC &lt; 5s ratio</td><td>0.454</td><td>0.029</td><td>위험 구간 감소</td></tr>
-            <tr><td>진입로 합류</td><td>Ego TTC &lt; 1.5s ratio</td><td>0.045</td><td>0.0007</td><td>고위험 구간 거의 제거</td></tr>
-            <tr><td>진입로 합류</td><td>Ego collision trial rate</td><td>0.560</td><td>0.013</td><td>충돌 trial 크게 감소</td></tr>
-            <tr><td>진입로 합류</td><td>Ego excessive accel</td><td>212.7</td><td>77.0</td><td>급가속 감소</td></tr>
-            <tr><td>진입로 합류</td><td>Ego excessive decel</td><td>66.8</td><td>2.1</td><td>급감속 크게 감소</td></tr>
-            <tr><td>진입로 합류</td><td>Ego jerk</td><td>4.53</td><td>2.59</td><td>승차감 proxy 개선</td></tr>
-            <tr><td>속도-간격 압박</td><td>Ego min TTC</td><td>0.96s</td><td>15.62s</td><td>안전 여유 크게 증가</td></tr>
-            <tr><td>속도-간격 압박</td><td>Ego TTC &lt; 5s ratio</td><td>0.484</td><td>0.000</td><td>위험 구간 제거</td></tr>
-            <tr><td>속도-간격 압박</td><td>Ego TTC &lt; 1.5s ratio</td><td>0.093</td><td>0.000</td><td>고위험 구간 제거</td></tr>
-            <tr><td>속도-간격 압박</td><td>Ego collision trial rate</td><td>0.853</td><td>0.000</td><td>충돌 trial 제거</td></tr>
-            <tr><td>속도-간격 압박</td><td>Ego excessive accel</td><td>227.2</td><td>114.6</td><td>급가속 감소</td></tr>
-            <tr><td>속도-간격 압박</td><td>Ego excessive decel</td><td>50.6</td><td>36.6</td><td>급감속 감소</td></tr>
-            <tr><td>속도-간격 압박</td><td>Ego jerk</td><td>10.55</td><td>5.21</td><td>승차감 proxy 개선</td></tr>
+            <tr data-case-row><td><span class="env-chip">도심</span></td><td><span class="case-name">인접 차량 cut-in</span><span class="case-sub">150 trials</span></td><td><span class="metric-pair"><span class="from">0.92s</span><span class="arrow">→</span><span class="to">5.05s</span></span></td><td><span class="metric-pair"><span class="from">0.635</span><span class="arrow">→</span><span class="to">0.045</span></span></td><td><span class="metric-pair"><span class="from">0.129</span><span class="arrow">→</span><span class="to">0.010</span></span></td><td><span class="metric-pair"><span class="from">1.000</span><span class="arrow">→</span><span class="to">0.013</span></span></td><td><span class="metric-pair"><span class="from">171.4</span><span class="arrow">→</span><span class="to">51.8</span></span></td><td><span class="metric-pair"><span class="from">38.1</span><span class="arrow">→</span><span class="to">32.2</span></span></td><td><span class="metric-pair"><span class="from">23.59</span><span class="arrow">→</span><span class="to">9.63</span></span></td><td><span class="verdict good">전반 개선</span></td></tr>
+            <tr data-case-row><td><span class="env-chip">도심</span></td><td><span class="case-name">전방 차량 급제동</span><span class="case-sub">150 trials</span></td><td><span class="metric-pair"><span class="from">1.40s</span><span class="arrow">→</span><span class="to">2.16s</span></span></td><td><span class="metric-pair"><span class="from">0.373</span><span class="arrow">→</span><span class="to">0.280</span></span></td><td><span class="metric-pair"><span class="from">0.026</span><span class="arrow">→</span><span class="to">0.033</span></span></td><td><span class="metric-pair"><span class="from">0.160</span><span class="arrow">→</span><span class="to">0.167</span></span></td><td><span class="metric-pair"><span class="from">68.0</span><span class="arrow">→</span><span class="to">96.1</span></span></td><td><span class="metric-pair"><span class="from">25.3</span><span class="arrow">→</span><span class="to">63.9</span></span></td><td><span class="metric-pair"><span class="from">12.88</span><span class="arrow">→</span><span class="to">13.75</span></span></td><td><span class="verdict mixed">혼합</span></td></tr>
+            <tr data-case-row><td><span class="env-chip">도심</span></td><td><span class="case-name">정체 차량 노출</span><span class="case-sub">150 trials</span></td><td><span class="metric-pair"><span class="from">0.62s</span><span class="arrow">→</span><span class="to">0.99s</span></span></td><td><span class="metric-pair"><span class="from">0.301</span><span class="arrow">→</span><span class="to">0.361</span></span></td><td><span class="metric-pair"><span class="from">0.069</span><span class="arrow">→</span><span class="to">0.074</span></span></td><td><span class="metric-pair"><span class="from">1.000</span><span class="arrow">→</span><span class="to">0.993</span></span></td><td><span class="metric-pair"><span class="from">101.7</span><span class="arrow">→</span><span class="to">145.8</span></span></td><td><span class="metric-pair"><span class="from">11.4</span><span class="arrow">→</span><span class="to">41.1</span></span></td><td><span class="metric-pair"><span class="from">32.47</span><span class="arrow">→</span><span class="to">23.02</span></span></td><td><span class="verdict mixed">혼합</span></td></tr>
+            <tr data-case-row><td><span class="env-chip">자동차 전용도로</span></td><td><span class="case-name">기본 following</span><span class="case-sub">150 trials</span></td><td><span class="metric-pair"><span class="from">6.08s</span><span class="arrow">→</span><span class="to">6.08s</span></span></td><td><span class="metric-pair"><span class="from">0.268</span><span class="arrow">→</span><span class="to">0.268</span></span></td><td><span class="metric-pair"><span class="from">0.151</span><span class="arrow">→</span><span class="to">0.151</span></span></td><td><span class="metric-pair"><span class="from">0.253</span><span class="arrow">→</span><span class="to">0.247</span></span></td><td><span class="metric-pair"><span class="from">91.5</span><span class="arrow">→</span><span class="to">92.0</span></span></td><td><span class="metric-pair"><span class="from">1.0</span><span class="arrow">→</span><span class="to">1.8</span></span></td><td><span class="metric-pair"><span class="from">2.20</span><span class="arrow">→</span><span class="to">2.32</span></span></td><td><span class="verdict mixed">중립</span></td></tr>
+            <tr data-case-row><td><span class="env-chip">자동차 전용도로</span></td><td><span class="case-name">진입로 합류</span><span class="case-sub">150 trials</span></td><td><span class="metric-pair"><span class="from">1.31s</span><span class="arrow">→</span><span class="to">7.05s</span></span></td><td><span class="metric-pair"><span class="from">0.454</span><span class="arrow">→</span><span class="to">0.029</span></span></td><td><span class="metric-pair"><span class="from">0.045</span><span class="arrow">→</span><span class="to">0.001</span></span></td><td><span class="metric-pair"><span class="from">0.560</span><span class="arrow">→</span><span class="to">0.013</span></span></td><td><span class="metric-pair"><span class="from">212.7</span><span class="arrow">→</span><span class="to">77.0</span></span></td><td><span class="metric-pair"><span class="from">66.8</span><span class="arrow">→</span><span class="to">2.1</span></span></td><td><span class="metric-pair"><span class="from">4.53</span><span class="arrow">→</span><span class="to">2.59</span></span></td><td><span class="verdict good">전반 개선</span></td></tr>
+            <tr data-case-row><td><span class="env-chip">자동차 전용도로</span></td><td><span class="case-name">속도-간격 압박</span><span class="case-sub">150 trials</span></td><td><span class="metric-pair"><span class="from">0.96s</span><span class="arrow">→</span><span class="to">15.33s</span></span></td><td><span class="metric-pair"><span class="from">0.482</span><span class="arrow">→</span><span class="to">0.000</span></span></td><td><span class="metric-pair"><span class="from">0.093</span><span class="arrow">→</span><span class="to">0.000</span></span></td><td><span class="metric-pair"><span class="from">0.853</span><span class="arrow">→</span><span class="to">0.000</span></span></td><td><span class="metric-pair"><span class="from">227.1</span><span class="arrow">→</span><span class="to">114.5</span></span></td><td><span class="metric-pair"><span class="from">50.6</span><span class="arrow">→</span><span class="to">36.4</span></span></td><td><span class="metric-pair"><span class="from">10.56</span><span class="arrow">→</span><span class="to">5.20</span></span></td><td><span class="verdict good">전반 개선</span></td></tr>
+            <tr data-case-row><td><span class="env-chip">고속도로</span></td><td><span class="case-name">고속 following</span><span class="case-sub">150 trials</span></td><td><span class="metric-pair"><span class="from">3.36s</span><span class="arrow">→</span><span class="to">3.36s</span></span></td><td><span class="metric-pair"><span class="from">0.763</span><span class="arrow">→</span><span class="to">0.766</span></span></td><td><span class="metric-pair"><span class="from">0.530</span><span class="arrow">→</span><span class="to">0.531</span></span></td><td><span class="metric-pair"><span class="from">0.727</span><span class="arrow">→</span><span class="to">0.727</span></span></td><td><span class="metric-pair"><span class="from">140.0</span><span class="arrow">→</span><span class="to">144.2</span></span></td><td><span class="metric-pair"><span class="from">7.9</span><span class="arrow">→</span><span class="to">6.6</span></span></td><td><span class="metric-pair"><span class="from">3.54</span><span class="arrow">→</span><span class="to">3.59</span></span></td><td><span class="verdict mixed">혼합</span></td></tr>
+            <tr data-case-row><td><span class="env-chip">고속도로</span></td><td><span class="case-name">고속 cut-in</span><span class="case-sub">150 trials</span></td><td><span class="metric-pair"><span class="from">1.35s</span><span class="arrow">→</span><span class="to">2.05s</span></span></td><td><span class="metric-pair"><span class="from">0.190</span><span class="arrow">→</span><span class="to">0.287</span></span></td><td><span class="metric-pair"><span class="from">0.154</span><span class="arrow">→</span><span class="to">0.214</span></span></td><td><span class="metric-pair"><span class="from">0.433</span><span class="arrow">→</span><span class="to">0.440</span></span></td><td><span class="metric-pair"><span class="from">132.9</span><span class="arrow">→</span><span class="to">132.1</span></span></td><td><span class="metric-pair"><span class="from">12.5</span><span class="arrow">→</span><span class="to">3.7</span></span></td><td><span class="metric-pair"><span class="from">3.30</span><span class="arrow">→</span><span class="to">3.31</span></span></td><td><span class="verdict mixed">혼합</span></td></tr>
+            <tr data-case-row><td><span class="env-chip">고속도로</span></td><td><span class="case-name">밀집 차량열</span><span class="case-sub">150 trials</span></td><td><span class="metric-pair"><span class="from">1.25s</span><span class="arrow">→</span><span class="to">1.94s</span></span></td><td><span class="metric-pair"><span class="from">0.143</span><span class="arrow">→</span><span class="to">0.226</span></span></td><td><span class="metric-pair"><span class="from">0.111</span><span class="arrow">→</span><span class="to">0.169</span></span></td><td><span class="metric-pair"><span class="from">0.427</span><span class="arrow">→</span><span class="to">0.460</span></span></td><td><span class="metric-pair"><span class="from">140.3</span><span class="arrow">→</span><span class="to">133.3</span></span></td><td><span class="metric-pair"><span class="from">22.5</span><span class="arrow">→</span><span class="to">4.4</span></span></td><td><span class="metric-pair"><span class="from">3.77</span><span class="arrow">→</span><span class="to">3.41</span></span></td><td><span class="verdict mixed">혼합</span></td></tr>
+            <tr data-case-row><td><span class="env-chip">인식 품질 스트레스</span></td><td><span class="case-name">안개 환경 cut-in</span><span class="case-sub">150 trials</span></td><td><span class="metric-pair"><span class="from">0.90s</span><span class="arrow">→</span><span class="to">4.95s</span></span></td><td><span class="metric-pair"><span class="from">0.623</span><span class="arrow">→</span><span class="to">0.043</span></span></td><td><span class="metric-pair"><span class="from">0.124</span><span class="arrow">→</span><span class="to">0.010</span></span></td><td><span class="metric-pair"><span class="from">1.000</span><span class="arrow">→</span><span class="to">0.013</span></span></td><td><span class="metric-pair"><span class="from">157.5</span><span class="arrow">→</span><span class="to">82.3</span></span></td><td><span class="metric-pair"><span class="from">34.0</span><span class="arrow">→</span><span class="to">33.4</span></span></td><td><span class="metric-pair"><span class="from">20.00</span><span class="arrow">→</span><span class="to">13.93</span></span></td><td><span class="verdict good">전반 개선</span></td></tr>
+            <tr data-case-row><td><span class="env-chip">인식 품질 스트레스</span></td><td><span class="case-name">비 환경 cut-in</span><span class="case-sub">150 trials</span></td><td><span class="metric-pair"><span class="from">0.90s</span><span class="arrow">→</span><span class="to">4.87s</span></span></td><td><span class="metric-pair"><span class="from">0.623</span><span class="arrow">→</span><span class="to">0.042</span></span></td><td><span class="metric-pair"><span class="from">0.124</span><span class="arrow">→</span><span class="to">0.011</span></span></td><td><span class="metric-pair"><span class="from">1.000</span><span class="arrow">→</span><span class="to">0.007</span></span></td><td><span class="metric-pair"><span class="from">157.5</span><span class="arrow">→</span><span class="to">80.3</span></span></td><td><span class="metric-pair"><span class="from">34.0</span><span class="arrow">→</span><span class="to">33.8</span></span></td><td><span class="metric-pair"><span class="from">19.98</span><span class="arrow">→</span><span class="to">13.87</span></span></td><td><span class="verdict good">전반 개선</span></td></tr>
+            <tr data-case-row><td><span class="env-chip">인식 품질 스트레스</span></td><td><span class="case-name">인식 노이즈 cut-in</span><span class="case-sub">150 trials</span></td><td><span class="metric-pair"><span class="from">0.92s</span><span class="arrow">→</span><span class="to">5.33s</span></span></td><td><span class="metric-pair"><span class="from">0.637</span><span class="arrow">→</span><span class="to">0.036</span></span></td><td><span class="metric-pair"><span class="from">0.129</span><span class="arrow">→</span><span class="to">0.010</span></span></td><td><span class="metric-pair"><span class="from">1.000</span><span class="arrow">→</span><span class="to">0.020</span></span></td><td><span class="metric-pair"><span class="from">161.1</span><span class="arrow">→</span><span class="to">89.0</span></span></td><td><span class="metric-pair"><span class="from">34.8</span><span class="arrow">→</span><span class="to">31.8</span></span></td><td><span class="metric-pair"><span class="from">19.90</span><span class="arrow">→</span><span class="to">13.69</span></span></td><td><span class="verdict good">전반 개선</span></td></tr>
           </tbody>
         </table>
+        <p class="table-note">
+          표는 `traffic_env_unified_gif_20260521`의 ego vehicle-order group 평균에서 정리했습니다. “전반 개선”은 TTC margin 증가와 collision 또는 harsh-driving proxy 감소가 함께 나타난 case이며, “혼합/중립”은 일부 안전 또는 comfort proxy가 개선되지 않아 추가 튜닝 대상으로 남긴 case입니다.
+        </p>
       </div>
     </section>
 
