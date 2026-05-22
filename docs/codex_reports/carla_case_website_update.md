@@ -3,11 +3,13 @@
 ## Scope
 
 Updated the VLA / GUIDANCE GitHub Pages page to show completed CARLA simulation GIFs by environment and case.
+The current GIF assets were then replaced with longer 14.4 s representative GIFs from the dedicated CALAR/GIF run.
 
 ## Source Run
 
 - Local source root: `C:\Users\user\Desktop\VLA\main\CALAR`
-- Run id: `traffic_env_unified_gif_20260521`
+- Original matrix run id: `traffic_env_unified_gif_20260521`
+- Long GIF run id: `long_gif_20260522_134458`
 - Representative asset used per case: `side_by_side_trial_000.gif`
 - Verified case count: 12 cases
 - Verified side-by-side GIF count: 150 per case
@@ -29,7 +31,7 @@ Optimized web GIF copies were generated under:
 - `assets/carla_cases/rain_cutin_degraded_perception_trial_000_side_by_side.gif`
 - `assets/carla_cases/perception_noise_cutin_trial_000_side_by_side.gif`
 
-The optimized GIFs preserve the source event but reduce width and sampled frame count for GitHub Pages usability.
+The optimized GIFs preserve the longer source event duration while reducing width and palette size for GitHub Pages usability.
 
 ## Page Changes
 
@@ -42,5 +44,6 @@ The optimized GIFs preserve the source event but reduce width and sampled frame 
 ## Validation
 
 - HTML asset references checked: 14 references, 0 missing.
+- Long GIF duration checked: 12/12 assets keep 72 frames and 14.4 s duration.
 - Exact metric values checked in `index.html`.
 - Scientific boundary preserved as controlled CARLA simulation diagnostic only.

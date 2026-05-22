@@ -2,10 +2,17 @@
 
 ## Current Page Assets
 
-The VLA / GUIDANCE page now uses case-labeled optimized GIFs under `assets/carla_cases/`.
+The VLA / GUIDANCE page now uses case-labeled optimized long GIFs under `assets/carla_cases/`.
 Each file is derived from the completed CALAR/CARLA run:
 
-`C:\Users\user\Desktop\VLA\main\CALAR\...\runs\traffic_env_unified_gif_20260521\side_by_side_trial_000.gif`
+`C:\Users\user\Desktop\VLA\main\CALAR\GIF\...\runs\long_gif_20260522_134458\side_by_side_trial_000.gif`
+
+Each deployed GIF keeps the long representative event duration:
+
+- Frames: 72
+- Duration: 14.4 s
+- Width: 960 px
+- Height: 270 px
 
 ## Scenario / Case Mapping
 
@@ -29,3 +36,4 @@ Each file is derived from the completed CALAR/CARLA run:
 - Missing GIF assets: none.
 - Broken page references: none detected.
 - Old root-level Ramp merge / Speed-gap GIFs were removed from the deploy repo because the page now uses the case-labeled optimized assets.
+- Current assets are regenerated from the longer `long_gif_20260522_134458` run.
