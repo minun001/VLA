@@ -302,6 +302,13 @@
       margin-bottom: 10px;
     }
 
+    .taxonomy-summary {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 780;
+    }
+
     .case-list {
       display: grid;
       gap: 10px;
@@ -311,13 +318,28 @@
     }
 
     .case-list li {
-      padding: 10px 12px;
+      display: grid;
+      gap: 2px;
+      padding: 12px 13px;
       border: 1px solid rgba(17, 24, 39, 0.1);
       border-radius: 16px;
       background: rgba(255, 255, 255, 0.74);
       color: #334155;
-      font-size: 0.9rem;
       font-weight: 800;
+    }
+
+    .case-list strong {
+      color: var(--ink);
+      font-size: 0.96rem;
+      font-weight: 1000;
+      line-height: 1.28;
+    }
+
+    .case-list span {
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 760;
+      line-height: 1.35;
     }
 
     .feature-strip {
@@ -614,8 +636,8 @@
         </p>
         <nav class="hero-actions" aria-label="Page navigation">
           <a class="pill" href="#taxonomy">실험 구성</a>
-          <a class="pill" href="#core-cases">핵심 case</a>
-          <a class="pill" href="#case-matrix">상황별 GIF</a>
+          <a class="pill" href="#core-cases">핵심 사례</a>
+          <a class="pill" href="#case-matrix">상황별 영상</a>
           <a class="pill" href="#metrics">정량 지표</a>
           <a class="pill" href="#boundary">해석 범위</a>
         </nav>
@@ -659,53 +681,57 @@
     <section class="section" id="taxonomy">
       <div class="section-title">
         <div>
-          <p class="section-kicker">Experiment structure</p>
-          <h2>상황 환경 4개와 case 12개</h2>
+          <p class="section-kicker">실험 구성</p>
+          <h2>상황 환경 4개와 사례 12개</h2>
         </div>
         <p class="section-note">
-          새 GIF는 `long_gif_20260522_60s` run에서 생성했습니다. 각 case는 No-GUIDANCE와 GUIDANCE를 나란히 보여주는 24초 side-by-side 대표 trial입니다.
+          도심, 자동차 전용도로, 고속도로, 인식 품질 스트레스 환경으로 나누고 각 환경에서 3개 사례를 비교했습니다.
         </p>
       </div>
 
       <div class="taxonomy-grid">
         <article class="taxonomy-card">
           <h3>도심 환경</h3>
+          <p class="taxonomy-summary">저속 도심 교통에서 끼어들기와 급제동 반응을 확인합니다.</p>
           <ul class="case-list">
-            <li>urban_adjacent_cutin - 인접 차량 cut-in</li>
-            <li>urban_lead_sudden_braking - 전방 차량 급제동</li>
-            <li>urban_stop_and_go_reveal - 정체 차량 reveal</li>
+            <li><strong>인접 차량 끼어들기</strong><span>옆 차선 차량이 자차 차선으로 진입</span></li>
+            <li><strong>전방 차량 급제동</strong><span>앞차의 갑작스러운 감속에 대한 반응</span></li>
+            <li><strong>정체 차량 노출</strong><span>앞차가 빠지며 느린 차량이 드러나는 상황</span></li>
           </ul>
         </article>
         <article class="taxonomy-card">
           <h3>자동차 전용도로</h3>
+          <p class="taxonomy-summary">중고속 주행에서 합류, 속도 차이, 기본 추종을 비교합니다.</p>
           <ul class="case-list">
-            <li>arterial_moving_lead_following - 기본 car-following</li>
-            <li>arterial_ramp_merge - 진입로 합류</li>
-            <li>arterial_speed_gap_stress - 속도-간격 압박</li>
+            <li><strong>기본 전방차 추종</strong><span>정상 주행 상황의 안정성 확인</span></li>
+            <li><strong>진입로 합류</strong><span>합류 차량 앞에서 선제적 차간거리 형성 여부</span></li>
+            <li><strong>속도-간격 압박</strong><span>속도 차이와 짧은 차간거리로 위험이 커지는 상황</span></li>
           </ul>
         </article>
         <article class="taxonomy-card">
           <h3>고속도로 환경</h3>
+          <p class="taxonomy-summary">고속 조건에서 끼어들기와 뒤차 충격파 가능성을 확인합니다.</p>
           <ul class="case-list">
-            <li>highway_moving_lead_following - 고속 following</li>
-            <li>highway_adjacent_cutin - 고속 cut-in</li>
-            <li>highway_dense_traffic_string - 밀집 vehicle string</li>
+            <li><strong>고속 전방차 추종</strong><span>높은 속도에서 기본 차간 반응 확인</span></li>
+            <li><strong>고속 끼어들기</strong><span>짧은 시간 안에 안전거리 확보가 필요한 상황</span></li>
+            <li><strong>밀집 차량열</strong><span>뒤따르는 차량열로 감속 충격이 전파되는 상황</span></li>
           </ul>
         </article>
         <article class="taxonomy-card">
           <h3>인식 품질 스트레스</h3>
+          <p class="taxonomy-summary">가시성 저하와 인식 노이즈에서 반응이 안정적인지 봅니다.</p>
           <ul class="case-list">
-            <li>fog_cutin_degraded_perception - 안개 cut-in</li>
-            <li>rain_cutin_degraded_perception - 비 cut-in</li>
-            <li>perception_noise_cutin - perception fallback/noise</li>
+            <li><strong>안개 환경 끼어들기</strong><span>낮은 가시성에서의 선제 반응 확인</span></li>
+            <li><strong>비 환경 끼어들기</strong><span>비로 인한 인식 저하 상황 비교</span></li>
+            <li><strong>인식 노이즈 끼어들기</strong><span>객체 박스, 깊이, 차간거리 추정이 흔들리는 상황</span></li>
           </ul>
         </article>
       </div>
 
       <div class="feature-strip" aria-label="GIF generation summary">
         <div class="feature"><span class="label">환경</span><strong>4</strong></div>
-        <div class="feature"><span class="label">case</span><strong>12</strong></div>
-        <div class="feature"><span class="label">대표 GIF</span><strong>24.0s</strong></div>
+        <div class="feature"><span class="label">사례</span><strong>12</strong></div>
+        <div class="feature"><span class="label">대표 영상</span><strong>24.0s</strong></div>
         <div class="feature"><span class="label">프레임</span><strong>120</strong></div>
       </div>
     </section>
@@ -714,10 +740,10 @@
       <div class="section-title">
         <div>
           <p class="section-kicker">Core visual evidence</p>
-          <h2>핵심 150-trial 조건의 대표 GIF</h2>
+          <h2>핵심 150회 조건의 대표 영상</h2>
         </div>
         <p class="section-note">
-          <span class="one-line">진입로 합류와 속도-간격 압박은 정량 비교의 핵심 case입니다.</span> 아래 GIF는 새로 생성한 24초 side-by-side 대표 trial입니다.
+          <span class="one-line">진입로 합류와 속도-간격 압박은 정량 비교의 핵심 사례입니다.</span> 아래 영상은 새로 생성한 24초 대표 비교 영상입니다.
         </p>
       </div>
 
@@ -755,8 +781,8 @@
     <section class="section" id="case-matrix">
       <div class="section-title">
         <div>
-          <p class="section-kicker">Scenario-by-case GIF matrix</p>
-          <h2>상황별 · case별 대표 시뮬레이션</h2>
+          <p class="section-kicker">상황별 사례 영상</p>
+          <h2>상황별 · 사례별 대표 시뮬레이션</h2>
         </div>
         <p class="section-note">
           각 GIF는 같은 사건을 No-GUIDANCE와 GUIDANCE 조건으로 side-by-side 비교합니다. 왼쪽은 No-GUIDANCE, 오른쪽은 GUIDANCE 조건입니다.
