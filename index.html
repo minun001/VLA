@@ -584,6 +584,10 @@
       background: rgba(255, 255, 255, 0.82);
     }
 
+    .chart-card.wide {
+      grid-column: 1 / -1;
+    }
+
     .chart-note {
       margin-bottom: 16px;
       color: var(--muted);
@@ -625,6 +629,95 @@
     .paired-bars {
       display: grid;
       gap: 5px;
+    }
+
+    .viz-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .viz-kpi {
+      padding: 15px;
+      border: 1px solid rgba(15, 23, 42, 0.1);
+      border-radius: 18px;
+      background: rgba(248, 250, 252, 0.8);
+    }
+
+    .viz-kpi strong {
+      display: block;
+      color: #0f172a;
+      font-size: clamp(1.8rem, 3vw, 2.55rem);
+      line-height: 1;
+      letter-spacing: -0.06em;
+    }
+
+    .viz-kpi span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.88rem;
+      font-weight: 850;
+      line-height: 1.5;
+    }
+
+    .delta-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .delta-row {
+      display: grid;
+      grid-template-columns: minmax(155px, 1.1fr) minmax(160px, 2.2fr) minmax(76px, auto);
+      gap: 10px;
+      align-items: center;
+    }
+
+    .delta-label {
+      color: #334155;
+      font-size: 0.84rem;
+      font-weight: 950;
+      white-space: nowrap;
+    }
+
+    .delta-bar {
+      height: 13px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.08);
+    }
+
+    .delta-fill {
+      display: block;
+      width: var(--w);
+      height: 100%;
+      min-width: 3px;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #10b981, #22c55e);
+    }
+
+    .delta-row.worse .delta-fill {
+      background: linear-gradient(90deg, #ef4444, #f97316);
+    }
+
+    .delta-row.neutral .delta-fill {
+      background: #94a3b8;
+    }
+
+    .delta-value {
+      color: var(--guidance-dark);
+      font-size: 0.84rem;
+      font-weight: 1000;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .delta-row.worse .delta-value {
+      color: var(--baseline-dark);
+    }
+
+    .delta-row.neutral .delta-value {
+      color: #64748b;
     }
 
     .boundary {
@@ -686,6 +779,18 @@
       .case-grid,
       .chart-grid {
         grid-template-columns: 1fr;
+      }
+
+      .viz-summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .delta-row {
+        grid-template-columns: 1fr;
+      }
+
+      .delta-value {
+        text-align: left;
       }
 
       .section,
@@ -1033,91 +1138,83 @@
     <section class="section" id="charts">
       <div class="section-title">
         <div>
-          <p class="section-kicker">Metric visualization</p>
-          <h2>안전성과 comfort proxy 변화</h2>
+          <p class="section-kicker">Full-case visualization</p>
+          <h2>전체 case 기준 안전성과 comfort proxy 변화</h2>
         </div>
         <p class="section-note">
-          빨간색은 No-GUIDANCE, 초록색은 GUIDANCE입니다. 영상 속 점/궤적과 아래 chart 색상이 같은 의미를 갖습니다.
+          12개 case 표를 시각적으로 요약했습니다. 전반 개선 case와 혼합 case를 분리해 해석하고, 실제 claim은 controlled CARLA simulation diagnostic 범위로 제한합니다.
         </p>
       </div>
 
       <div class="chart-grid">
-        <article class="chart-card">
-          <h3>Min TTC</h3>
-          <p class="chart-note">GUIDANCE 조건에서 두 핵심 case 모두 TTC margin이 커졌습니다.</p>
-          <div class="bar-group">
-            <div>
-              <div class="bar-meta"><span>진입로 합류 - No-GUIDANCE</span><span>1.31s</span></div>
-              <div class="bar-track"><span class="bar-fill" style="--w: 8.4%; --color: var(--baseline);"></span></div>
-              <div class="bar-meta"><span>진입로 합류 - GUIDANCE</span><span>7.05s</span></div>
-              <div class="bar-track"><span class="bar-fill" style="--w: 45.1%; --color: var(--guidance);"></span></div>
-            </div>
-            <div>
-              <div class="bar-meta"><span>속도-간격 압박 - No-GUIDANCE</span><span>0.96s</span></div>
-              <div class="bar-track"><span class="bar-fill" style="--w: 6.1%; --color: var(--baseline);"></span></div>
-              <div class="bar-meta"><span>속도-간격 압박 - GUIDANCE</span><span>15.33s</span></div>
-              <div class="bar-track"><span class="bar-fill" style="--w: 100%; --color: var(--guidance);"></span></div>
-            </div>
+        <article class="chart-card wide">
+          <h3>12개 case 요약</h3>
+          <p class="chart-note">표의 ego 기준 값을 case 단위로 집계했습니다. GUIDANCE가 항상 우세하다고 단정하지 않고, 개선이 뚜렷한 case와 추가 튜닝이 필요한 case를 분리합니다.</p>
+          <div class="viz-summary-grid">
+            <div class="viz-kpi"><strong>10/12</strong><span>case에서 Min TTC margin이 증가했습니다. 2개 following case는 거의 유지되었습니다.</span></div>
+            <div class="viz-kpi"><strong>8/12</strong><span>case에서 collision trial rate가 감소했습니다. 고속 일부 case는 혼합 결과입니다.</span></div>
+            <div class="viz-kpi"><strong>6/12</strong><span>case에서 안전성과 comfort proxy가 함께 전반 개선으로 나타났습니다.</span></div>
+            <div class="viz-kpi"><strong>8~9/12</strong><span>급가속, 급감속, jerk 중 comfort proxy는 대부분 case에서 감소했습니다.</span></div>
           </div>
         </article>
 
         <article class="chart-card">
-          <h3>Collision trial rate</h3>
-          <p class="chart-note">GUIDANCE 조건에서 collision trial rate가 크게 낮아졌습니다.</p>
-          <div class="bar-group">
-            <div>
-              <div class="bar-meta"><span>진입로 합류 - No-GUIDANCE</span><span>0.560</span></div>
-              <div class="bar-track"><span class="bar-fill" style="--w: 65.7%; --color: var(--baseline);"></span></div>
-              <div class="bar-meta"><span>진입로 합류 - GUIDANCE</span><span>0.013</span></div>
-              <div class="bar-track"><span class="bar-fill" style="--w: 1.5%; --color: var(--guidance);"></span></div>
-            </div>
-            <div>
-              <div class="bar-meta"><span>속도-간격 압박 - No-GUIDANCE</span><span>0.853</span></div>
-              <div class="bar-track"><span class="bar-fill" style="--w: 100%; --color: var(--baseline);"></span></div>
-              <div class="bar-meta"><span>속도-간격 압박 - GUIDANCE</span><span>0.000</span></div>
-              <div class="bar-track"><span class="bar-fill" style="--w: 0%; --color: var(--guidance);"></span></div>
-            </div>
+          <h3>Min TTC 증가량</h3>
+          <p class="chart-note">막대는 GUIDANCE - No-GUIDANCE의 Min TTC 변화입니다. 값이 클수록 안전 여유가 커진 것입니다.</p>
+          <div class="delta-list">
+            <div class="delta-row"><span class="delta-label">도심 cut-in</span><span class="delta-bar"><span class="delta-fill" style="--w: 29%;"></span></span><span class="delta-value">+4.13s</span></div>
+            <div class="delta-row"><span class="delta-label">전방 급제동</span><span class="delta-bar"><span class="delta-fill" style="--w: 5%;"></span></span><span class="delta-value">+0.76s</span></div>
+            <div class="delta-row"><span class="delta-label">정체 노출</span><span class="delta-bar"><span class="delta-fill" style="--w: 3%;"></span></span><span class="delta-value">+0.37s</span></div>
+            <div class="delta-row neutral"><span class="delta-label">기본 following</span><span class="delta-bar"><span class="delta-fill" style="--w: 1%;"></span></span><span class="delta-value">±0.00s</span></div>
+            <div class="delta-row"><span class="delta-label">진입로 합류</span><span class="delta-bar"><span class="delta-fill" style="--w: 40%;"></span></span><span class="delta-value">+5.74s</span></div>
+            <div class="delta-row"><span class="delta-label">속도-간격 압박</span><span class="delta-bar"><span class="delta-fill" style="--w: 100%;"></span></span><span class="delta-value">+14.37s</span></div>
+            <div class="delta-row neutral"><span class="delta-label">고속 following</span><span class="delta-bar"><span class="delta-fill" style="--w: 1%;"></span></span><span class="delta-value">±0.00s</span></div>
+            <div class="delta-row"><span class="delta-label">고속 cut-in</span><span class="delta-bar"><span class="delta-fill" style="--w: 5%;"></span></span><span class="delta-value">+0.70s</span></div>
+            <div class="delta-row"><span class="delta-label">밀집 차량열</span><span class="delta-bar"><span class="delta-fill" style="--w: 5%;"></span></span><span class="delta-value">+0.69s</span></div>
+            <div class="delta-row"><span class="delta-label">안개 cut-in</span><span class="delta-bar"><span class="delta-fill" style="--w: 28%;"></span></span><span class="delta-value">+4.05s</span></div>
+            <div class="delta-row"><span class="delta-label">비 cut-in</span><span class="delta-bar"><span class="delta-fill" style="--w: 28%;"></span></span><span class="delta-value">+3.97s</span></div>
+            <div class="delta-row"><span class="delta-label">노이즈 cut-in</span><span class="delta-bar"><span class="delta-fill" style="--w: 31%;"></span></span><span class="delta-value">+4.41s</span></div>
           </div>
         </article>
 
         <article class="chart-card">
-          <h3>TTC risk ratio</h3>
-          <p class="chart-note">TTC &lt; 5s와 TTC &lt; 1.5s 비율은 낮을수록 안전합니다.</p>
-          <div class="bar-group">
-            <div>
-              <div class="bar-meta"><span>진입로 합류 - TTC &lt; 5s</span><span>0.454 → 0.029</span></div>
-              <div class="paired-bars">
-                <div class="bar-track"><span class="bar-fill" style="--w: 93.8%; --color: var(--baseline);"></span></div>
-                <div class="bar-track"><span class="bar-fill" style="--w: 6.0%; --color: var(--guidance);"></span></div>
-              </div>
-            </div>
-            <div>
-              <div class="bar-meta"><span>속도-간격 압박 - TTC &lt; 5s</span><span>0.482 → 0.000</span></div>
-              <div class="paired-bars">
-                <div class="bar-track"><span class="bar-fill" style="--w: 100%; --color: var(--baseline);"></span></div>
-                <div class="bar-track"><span class="bar-fill" style="--w: 0%; --color: var(--guidance);"></span></div>
-              </div>
-            </div>
+          <h3>Collision trial rate 변화</h3>
+          <p class="chart-note">아래 값은 No-GUIDANCE - GUIDANCE입니다. 초록색은 감소, 붉은색은 GUIDANCE 조건에서 증가한 혼합 case입니다.</p>
+          <div class="delta-list">
+            <div class="delta-row"><span class="delta-label">도심 cut-in</span><span class="delta-bar"><span class="delta-fill" style="--w: 99%;"></span></span><span class="delta-value">↓0.987</span></div>
+            <div class="delta-row worse"><span class="delta-label">전방 급제동</span><span class="delta-bar"><span class="delta-fill" style="--w: 1%;"></span></span><span class="delta-value">↑0.007</span></div>
+            <div class="delta-row"><span class="delta-label">정체 노출</span><span class="delta-bar"><span class="delta-fill" style="--w: 1%;"></span></span><span class="delta-value">↓0.007</span></div>
+            <div class="delta-row"><span class="delta-label">기본 following</span><span class="delta-bar"><span class="delta-fill" style="--w: 1%;"></span></span><span class="delta-value">↓0.006</span></div>
+            <div class="delta-row"><span class="delta-label">진입로 합류</span><span class="delta-bar"><span class="delta-fill" style="--w: 55%;"></span></span><span class="delta-value">↓0.547</span></div>
+            <div class="delta-row"><span class="delta-label">속도-간격 압박</span><span class="delta-bar"><span class="delta-fill" style="--w: 86%;"></span></span><span class="delta-value">↓0.853</span></div>
+            <div class="delta-row neutral"><span class="delta-label">고속 following</span><span class="delta-bar"><span class="delta-fill" style="--w: 1%;"></span></span><span class="delta-value">0.000</span></div>
+            <div class="delta-row worse"><span class="delta-label">고속 cut-in</span><span class="delta-bar"><span class="delta-fill" style="--w: 1%;"></span></span><span class="delta-value">↑0.007</span></div>
+            <div class="delta-row worse"><span class="delta-label">밀집 차량열</span><span class="delta-bar"><span class="delta-fill" style="--w: 3%;"></span></span><span class="delta-value">↑0.033</span></div>
+            <div class="delta-row"><span class="delta-label">안개 cut-in</span><span class="delta-bar"><span class="delta-fill" style="--w: 99%;"></span></span><span class="delta-value">↓0.987</span></div>
+            <div class="delta-row"><span class="delta-label">비 cut-in</span><span class="delta-bar"><span class="delta-fill" style="--w: 100%;"></span></span><span class="delta-value">↓0.993</span></div>
+            <div class="delta-row"><span class="delta-label">노이즈 cut-in</span><span class="delta-bar"><span class="delta-fill" style="--w: 99%;"></span></span><span class="delta-value">↓0.980</span></div>
           </div>
         </article>
 
-        <article class="chart-card">
-          <h3>Comfort proxy</h3>
-          <p class="chart-note">GUIDANCE는 excessive accel/decel과 jerk도 함께 낮추는 방향을 보였습니다.</p>
+        <article class="chart-card wide">
+          <h3>Comfort proxy 개선 빈도</h3>
+          <p class="chart-note">급가속, 급감속, jerk는 낮을수록 부드러운 주행 proxy입니다. 아래는 12개 case 중 GUIDANCE 조건에서 값이 낮아진 case 수입니다.</p>
           <div class="bar-group">
             <div>
-              <div class="bar-meta"><span>진입로 합류 급가속</span><span>212.7 → 77.0</span></div>
-              <div class="paired-bars">
-                <div class="bar-track"><span class="bar-fill" style="--w: 93.6%; --color: var(--baseline);"></span></div>
-                <div class="bar-track"><span class="bar-fill" style="--w: 33.9%; --color: var(--guidance);"></span></div>
-              </div>
+              <div class="bar-meta"><span>급가속 감소</span><span>8 / 12 case</span></div>
+              <div class="bar-track"><span class="bar-fill" style="--w: 66.7%; --color: var(--guidance);"></span></div>
             </div>
             <div>
-              <div class="bar-meta"><span>속도-간격 압박 jerk</span><span>10.56 → 5.20</span></div>
-              <div class="paired-bars">
-                <div class="bar-track"><span class="bar-fill" style="--w: 100%; --color: var(--baseline);"></span></div>
-                <div class="bar-track"><span class="bar-fill" style="--w: 49.4%; --color: var(--guidance);"></span></div>
-              </div>
+              <div class="bar-meta"><span>급감속 감소</span><span>9 / 12 case</span></div>
+              <div class="bar-track"><span class="bar-fill" style="--w: 75%; --color: var(--guidance);"></span></div>
+            </div>
+            <div>
+              <div class="bar-meta"><span>Jerk 감소</span><span>8 / 12 case</span></div>
+              <div class="bar-track"><span class="bar-fill" style="--w: 66.7%; --color: var(--guidance);"></span></div>
+            </div>
+            <div>
+              <div class="bar-meta"><span>전반 개선 판정</span><span>6 / 12 case</span></div>
+              <div class="bar-track"><span class="bar-fill" style="--w: 50%; --color: var(--guidance);"></span></div>
             </div>
           </div>
         </article>
