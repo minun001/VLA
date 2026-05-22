@@ -1,31 +1,31 @@
 # GIF Asset Manifest
 
-## Active Public Page GIFs
+## Current Page Assets
 
-| Asset path | Scenario use | Source run | Dimensions / frames | Why it is appropriate |
-|---|---|---|---|---|
-| `assets/ramp_merge_trial_000_side_by_side.gif` | Ramp merge | `C:\Users\user\Desktop\VLA\main\CALAR\02_arterial_motorway\arterial_ramp_merge\runs\web_gif_ramp_merge_trial_000_20260521` | 1920x540 / 48 frames | Generated from `p10_ramp_merge`, `trial_000`, `record_gif=true`; shows side-by-side No-GUIDANCE vs GUIDANCE for the Ramp merge case. |
-| `assets/speed_gap_stress_trial_000_side_by_side.gif` | Speed-gap stress | `C:\Users\user\Desktop\VLA\main\CALAR\02_arterial_motorway\arterial_speed_gap_stress\runs\web_gif_speed_gap_stress_trial_000_distinct_20260521` | 1920x540 / 48 frames | Generated from `p7_speed_gap_stress`, `trial_000`, `record_gif=true`; selected because the closer visible vehicle and relative-speed/gap pressure are visually distinct from the Ramp merge GIF. |
+The VLA / GUIDANCE page now uses case-labeled optimized GIFs under `assets/carla_cases/`.
+Each file is derived from the completed CALAR/CARLA run:
 
-## Korean Captions
+`C:\Users\user\Desktop\VLA\main\CALAR\...\runs\traffic_env_unified_gif_20260521\side_by_side_trial_000.gif`
 
-Ramp merge:
+## Scenario / Case Mapping
 
-> Ramp merge 조건에서 No-GUIDANCE는 merge 이후 짧은 TTC와 높은 collision trial rate를 보였습니다. GUIDANCE는 선제적으로 gap을 만들며 min TTC를 1.31s에서 7.05s로 높이고 collision trial rate를 0.560에서 0.013으로 낮췄습니다.
+| Environment | Case | Scenario id | Web asset |
+|---|---|---|---|
+| Urban downtown | `urban_adjacent_cutin` | `p2_adjacent_cutin` | `assets/carla_cases/urban_adjacent_cutin_trial_000_side_by_side.gif` |
+| Urban downtown | `urban_lead_sudden_braking` | `p3_lead_sudden_braking` | `assets/carla_cases/urban_lead_sudden_braking_trial_000_side_by_side.gif` |
+| Urban downtown | `urban_stop_and_go_reveal` | `p11_stop_and_go_reveal` | `assets/carla_cases/urban_stop_and_go_reveal_trial_000_side_by_side.gif` |
+| Arterial / motorway | `arterial_moving_lead_following` | `p1_moving_lead_following` | `assets/carla_cases/arterial_moving_lead_following_trial_000_side_by_side.gif` |
+| Arterial / motorway | `arterial_ramp_merge` | `p10_ramp_merge` | `assets/carla_cases/arterial_ramp_merge_trial_000_side_by_side.gif` |
+| Arterial / motorway | `arterial_speed_gap_stress` | `p7_speed_gap_stress` | `assets/carla_cases/arterial_speed_gap_stress_trial_000_side_by_side.gif` |
+| Highway | `highway_adjacent_cutin` | `p9_highway_cutin` | `assets/carla_cases/highway_adjacent_cutin_trial_000_side_by_side.gif` |
+| Highway | `highway_dense_traffic_string` | `p5_dense_traffic_string` | `assets/carla_cases/highway_dense_traffic_string_trial_000_side_by_side.gif` |
+| Highway | `highway_moving_lead_following` | `p1_moving_lead_following` | `assets/carla_cases/highway_moving_lead_following_trial_000_side_by_side.gif` |
+| Visibility / perception | `fog_cutin_degraded_perception` | `p12_adverse_visibility_degraded_perception` | `assets/carla_cases/fog_cutin_degraded_perception_trial_000_side_by_side.gif` |
+| Visibility / perception | `rain_cutin_degraded_perception` | `p12_adverse_visibility_degraded_perception` | `assets/carla_cases/rain_cutin_degraded_perception_trial_000_side_by_side.gif` |
+| Visibility / perception | `perception_noise_cutin` | `p13_perception_noise_stress` | `assets/carla_cases/perception_noise_cutin_trial_000_side_by_side.gif` |
 
-Speed-gap stress:
+## Status
 
-> Speed-gap stress 조건에서 No-GUIDANCE는 속도 차이로 인해 closing risk가 커졌고, TTC < 5s ratio 0.484와 collision trial rate 0.853을 보였습니다. GUIDANCE는 TTC < 5s ratio와 collision trial rate를 모두 0으로 낮추며 위험 구간을 제거했습니다.
-
-## Retired Generic GIFs
-
-The previous generic GIF assets were removed from the public website asset folder to avoid scenario ambiguity:
-
-- `assets/carla_event_a.gif`
-- `assets/carla_event_b.gif`
-- `assets/carla_event_c.gif`
-- `assets/carla_event_d.gif`
-- `assets/carla_phase_*.gif`
-- `assets/carla_trial_*.gif`
-
-Use only scenario-labeled GIF filenames for public comparison evidence.
+- Missing GIF assets: none.
+- Broken page references: none detected.
+- Old root-level Ramp merge / Speed-gap GIFs were removed from the deploy repo because the page now uses the case-labeled optimized assets.

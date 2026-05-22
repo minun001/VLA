@@ -1,27 +1,27 @@
 <!doctype html>
 <html lang="ko">
 <head>
-  <!-- deploy-refresh: 2026-05-20T20:13:00+09:00 -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>VLA</title>
-  <meta name="description" content="No-GUIDANCE vs GUIDANCE final 150-trial controlled CARLA simulation comparison for Ramp merge and Speed-gap stress.">
+  <meta name="description" content="GUIDANCE controlled CARLA simulation matrix with No-GUIDANCE vs GUIDANCE 150-trial comparison and scenario-by-case GIF examples.">
   <style>
     :root {
       --bg: #f4f7f2;
       --ink: #101828;
       --muted: #5d6678;
       --line: rgba(16, 24, 40, 0.13);
-      --card: rgba(255, 255, 255, 0.92);
+      --card: rgba(255, 255, 255, 0.94);
       --guidance: #0f9f6e;
       --guidance-dark: #047857;
       --baseline: #ef4444;
       --baseline-dark: #b42318;
-      --amber: #f59e0b;
       --blue: #2563eb;
-      --cream: #fff7ed;
+      --amber: #f59e0b;
+      --slate: #172033;
       --shadow: 0 24px 72px rgba(15, 23, 42, 0.12);
-      --radius: 28px;
+      --radius-lg: 32px;
+      --radius-md: 22px;
     }
 
     * {
@@ -49,16 +49,28 @@
     }
 
     .page {
-      width: min(1500px, calc(100% - 44px));
+      width: min(1920px, calc(100% - clamp(24px, 5vw, 96px)));
       margin: 0 auto;
     }
 
     .hero {
       display: grid;
-      grid-template-columns: minmax(0, 1.04fr) minmax(420px, 0.96fr);
-      gap: 32px;
+      grid-template-columns: minmax(0, 1.05fr) minmax(390px, 0.95fr);
+      gap: clamp(24px, 4vw, 52px);
       align-items: center;
-      padding: 48px 0 34px;
+      padding: clamp(42px, 6vw, 82px) 0 clamp(28px, 4vw, 54px);
+    }
+
+    .hero-copy,
+    .hero-panel,
+    .section,
+    .scenario-card,
+    .case-card,
+    .coverage-card,
+    .chart-card,
+    .highlight {
+      min-width: 0;
+      max-width: 100%;
     }
 
     .eyebrow {
@@ -69,7 +81,7 @@
       border: 1px solid rgba(15, 159, 110, 0.28);
       border-radius: 999px;
       color: var(--guidance-dark);
-      background: rgba(255, 255, 255, 0.7);
+      background: rgba(255, 255, 255, 0.74);
       font-size: 0.9rem;
       font-weight: 900;
       letter-spacing: 0.02em;
@@ -81,590 +93,551 @@
       height: 9px;
       border-radius: 999px;
       background: var(--guidance);
-      box-shadow: 0 0 0 7px rgba(15, 159, 110, 0.14);
+      box-shadow: 0 0 0 6px rgba(15, 159, 110, 0.12);
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
     }
 
     h1 {
-      margin: 24px 0 18px;
-      max-width: 980px;
-      font-size: clamp(2.85rem, 5.1vw, 5.7rem);
-      line-height: 0.96;
-      letter-spacing: -0.075em;
+      margin: 22px 0 16px;
+      font-size: clamp(2.55rem, 5.4vw, 6.4rem);
+      line-height: 0.92;
+      letter-spacing: -0.07em;
+      text-wrap: balance;
+      overflow-wrap: anywhere;
     }
 
     h2 {
-      margin: 0;
-      font-size: clamp(2rem, 3.5vw, 3.9rem);
-      line-height: 1.02;
-      letter-spacing: -0.06em;
+      margin-bottom: 10px;
+      font-size: clamp(1.9rem, 3vw, 3.4rem);
+      line-height: 1.04;
+      letter-spacing: -0.045em;
+      text-wrap: balance;
     }
 
     h3 {
-      margin: 0;
-      font-size: clamp(1.42rem, 2vw, 2.1rem);
-      line-height: 1.12;
-      letter-spacing: -0.04em;
+      margin-bottom: 8px;
+      font-size: clamp(1.15rem, 1.5vw, 1.45rem);
+      line-height: 1.18;
+      letter-spacing: -0.025em;
     }
 
     .hero-lead {
-      max-width: 900px;
-      color: #293241;
-      font-size: clamp(1.05rem, 1.35vw, 1.24rem);
-      font-weight: 600;
-      line-height: 1.72;
-      word-break: keep-all;
-      overflow-wrap: break-word;
-    }
-
-    .claim {
-      margin-top: 24px;
-      padding: 18px 20px;
-      border: 1px solid rgba(15, 159, 110, 0.28);
-      border-left: 6px solid var(--guidance);
-      border-radius: 20px;
-      background: rgba(255, 255, 255, 0.72);
-      color: #1f2937;
-      font-weight: 760;
-      line-height: 1.7;
-      word-break: keep-all;
-      overflow-wrap: break-word;
+      max-width: 980px;
+      margin-bottom: 22px;
+      color: #263244;
+      font-size: clamp(1rem, 1.5vw, 1.22rem);
+      font-weight: 800;
+      letter-spacing: -0.015em;
+      overflow-wrap: anywhere;
     }
 
     .hero-actions {
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 28px;
+      gap: 10px;
+      margin-top: 18px;
     }
 
     .pill {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 44px;
-      padding: 10px 18px;
+      min-height: 42px;
+      max-width: 100%;
+      padding: 10px 16px;
       border: 1px solid rgba(16, 24, 40, 0.12);
       border-radius: 999px;
+      color: #1e293b;
       background: rgba(255, 255, 255, 0.74);
-      color: #172033;
-      font-weight: 850;
+      font-size: 0.93rem;
+      font-weight: 900;
+      text-align: center;
       text-decoration: none;
-      white-space: nowrap;
-      transition: transform 160ms ease, background 160ms ease, box-shadow 160ms ease;
+      transition: transform 150ms ease, border-color 150ms ease, background 150ms ease;
     }
 
     .pill:hover {
       transform: translateY(-2px);
-      background: #fff;
-      box-shadow: 0 10px 24px rgba(16, 24, 40, 0.1);
+      border-color: rgba(15, 159, 110, 0.38);
+      background: rgba(255, 255, 255, 0.96);
     }
 
     .hero-panel {
-      display: grid;
-      gap: 14px;
+      padding: clamp(20px, 3vw, 32px);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(240, 253, 244, 0.88)),
+        var(--card);
+      box-shadow: var(--shadow);
     }
 
     .metric-card-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 14px;
     }
 
     .highlight {
-      position: relative;
-      overflow: hidden;
-      min-height: 150px;
-      padding: 21px;
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      background: var(--card);
-      box-shadow: 0 14px 40px rgba(15, 23, 42, 0.08);
+      min-height: 146px;
+      padding: 18px;
+      border: 1px solid rgba(15, 159, 110, 0.16);
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.82);
     }
 
-    .highlight::after {
-      content: "";
-      position: absolute;
-      inset: auto -16% -42% auto;
-      width: 140px;
-      height: 140px;
-      border-radius: 50%;
-      background: rgba(15, 159, 110, 0.14);
-    }
-
-    .highlight span {
-      display: block;
-      color: var(--muted);
-      font-size: 0.9rem;
-      font-weight: 850;
+    .highlight span,
+    .case-meta,
+    .section-kicker {
+      color: var(--guidance-dark);
+      font-size: 0.82rem;
+      font-weight: 1000;
+      letter-spacing: 0.075em;
+      text-transform: uppercase;
     }
 
     .highlight strong {
       display: block;
-      margin-top: 12px;
-      color: var(--guidance-dark);
-      font-size: clamp(1.55rem, 2.3vw, 2.55rem);
-      line-height: 1;
-      letter-spacing: -0.05em;
-      white-space: nowrap;
+      margin: 8px 0 6px;
+      font-size: clamp(1.45rem, 2.3vw, 2.05rem);
+      letter-spacing: -0.045em;
     }
 
     .highlight small {
       display: block;
-      margin-top: 12px;
-      color: #344054;
-      word-break: keep-all;
+      color: var(--muted);
+      font-weight: 800;
+      line-height: 1.45;
     }
 
     .mini-legend {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
-      padding: 14px 16px;
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      background: rgba(255, 255, 255, 0.68);
+      gap: 12px 16px;
+      margin-top: 18px;
       color: var(--muted);
-      font-size: 0.92rem;
-      font-weight: 760;
+      font-size: 0.9rem;
+      font-weight: 850;
     }
 
     .legend-dot {
       display: inline-flex;
       align-items: center;
-      gap: 7px;
+      gap: 8px;
     }
 
     .legend-dot::before {
       content: "";
-      width: 10px;
-      height: 10px;
+      width: 11px;
+      height: 11px;
       border-radius: 999px;
       background: var(--dot);
     }
 
     .section {
-      padding: 42px 0;
+      margin: clamp(28px, 5vw, 74px) 0;
+      padding: clamp(22px, 3.4vw, 40px);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: var(--card);
+      box-shadow: 0 18px 52px rgba(15, 23, 42, 0.08);
     }
 
     .section-title {
-      display: flex;
-      justify-content: space-between;
+      display: grid;
+      grid-template-columns: minmax(0, 0.82fr) minmax(280px, 0.48fr);
       gap: 24px;
       align-items: end;
-      margin-bottom: 22px;
-    }
-
-    .section-kicker {
-      margin: 0 0 8px;
-      color: var(--guidance-dark);
-      font-weight: 950;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      font-size: 0.82rem;
+      margin-bottom: 26px;
     }
 
     .section-note {
-      max-width: 600px;
-      margin: 0;
+      margin-bottom: 0;
       color: var(--muted);
-      font-size: 1.02rem;
-      word-break: keep-all;
-      overflow-wrap: break-word;
+      font-size: 1rem;
+      font-weight: 750;
+    }
+
+    .scenario-grid,
+    .case-grid,
+    .chart-grid,
+    .coverage-grid {
+      display: grid;
+      gap: clamp(16px, 2vw, 26px);
     }
 
     .scenario-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 30px;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 620px), 1fr));
+    }
+
+    .case-grid {
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
     }
 
     .coverage-grid {
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+    }
+
+    .chart-grid {
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 430px), 1fr));
+    }
+
+    .scenario-card,
+    .case-card,
+    .coverage-card,
+    .chart-card,
+    .table-card,
+    .narrative-card {
+      border: 1px solid rgba(16, 24, 40, 0.11);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.72);
+      overflow: hidden;
+    }
+
+    .scenario-card {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 18px;
+      grid-template-rows: auto auto 1fr;
+      min-width: 0;
+    }
+
+    .scenario-head,
+    .case-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 20px 0;
+    }
+
+    .scenario-head span,
+    .case-head span {
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 850;
+      text-align: right;
+    }
+
+    .media-frame {
+      margin: 16px 18px 0;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 18px;
+      background: #080f1d;
+      overflow: hidden;
+    }
+
+    .media-frame img {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      background: #080f1d;
+    }
+
+    .scenario-caption,
+    .case-caption {
+      padding: 16px 20px 20px;
+      color: #344054;
+      font-size: 0.96rem;
+      font-weight: 730;
+      word-break: keep-all;
+    }
+
+    .case-card {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .case-card .media-frame {
+      margin-top: 10px;
+    }
+
+    .case-caption {
+      flex: 1;
+      padding-top: 14px;
+    }
+
+    .case-meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 0 20px 4px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      color: #334155;
+      background: rgba(15, 23, 42, 0.07);
+      font-size: 0.79rem;
+      font-weight: 900;
+    }
+
+    .tag.good {
+      color: var(--guidance-dark);
+      background: rgba(15, 159, 110, 0.11);
+    }
+
+    .environment-block + .environment-block {
+      margin-top: clamp(26px, 4vw, 42px);
+    }
+
+    .environment-title {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .environment-title h3 {
+      margin: 0;
+      font-size: clamp(1.35rem, 2vw, 2rem);
     }
 
     .coverage-card {
-      display: flex;
-      flex-direction: column;
-      min-height: 100%;
-      padding: 22px;
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      background: rgba(255, 255, 255, 0.86);
-      box-shadow: 0 14px 42px rgba(15, 23, 42, 0.08);
+      padding: 18px;
+    }
+
+    .coverage-card h3 {
+      margin-bottom: 4px;
     }
 
     .coverage-count {
       display: inline-flex;
-      width: fit-content;
-      margin: 13px 0 15px;
-      padding: 7px 11px;
-      border-radius: 999px;
+      margin-bottom: 12px;
       color: var(--guidance-dark);
-      background: rgba(15, 159, 110, 0.12);
-      font-size: 0.84rem;
-      font-weight: 900;
+      font-size: 0.87rem;
+      font-weight: 950;
     }
 
     .case-list {
-      display: grid;
-      gap: 9px;
       margin: 0;
-      padding: 0;
-      list-style: none;
-      color: #344054;
-      font-size: 0.95rem;
-      font-weight: 720;
-      word-break: keep-all;
-    }
-
-    .case-list li {
-      padding: 10px 12px;
-      border-radius: 14px;
-      background: rgba(16, 24, 40, 0.045);
-    }
-
-    .example-strip {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 16px;
-      margin-top: 20px;
-    }
-
-    .example-card {
-      overflow: hidden;
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      background: #0b1118;
-      box-shadow: 0 14px 38px rgba(15, 23, 42, 0.11);
-    }
-
-    .example-card img {
-      display: block;
-      width: 100%;
-      height: auto;
-    }
-
-    .example-card figcaption {
-      padding: 12px 14px;
-      color: #dbeafe;
-      font-size: 0.84rem;
+      padding-left: 18px;
+      color: var(--muted);
       font-weight: 800;
-      word-break: keep-all;
-    }
-
-    .scenario-card,
-    .chart-card,
-    .table-card,
-    .narrative-card,
-    .boundary {
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      background: rgba(255, 255, 255, 0.86);
-      box-shadow: var(--shadow);
-    }
-
-    .scenario-card {
-      overflow: hidden;
-      width: min(1920px, calc(100vw - 44px));
-      margin-left: 50%;
-      transform: translateX(-50%);
-    }
-
-    .scenario-head {
-      display: flex;
-      justify-content: space-between;
-      gap: 14px;
-      align-items: center;
-      padding: 20px 22px;
-      color: #d8efe5;
-      background: linear-gradient(100deg, rgba(4, 120, 87, 0.98), rgba(15, 23, 42, 0.94));
-    }
-
-    .scenario-head span {
-      color: rgba(255, 255, 255, 0.78);
-      font-size: 0.9rem;
-      font-weight: 820;
-      white-space: nowrap;
-    }
-
-    .gif-row {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 0;
-      overflow: hidden;
-      background: #0b1118;
-    }
-
-    .gif-frame {
-      min-width: 0;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .gif-frame + .gif-frame {
-      border-left: 1px solid rgba(255, 255, 255, 0.12);
-    }
-
-    .gif-label {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      padding: 14px 18px;
-      color: #dbeafe;
-      background: rgba(15, 23, 42, 0.94);
-      font-size: 0.92rem;
-      font-weight: 850;
-    }
-
-    .gif-frame img {
-      display: block;
-      width: 100%;
-      height: auto;
-      max-height: none;
-      object-fit: contain;
-      object-position: center center;
-      background: #111827;
-    }
-
-    .scenario-caption {
-      padding: 18px 22px 22px;
-      color: #344054;
-      font-size: 0.98rem;
-      font-weight: 620;
-      word-break: keep-all;
-      overflow-wrap: break-word;
     }
 
     .asset-note {
-      margin-top: 12px;
-      padding: 12px 14px;
-      border-radius: 16px;
-      background: #fff7ed;
-      color: #7c2d12;
-      font-size: 0.88rem;
-      font-weight: 720;
+      margin-top: 18px;
+      padding: 14px 16px;
+      border: 1px dashed rgba(15, 159, 110, 0.34);
+      border-radius: 18px;
+      color: #335146;
+      background: rgba(240, 253, 244, 0.72);
+      font-size: 0.94rem;
+      font-weight: 800;
+    }
+
+    .table-card {
+      overflow-x: auto;
     }
 
     .metric-table {
       width: 100%;
+      min-width: 860px;
       border-collapse: collapse;
-      overflow: hidden;
-      border-radius: var(--radius);
-      background: #fff;
+      font-size: 0.96rem;
     }
 
     .metric-table th,
     .metric-table td {
-      padding: 14px 16px;
-      border-bottom: 1px solid rgba(16, 24, 40, 0.1);
+      padding: 15px 16px;
+      border-bottom: 1px solid rgba(16, 24, 40, 0.09);
       text-align: left;
       vertical-align: top;
-      word-break: keep-all;
-      overflow-wrap: break-word;
     }
 
     .metric-table th {
-      color: var(--guidance-dark);
-      background: #e9f8f1;
-      font-size: 0.88rem;
+      color: #334155;
+      background: rgba(15, 159, 110, 0.08);
+      font-size: 0.82rem;
+      font-weight: 1000;
+      letter-spacing: 0.04em;
       text-transform: uppercase;
-      letter-spacing: 0.03em;
     }
 
-    .metric-table tr.group-row td {
-      padding: 12px 16px;
-      color: #7c2d12;
-      background: #fff7ed;
-      font-size: 0.9rem;
-      font-weight: 950;
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
+    .metric-table td {
+      font-weight: 770;
     }
 
-    .metric-table td:nth-child(3) {
-      color: var(--baseline-dark);
-      font-weight: 900;
-    }
-
-    .metric-table td:nth-child(4) {
-      color: var(--guidance-dark);
-      font-weight: 900;
-    }
-
-    .table-card {
-      overflow: hidden;
-    }
-
-    .chart-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 22px;
+    .metric-table tr:last-child td {
+      border-bottom: 0;
     }
 
     .chart-card {
-      padding: 22px;
-    }
-
-    .chart-card h3 {
-      margin-bottom: 16px;
+      padding: 20px;
     }
 
     .chart-note {
-      margin: -6px 0 16px;
+      margin-bottom: 18px;
       color: var(--muted);
       font-size: 0.94rem;
-      word-break: keep-all;
+      font-weight: 760;
+    }
+
+    .bar-group,
+    .bar-item,
+    .paired-bars {
+      display: grid;
+      gap: 10px;
     }
 
     .bar-group {
-      display: grid;
-      gap: 14px;
-    }
-
-    .bar-item {
-      display: grid;
-      gap: 8px;
+      gap: 20px;
     }
 
     .bar-meta {
       display: flex;
       justify-content: space-between;
       gap: 12px;
-      color: #344054;
-      font-size: 0.92rem;
-      font-weight: 850;
+      color: #334155;
+      font-size: 0.88rem;
+      font-weight: 900;
     }
 
     .bar-track {
-      height: 18px;
-      overflow: hidden;
+      height: 13px;
       border-radius: 999px;
-      background: rgba(16, 24, 40, 0.08);
+      background: rgba(15, 23, 42, 0.1);
+      overflow: hidden;
     }
 
     .bar-fill {
       display: block;
       width: var(--w);
+      min-width: 3px;
       height: 100%;
       border-radius: inherit;
       background: var(--color);
     }
 
-    .paired-bars {
-      display: grid;
-      gap: 6px;
-    }
-
     .narrative-card {
-      padding: 26px;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(236, 253, 245, 0.92));
+      padding: clamp(20px, 3vw, 30px);
+      color: #263244;
+      font-size: clamp(1.02rem, 1.35vw, 1.18rem);
+      font-weight: 780;
     }
 
     .narrative-card p {
       margin: 0;
-      color: #293241;
-      font-size: clamp(1.02rem, 1.25vw, 1.16rem);
-      font-weight: 720;
-      word-break: keep-all;
     }
 
     .boundary {
-      margin: 44px 0 70px;
-      padding: 28px;
-      background: linear-gradient(135deg, #fff 0%, #fff7ed 100%);
-      color: #2f3a49;
+      margin: clamp(28px, 5vw, 74px) 0;
+      padding: clamp(24px, 4vw, 44px);
+      border: 1px solid rgba(180, 35, 24, 0.17);
+      border-radius: var(--radius-lg);
+      background: linear-gradient(135deg, rgba(255, 247, 237, 0.94), rgba(255, 255, 255, 0.86));
+      box-shadow: 0 18px 52px rgba(180, 35, 24, 0.08);
     }
 
     .boundary h2 {
-      font-size: clamp(1.7rem, 2.7vw, 3rem);
+      margin-bottom: 14px;
+      color: #7f1d1d;
     }
 
     .boundary p {
-      word-break: keep-all;
-      overflow-wrap: break-word;
+      max-width: 1180px;
+      color: #503225;
+      font-weight: 780;
     }
 
-    footer {
-      padding: 28px 0 46px;
+    footer.page {
+      padding: 30px 0 48px;
       color: var(--muted);
-      border-top: 1px solid rgba(16, 24, 40, 0.1);
+      font-size: 0.95rem;
+      font-weight: 820;
     }
 
     @media (max-width: 1180px) {
-      .hero {
+      .hero,
+      .section-title {
         grid-template-columns: 1fr;
       }
 
       .hero-panel {
-        max-width: 920px;
+        width: 100%;
       }
     }
 
-    @media (max-width: 900px) {
-      .scenario-grid,
-      .chart-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .coverage-grid,
-      .example-strip {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .section-title {
-        display: block;
-      }
-
-      .section-note {
-        margin-top: 12px;
-      }
-    }
-
-    @media (max-width: 720px) {
+    @media (max-width: 760px) {
       .page {
-        width: min(100% - 24px, 1500px);
-      }
-
-      .scenario-card {
-        width: calc(100vw - 24px);
+        width: min(100% - 28px, 1920px);
       }
 
       .hero {
-        padding-top: 28px;
+        padding-top: 34px;
       }
 
       h1 {
-        font-size: clamp(2.35rem, 11vw, 3.25rem);
-        letter-spacing: -0.065em;
+        font-size: clamp(1.95rem, 9.2vw, 2.7rem);
+        letter-spacing: -0.045em;
+        line-height: 1.04;
+        text-wrap: wrap;
       }
 
-      .metric-card-grid,
-      .coverage-grid,
-      .example-strip,
-      .gif-row {
+      .hero-lead {
+        font-size: 0.98rem;
+        line-height: 1.55;
+      }
+
+      .hero-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+        width: 100%;
+      }
+
+      .pill {
+        width: 100%;
+      }
+
+      .metric-card-grid {
         grid-template-columns: 1fr;
       }
 
-      .gif-frame + .gif-frame {
-        border-left: 0;
-      }
-
-      .highlight {
-        min-height: auto;
-      }
-
-      .metric-table {
+      .scenario-head,
+      .case-head {
         display: block;
-        max-width: 100%;
-        overflow-x: auto;
-        font-size: 0.88rem;
       }
 
-      .metric-table th,
-      .metric-table td {
-        min-width: 136px;
-        padding: 12px;
+      .scenario-head span,
+      .case-head span {
+        display: block;
+        margin-top: 4px;
+        text-align: left;
+      }
+
+      .section {
+        padding: 18px;
+        border-radius: 24px;
+      }
+
+      .media-frame {
+        margin-inline: 12px;
+        border-radius: 14px;
+      }
+
+      .scenario-caption,
+      .case-caption {
+        padding-inline: 14px;
+      }
+
+      .case-meta-row {
+        padding-inline: 14px;
+      }
+
+      .bar-meta {
+        display: block;
       }
     }
   </style>
@@ -674,15 +647,16 @@
     <section class="hero" id="top">
       <div class="hero-copy">
         <span class="eyebrow">Controlled CARLA simulation diagnostic</span>
-        <h1>No-GUIDANCE vs GUIDANCE: 150-Trial Final Comparison</h1>
+        <h1>GUIDANCE CARLA Scenario Matrix</h1>
         <p class="hero-lead">
-          VLM output을 GUIDANCE trajectory-prior로 변환해 CARLA에서 No-GUIDANCE와 같은 시나리오로 비교합니다.
+          VLM trajectory-prior를 CARLA control candidate로 변환해 No-GUIDANCE baseline과 GUIDANCE 조건을 같은 traffic event에서 비교합니다.
         </p>
         <nav class="hero-actions" aria-label="Page sections">
-          <a class="pill" href="#scenarios">시나리오</a>
-          <a class="pill" href="#coverage">실험 범위</a>
-          <a class="pill" href="#metrics">지표 표</a>
-          <a class="pill" href="#charts">시각화</a>
+          <a class="pill" href="#scenario-visuals">대표 GIF</a>
+          <a class="pill" href="#case-matrix">상황별 case</a>
+          <a class="pill" href="#coverage">실험 구성</a>
+          <a class="pill" href="#metrics">정량 지표</a>
+          <a class="pill" href="#charts">시각 비교</a>
           <a class="pill" href="#boundary">해석 범위</a>
         </nav>
       </div>
@@ -717,14 +691,15 @@
       </aside>
     </section>
 
-    <section class="section" id="scenarios">
+    <section class="section" id="scenario-visuals">
       <div class="section-title">
         <div>
           <p class="section-kicker">Scenario visuals</p>
-          <h2>두 가지 핵심 조건</h2>
+          <h2>대표 비교 GIF</h2>
         </div>
         <p class="section-note">
-          GIF는 repo에 존재하는 side-by-side CARLA event asset만 사용했습니다. 수치 해석은 아래 표의 final 150-trial source-of-truth에 따릅니다.
+          Ramp merge와 Speed-gap stress는 final 150-trial 정량 결과의 핵심 case입니다.
+          아래 GIF는 각각 해당 case의 실제 CARLA side-by-side event 영상에서 가져온 대표 trial입니다.
         </p>
       </div>
 
@@ -734,15 +709,9 @@
             <h3>Ramp merge</h3>
             <span>merge 이후 late reaction vs proactive gap</span>
           </div>
-          <div class="gif-row">
-            <figure class="gif-frame">
-              <figcaption class="gif-label">
-                <span>Ramp merge simulation GIF</span>
-                <span>No-GUIDANCE / GUIDANCE side-by-side</span>
-              </figcaption>
-              <img src="assets/ramp_merge_trial_000_side_by_side.gif" alt="Case-labeled Ramp merge trial 000 side-by-side CARLA visualization comparing No-GUIDANCE and GUIDANCE.">
-            </figure>
-          </div>
+          <figure class="media-frame">
+            <img src="assets/carla_cases/arterial_ramp_merge_trial_000_side_by_side.gif" alt="Ramp merge trial 000 side-by-side CARLA visualization comparing No-GUIDANCE and GUIDANCE." loading="eager">
+          </figure>
           <div class="scenario-caption">
             Ramp merge 조건에서 No-GUIDANCE는 merge 이후 짧은 TTC와 높은 collision trial rate를 보였습니다.
             GUIDANCE는 선제적으로 gap을 만들며 min TTC를 1.31s에서 7.05s로 높이고 collision trial rate를 0.560에서 0.013으로 낮췄습니다.
@@ -754,25 +723,244 @@
             <h3>Speed-gap stress</h3>
             <span>closing risk vs gap-first response</span>
           </div>
-          <div class="gif-row">
-            <figure class="gif-frame">
-              <figcaption class="gif-label">
-                <span>Speed-gap stress simulation GIF</span>
-                <span>No-GUIDANCE / GUIDANCE side-by-side</span>
-              </figcaption>
-              <img src="assets/speed_gap_stress_trial_000_side_by_side.gif" alt="Case-labeled Speed-gap stress trial 000 side-by-side CARLA visualization comparing No-GUIDANCE and GUIDANCE.">
-            </figure>
-          </div>
+          <figure class="media-frame">
+            <img src="assets/carla_cases/arterial_speed_gap_stress_trial_000_side_by_side.gif" alt="Speed-gap stress trial 000 side-by-side CARLA visualization comparing No-GUIDANCE and GUIDANCE." loading="eager">
+          </figure>
           <div class="scenario-caption">
             Speed-gap stress 조건에서 No-GUIDANCE는 속도 차이로 인해 closing risk가 커졌고, TTC &lt; 5s ratio 0.484와 collision trial rate 0.853을 보였습니다.
             GUIDANCE는 TTC &lt; 5s ratio와 collision trial rate를 모두 0으로 낮추며 위험 구간을 제거했습니다.
           </div>
         </article>
       </div>
+    </section>
+
+    <section class="section" id="case-matrix">
+      <div class="section-title">
+        <div>
+          <p class="section-kicker">Scenario-by-case GIF matrix</p>
+          <h2>상황별 · case별 CARLA 대표 시뮬레이션</h2>
+        </div>
+        <p class="section-note">
+          완료된 `traffic_env_unified_gif_20260521` run에서 4개 환경군과 12개 case 모두 `trial_000` side-by-side GIF를 웹용으로 최적화해 연결했습니다.
+          각 case는 150개의 side-by-side trial GIF가 생성된 상태로 확인했습니다.
+        </p>
+      </div>
+
+      <div class="environment-block">
+        <div class="environment-title">
+          <h3>1. 도심 환경</h3>
+          <span class="tag good">3 cases · 150 trials each</span>
+        </div>
+        <div class="case-grid">
+          <article class="case-card">
+            <div class="case-head">
+              <h3>urban_adjacent_cutin</h3>
+              <span>p2_adjacent_cutin</span>
+            </div>
+            <div class="case-meta-row">
+              <span class="tag">전방/인접 차량 cut-in</span>
+              <span class="tag good">150 trials</span>
+            </div>
+            <figure class="media-frame">
+              <img src="assets/carla_cases/urban_adjacent_cutin_trial_000_side_by_side.gif" alt="Urban adjacent cut-in trial 000 side-by-side CARLA visualization." loading="lazy">
+            </figure>
+            <div class="case-caption">도심 cut-in 상황에서 인접 차선 차량이 ego lane으로 들어올 때 두 조건의 반응 차이를 보여줍니다.</div>
+          </article>
+
+          <article class="case-card">
+            <div class="case-head">
+              <h3>urban_lead_sudden_braking</h3>
+              <span>p3_lead_sudden_braking</span>
+            </div>
+            <div class="case-meta-row">
+              <span class="tag">전방 차량 급제동</span>
+              <span class="tag good">150 trials</span>
+            </div>
+            <figure class="media-frame">
+              <img src="assets/carla_cases/urban_lead_sudden_braking_trial_000_side_by_side.gif" alt="Urban lead sudden braking trial 000 side-by-side CARLA visualization." loading="lazy">
+            </figure>
+            <div class="case-caption">도심 주행 중 lead vehicle의 급제동에 대해 late-reactive baseline과 proactive response를 비교합니다.</div>
+          </article>
+
+          <article class="case-card">
+            <div class="case-head">
+              <h3>urban_stop_and_go_reveal</h3>
+              <span>p11_stop_and_go_reveal</span>
+            </div>
+            <div class="case-meta-row">
+              <span class="tag">정체/저속 차량 reveal</span>
+              <span class="tag good">150 trials</span>
+            </div>
+            <figure class="media-frame">
+              <img src="assets/carla_cases/urban_stop_and_go_reveal_trial_000_side_by_side.gif" alt="Urban stop-and-go reveal trial 000 side-by-side CARLA visualization." loading="lazy">
+            </figure>
+            <div class="case-caption">앞차가 빠지며 정체 또는 저속 차량이 드러나는 상황에서 trajectory-prior 반응을 확인합니다.</div>
+          </article>
+        </div>
+      </div>
+
+      <div class="environment-block">
+        <div class="environment-title">
+          <h3>2. 자동차 전용 도로 / arterial-motorway</h3>
+          <span class="tag good">3 cases · 150 trials each</span>
+        </div>
+        <div class="case-grid">
+          <article class="case-card">
+            <div class="case-head">
+              <h3>arterial_moving_lead_following</h3>
+              <span>p1_moving_lead_following</span>
+            </div>
+            <div class="case-meta-row">
+              <span class="tag">moving lead following</span>
+              <span class="tag good">150 trials</span>
+            </div>
+            <figure class="media-frame">
+              <img src="assets/carla_cases/arterial_moving_lead_following_trial_000_side_by_side.gif" alt="Arterial moving lead following trial 000 side-by-side CARLA visualization." loading="lazy">
+            </figure>
+            <div class="case-caption">위험 event가 약한 기본 following 조건에서 불필요한 강개입이 발생하지 않는지 확인하기 위한 보조 case입니다.</div>
+          </article>
+
+          <article class="case-card">
+            <div class="case-head">
+              <h3>arterial_ramp_merge</h3>
+              <span>p10_ramp_merge</span>
+            </div>
+            <div class="case-meta-row">
+              <span class="tag">ramp merge / 합류</span>
+              <span class="tag good">150 trials</span>
+            </div>
+            <figure class="media-frame">
+              <img src="assets/carla_cases/arterial_ramp_merge_trial_000_side_by_side.gif" alt="Arterial ramp merge trial 000 side-by-side CARLA visualization." loading="lazy">
+            </figure>
+            <div class="case-caption">합류 차량이 ego lane으로 들어올 때 GUIDANCE가 선제적으로 gap을 만드는지 보는 핵심 평가 case입니다.</div>
+          </article>
+
+          <article class="case-card">
+            <div class="case-head">
+              <h3>arterial_speed_gap_stress</h3>
+              <span>p7_speed_gap_stress</span>
+            </div>
+            <div class="case-meta-row">
+              <span class="tag">속도 차이와 gap 압박</span>
+              <span class="tag good">150 trials</span>
+            </div>
+            <figure class="media-frame">
+              <img src="assets/carla_cases/arterial_speed_gap_stress_trial_000_side_by_side.gif" alt="Arterial speed-gap stress trial 000 side-by-side CARLA visualization." loading="lazy">
+            </figure>
+            <div class="case-caption">상대 속도 차이로 closing risk가 커지는 상황에서 TTC margin 확보 여부를 비교합니다.</div>
+          </article>
+        </div>
+      </div>
+
+      <div class="environment-block">
+        <div class="environment-title">
+          <h3>3. 고속도로 환경</h3>
+          <span class="tag good">3 cases · 150 trials each</span>
+        </div>
+        <div class="case-grid">
+          <article class="case-card">
+            <div class="case-head">
+              <h3>highway_adjacent_cutin</h3>
+              <span>p9_highway_cutin</span>
+            </div>
+            <div class="case-meta-row">
+              <span class="tag">고속 cut-in</span>
+              <span class="tag good">150 trials</span>
+            </div>
+            <figure class="media-frame">
+              <img src="assets/carla_cases/highway_adjacent_cutin_trial_000_side_by_side.gif" alt="Highway adjacent cut-in trial 000 side-by-side CARLA visualization." loading="lazy">
+            </figure>
+            <div class="case-caption">고속 환경의 cut-in 상황에서 gap 형성과 급감속 proxy 변화를 확인합니다.</div>
+          </article>
+
+          <article class="case-card">
+            <div class="case-head">
+              <h3>highway_dense_traffic_string</h3>
+              <span>p5_dense_traffic_string</span>
+            </div>
+            <div class="case-meta-row">
+              <span class="tag">following vehicle string</span>
+              <span class="tag good">150 trials</span>
+            </div>
+            <figure class="media-frame">
+              <img src="assets/carla_cases/highway_dense_traffic_string_trial_000_side_by_side.gif" alt="Highway dense traffic string trial 000 side-by-side CARLA visualization." loading="lazy">
+            </figure>
+            <div class="case-caption">ego 뒤쪽 following vehicle string으로 위험 또는 shockwave가 전파되는지 확인하기 위한 traffic case입니다.</div>
+          </article>
+
+          <article class="case-card">
+            <div class="case-head">
+              <h3>highway_moving_lead_following</h3>
+              <span>p1_moving_lead_following</span>
+            </div>
+            <div class="case-meta-row">
+              <span class="tag">고속 moving lead following</span>
+              <span class="tag good">150 trials</span>
+            </div>
+            <figure class="media-frame">
+              <img src="assets/carla_cases/highway_moving_lead_following_trial_000_side_by_side.gif" alt="Highway moving lead following trial 000 side-by-side CARLA visualization." loading="lazy">
+            </figure>
+            <div class="case-caption">고속 following 조건에서 안정적인 lane-following과 불필요한 개입 여부를 함께 확인합니다.</div>
+          </article>
+        </div>
+      </div>
+
+      <div class="environment-block">
+        <div class="environment-title">
+          <h3>4. 인식 품질 / 가시성 스트레스</h3>
+          <span class="tag good">3 cases · 150 trials each</span>
+        </div>
+        <div class="case-grid">
+          <article class="case-card">
+            <div class="case-head">
+              <h3>fog_cutin_degraded_perception</h3>
+              <span>p12_adverse_visibility</span>
+            </div>
+            <div class="case-meta-row">
+              <span class="tag">안개 + 인식 저하 cut-in</span>
+              <span class="tag good">150 trials</span>
+            </div>
+            <figure class="media-frame">
+              <img src="assets/carla_cases/fog_cutin_degraded_perception_trial_000_side_by_side.gif" alt="Fog cut-in degraded perception trial 000 side-by-side CARLA visualization." loading="lazy">
+            </figure>
+            <div class="case-caption">안개 조건에서 perception confidence가 낮아질 때 trajectory-prior가 보수적으로 반응하는지 확인합니다.</div>
+          </article>
+
+          <article class="case-card">
+            <div class="case-head">
+              <h3>rain_cutin_degraded_perception</h3>
+              <span>p12_adverse_visibility</span>
+            </div>
+            <div class="case-meta-row">
+              <span class="tag">비 + 인식 저하 cut-in</span>
+              <span class="tag good">150 trials</span>
+            </div>
+            <figure class="media-frame">
+              <img src="assets/carla_cases/rain_cutin_degraded_perception_trial_000_side_by_side.gif" alt="Rain cut-in degraded perception trial 000 side-by-side CARLA visualization." loading="lazy">
+            </figure>
+            <div class="case-caption">우천 조건에서 가시성 저하가 gap 형성과 TTC proxy에 미치는 영향을 확인합니다.</div>
+          </article>
+
+          <article class="case-card">
+            <div class="case-head">
+              <h3>perception_noise_cutin</h3>
+              <span>p13_perception_noise_stress</span>
+            </div>
+            <div class="case-meta-row">
+              <span class="tag">bbox/depth/edge-gap noise</span>
+              <span class="tag good">150 trials</span>
+            </div>
+            <figure class="media-frame">
+              <img src="assets/carla_cases/perception_noise_cutin_trial_000_side_by_side.gif" alt="Perception noise cut-in trial 000 side-by-side CARLA visualization." loading="lazy">
+            </figure>
+            <div class="case-caption">bbox, depth, edge-gap noise 또는 fallback stress가 있을 때 quality-aware graph 기반 반응을 검토합니다.</div>
+          </article>
+        </div>
+      </div>
 
       <div class="asset-note">
-        GIF provenance: Ramp merge는 `p10_ramp_merge`, Speed-gap stress는 `p7_speed_gap_stress`를
-        final case 설정 기반 `trial_000`, `record_gif=true`로 다시 실행해 생성한 side-by-side 영상입니다.
+        이 섹션의 GIF는 모두 실제 생성된 `side_by_side_trial_000.gif`에서 만든 웹용 최적화 복사본입니다.
+        원본 run 경로는 `C:\Users\user\Desktop\VLA\main\CALAR\...\runs\traffic_env_unified_gif_20260521`입니다.
       </div>
     </section>
 
@@ -780,59 +968,53 @@
       <div class="section-title">
         <div>
           <p class="section-kicker">Simulation coverage</p>
-          <h2>전체 시뮬레이션 상황과 case 구성</h2>
+          <h2>완료된 시뮬레이션 구성</h2>
         </div>
         <p class="section-note">
-          현재 CARLA 실험 저장소는 4개 상황 계열과 12개 case로 구성되어 있습니다.
-          이 페이지의 final 150-trial 정량 결과는 그중 Ramp merge와 Speed-gap stress 두 case를 대표 비교로 제시합니다.
+          현재 웹페이지는 12개 case의 대표 GIF를 모두 보여주고, 정량 claim은 검증된 Ramp merge와 Speed-gap stress 150-trial 결과에 한정합니다.
         </p>
       </div>
 
       <div class="coverage-grid" aria-label="CARLA simulation scenario family and case inventory">
         <article class="coverage-card">
-          <h3>도심 주행</h3>
-          <span class="coverage-count">3 cases</span>
+          <h3>도심 환경</h3>
+          <span class="coverage-count">3 cases · 450 side-by-side GIFs</span>
           <ul class="case-list">
-            <li>Urban adjacent cut-in</li>
-            <li>Urban lead sudden braking</li>
-            <li>Urban stop-and-go reveal</li>
+            <li>urban_adjacent_cutin</li>
+            <li>urban_lead_sudden_braking</li>
+            <li>urban_stop_and_go_reveal</li>
           </ul>
         </article>
 
         <article class="coverage-card">
-          <h3>자동차 전용도로</h3>
-          <span class="coverage-count">3 cases · final focus</span>
+          <h3>자동차 전용 도로</h3>
+          <span class="coverage-count">3 cases · 450 side-by-side GIFs</span>
           <ul class="case-list">
-            <li>Moving lead following</li>
-            <li>Ramp merge</li>
-            <li>Speed-gap stress</li>
+            <li>arterial_moving_lead_following</li>
+            <li>arterial_ramp_merge</li>
+            <li>arterial_speed_gap_stress</li>
           </ul>
         </article>
 
         <article class="coverage-card">
-          <h3>고속도로</h3>
-          <span class="coverage-count">3 cases</span>
+          <h3>고속도로 환경</h3>
+          <span class="coverage-count">3 cases · 450 side-by-side GIFs</span>
           <ul class="case-list">
-            <li>Highway adjacent cut-in</li>
-            <li>Highway dense traffic string</li>
-            <li>Highway moving lead following</li>
+            <li>highway_adjacent_cutin</li>
+            <li>highway_dense_traffic_string</li>
+            <li>highway_moving_lead_following</li>
           </ul>
         </article>
 
         <article class="coverage-card">
-          <h3>인식 품질 저하</h3>
-          <span class="coverage-count">3 cases</span>
+          <h3>인식 품질 / 가시성</h3>
+          <span class="coverage-count">3 cases · 450 side-by-side GIFs</span>
           <ul class="case-list">
-            <li>Fog cut-in degraded perception</li>
-            <li>Rain cut-in degraded perception</li>
-            <li>Perception noise cut-in</li>
+            <li>fog_cutin_degraded_perception</li>
+            <li>rain_cutin_degraded_perception</li>
+            <li>perception_noise_cutin</li>
           </ul>
         </article>
-      </div>
-
-      <div class="asset-note">
-        영상 asset은 위 두 핵심 case의 case-labeled GIF만 사용합니다. 다른 10개 case는 metric/config 중심으로 정리되어 있으며,
-        웹 전시용 영상이 필요하면 같은 방식으로 case-labeled GIF를 추가 생성할 수 있습니다.
       </div>
     </section>
 
@@ -840,7 +1022,7 @@
       <div class="section-title">
         <div>
           <p class="section-kicker">Exact source-of-truth metrics</p>
-          <h2>150-trial 지표 비교</h2>
+          <h2>150-trial 정량 비교</h2>
         </div>
         <p class="section-note">
           Safety-critical metric을 먼저 배치하고, 그 다음 comfort/control proxy를 정리했습니다.
@@ -860,104 +1042,20 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Ramp merge</td>
-              <td>Ego min TTC</td>
-              <td>1.31s</td>
-              <td>7.05s</td>
-              <td>안전 여유 증가</td>
-            </tr>
-            <tr>
-              <td>Ramp merge</td>
-              <td>Ego TTC &lt; 5s ratio</td>
-              <td>0.454</td>
-              <td>0.029</td>
-              <td>위험 구간 감소</td>
-            </tr>
-            <tr>
-              <td>Ramp merge</td>
-              <td>Ego TTC &lt; 1.5s ratio</td>
-              <td>0.045</td>
-              <td>0.0007</td>
-              <td>고위험 구간 거의 제거</td>
-            </tr>
-            <tr>
-              <td>Ramp merge</td>
-              <td>Ego collision trial rate</td>
-              <td>0.560</td>
-              <td>0.013</td>
-              <td>충돌 trial 크게 감소</td>
-            </tr>
-            <tr>
-              <td>Ramp merge</td>
-              <td>Ego excessive accel</td>
-              <td>212.7</td>
-              <td>77.0</td>
-              <td>급가속 감소</td>
-            </tr>
-            <tr>
-              <td>Ramp merge</td>
-              <td>Ego excessive decel</td>
-              <td>66.8</td>
-              <td>2.1</td>
-              <td>급감속 크게 감소</td>
-            </tr>
-            <tr>
-              <td>Ramp merge</td>
-              <td>Ego jerk</td>
-              <td>4.53</td>
-              <td>2.59</td>
-              <td>승차감 proxy 개선</td>
-            </tr>
-            <tr>
-              <td>Speed-gap stress</td>
-              <td>Ego min TTC</td>
-              <td>0.96s</td>
-              <td>15.62s</td>
-              <td>안전 여유 크게 증가</td>
-            </tr>
-            <tr>
-              <td>Speed-gap stress</td>
-              <td>Ego TTC &lt; 5s ratio</td>
-              <td>0.484</td>
-              <td>0.000</td>
-              <td>위험 구간 제거</td>
-            </tr>
-            <tr>
-              <td>Speed-gap stress</td>
-              <td>Ego TTC &lt; 1.5s ratio</td>
-              <td>0.093</td>
-              <td>0.000</td>
-              <td>고위험 구간 제거</td>
-            </tr>
-            <tr>
-              <td>Speed-gap stress</td>
-              <td>Ego collision trial rate</td>
-              <td>0.853</td>
-              <td>0.000</td>
-              <td>충돌 trial 제거</td>
-            </tr>
-            <tr>
-              <td>Speed-gap stress</td>
-              <td>Ego excessive accel</td>
-              <td>227.2</td>
-              <td>114.6</td>
-              <td>급가속 감소</td>
-            </tr>
-            <tr>
-              <td>Speed-gap stress</td>
-              <td>Ego excessive decel</td>
-              <td>50.6</td>
-              <td>36.6</td>
-              <td>급감속 감소</td>
-            </tr>
-            <tr>
-              <td>Speed-gap stress</td>
-              <td>Ego jerk</td>
-              <td>10.55</td>
-              <td>5.21</td>
-              <td>승차감 proxy 개선</td>
-            </tr>
+            <tr><td>Ramp merge</td><td>Ego min TTC</td><td>1.31s</td><td>7.05s</td><td>안전 여유 증가</td></tr>
+            <tr><td>Ramp merge</td><td>Ego TTC &lt; 5s ratio</td><td>0.454</td><td>0.029</td><td>위험 구간 감소</td></tr>
+            <tr><td>Ramp merge</td><td>Ego TTC &lt; 1.5s ratio</td><td>0.045</td><td>0.0007</td><td>고위험 구간 거의 제거</td></tr>
+            <tr><td>Ramp merge</td><td>Ego collision trial rate</td><td>0.560</td><td>0.013</td><td>충돌 trial 크게 감소</td></tr>
+            <tr><td>Ramp merge</td><td>Ego excessive accel</td><td>212.7</td><td>77.0</td><td>급가속 감소</td></tr>
+            <tr><td>Ramp merge</td><td>Ego excessive decel</td><td>66.8</td><td>2.1</td><td>급감속 크게 감소</td></tr>
+            <tr><td>Ramp merge</td><td>Ego jerk</td><td>4.53</td><td>2.59</td><td>승차감 proxy 개선</td></tr>
+            <tr><td>Speed-gap stress</td><td>Ego min TTC</td><td>0.96s</td><td>15.62s</td><td>안전 여유 크게 증가</td></tr>
+            <tr><td>Speed-gap stress</td><td>Ego TTC &lt; 5s ratio</td><td>0.484</td><td>0.000</td><td>위험 구간 제거</td></tr>
+            <tr><td>Speed-gap stress</td><td>Ego TTC &lt; 1.5s ratio</td><td>0.093</td><td>0.000</td><td>고위험 구간 제거</td></tr>
+            <tr><td>Speed-gap stress</td><td>Ego collision trial rate</td><td>0.853</td><td>0.000</td><td>충돌 trial 제거</td></tr>
+            <tr><td>Speed-gap stress</td><td>Ego excessive accel</td><td>227.2</td><td>114.6</td><td>급가속 감소</td></tr>
+            <tr><td>Speed-gap stress</td><td>Ego excessive decel</td><td>50.6</td><td>36.6</td><td>급감속 감소</td></tr>
+            <tr><td>Speed-gap stress</td><td>Ego jerk</td><td>10.55</td><td>5.21</td><td>승차감 proxy 개선</td></tr>
           </tbody>
         </table>
       </div>
@@ -996,7 +1094,7 @@
 
         <article class="chart-card">
           <h3>Collision trial rate</h3>
-          <p class="chart-note">낮을수록 좋습니다. GUIDANCE는 두 scenario 모두에서 크게 낮아졌습니다.</p>
+          <p class="chart-note">낮을수록 좋습니다. GUIDANCE는 두 핵심 case 모두에서 크게 낮아졌습니다.</p>
           <div class="bar-group">
             <div class="bar-item">
               <div class="bar-meta"><span>Ramp merge · No-GUIDANCE</span><span>0.560</span></div>
@@ -1091,10 +1189,9 @@
     <section class="section">
       <div class="narrative-card">
         <p>
-          Ramp merge에서 GUIDANCE는 min TTC를 1.31s에서 7.05s로 높이고, collision trial rate를 0.560에서 0.013으로 낮췄습니다.
-          이는 merge 상황에서 선제적으로 gap을 만든 결과로 해석할 수 있습니다.
-          Speed-gap stress에서는 min TTC를 0.96s에서 15.62s로 크게 높이고, TTC &lt; 5s ratio와 collision trial rate를 0으로 낮췄습니다.
-          속도 차이로 인한 closing risk가 GUIDANCE 조건에서 제거된 것으로 해석됩니다.
+          No-GUIDANCE는 cut-in/merge 및 speed-gap stress 상황에서 늦게 반응하면서 낮은 TTC와 높은 collision trial rate를 보였습니다.
+          GUIDANCE는 선제적으로 gap을 만들면서 TTC, collision trial, 급가속/급감속, jerk가 모두 개선되었습니다.
+          다만 이 해석은 controlled CARLA simulation diagnostic 범위에 한정됩니다.
         </p>
       </div>
     </section>
