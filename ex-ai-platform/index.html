@@ -4,8 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>교통사고 분석·관리 플랫폼</title>
+  <link rel="icon" href="./trajectory-prototype/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-  <link rel="stylesheet" href="./styles.css?v=20260809-1">
+  <link rel="stylesheet" href="./styles.css?v=20260810-7">
   <link rel="stylesheet" href="./workflow.css?v=20260806-1">
   <link rel="stylesheet" href="./video.css?v=20260806-4">
   <link rel="stylesheet" href="./dashboard.css?v=20260806-3">
@@ -287,6 +288,49 @@
       </section>
     </section>
 
+    <section class="app-page" data-page="detail" id="page-detail" hidden>
+      <header class="page-heading detail-page-heading">
+        <div><p class="eyebrow">사고 단위 분석</p><h2>사고 상세</h2></div>
+        <a id="detail-back" class="secondary-link-button" href="#/records">사고 목록</a>
+      </header>
+
+      <div id="detail-empty" class="empty detail-empty">사고 목록 또는 지도에서 사고를 선택하세요.</div>
+
+      <article id="detail-content" class="detail-workspace" hidden aria-live="polite">
+        <header class="detail-identity">
+          <div>
+            <div class="detail-badges"><span id="detail-source-badge" class="source-badge">자료 확인 중</span><span id="detail-quality-badge" class="quality-badge">품질 확인 중</span></div>
+            <h3 id="detail-title">사고 정보</h3>
+            <p id="detail-subtitle"></p>
+            <code id="detail-uid"></code>
+          </div>
+          <div class="detail-actions">
+            <button id="detail-report-create" type="button" data-capability="report_create">보고서 초안</button>
+            <a id="detail-report-open" class="secondary-link-button" href="#/report" hidden>보고서 보기</a>
+          </div>
+        </header>
+
+        <section class="detail-overview-grid">
+          <article class="panel detail-map-card">
+            <div class="panel-head"><div><h3>사고 위치</h3><span id="detail-map-meta"></span></div></div>
+            <div id="detail-map" aria-label="선택 사고 위치 지도"></div>
+            <p id="detail-map-note" class="detail-note"></p>
+          </article>
+          <article class="panel detail-facts-card">
+            <div class="panel-head"><div><h3>사고 정보</h3></div></div>
+            <dl id="detail-facts" class="detail-facts"></dl>
+          </article>
+        </section>
+
+        <section class="detail-evidence-grid" aria-label="사고 근거와 검토 상태">
+          <article class="panel"><div class="detail-section-head"><span>01</span><h3>자료 출처</h3></div><dl id="detail-provenance" class="detail-list"></dl></article>
+          <article class="panel"><div class="detail-section-head"><span>02</span><h3>구간 위험</h3></div><div id="detail-risk" class="detail-status"></div></article>
+          <article class="panel"><div class="detail-section-head"><span>03</span><h3>영상·궤적</h3></div><div id="detail-media" class="detail-status"></div><a id="detail-media-demo" class="text-link" href="./trajectory-prototype/#/trajectory?t=1" target="_blank" rel="noopener" hidden>시연 분석 열기</a></article>
+          <article class="panel"><div class="detail-section-head"><span>04</span><h3>보고서·검토</h3></div><div id="detail-report" class="detail-status"></div></article>
+        </section>
+      </article>
+    </section>
+
     <section class="app-page" data-page="video" id="page-video" hidden>
       <header class="page-heading">
         <div><h2>영상·궤적 분석</h2></div>
@@ -479,7 +523,7 @@
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script src="./public-data.js"></script>
-  <script src="./workflow.js?v=20260810-4"></script>
-  <script src="./app.js?v=20260810-4"></script>
+  <script src="./workflow.js?v=20260810-5"></script>
+  <script src="./app.js?v=20260810-7"></script>
 </body>
 </html>

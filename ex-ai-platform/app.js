@@ -7,6 +7,8 @@ let segmentMapLayer;
 let dashboardMap;
 let dashboardRouteLayer;
 let dashboardAccidentLayer;
+let detailMap;
+let detailMapLayer;
 let taasRiskLayer;
 let taasRiskData;
 let taasLayerEnabled = false;
@@ -35,6 +37,7 @@ const PAGE_TITLES = Object.freeze({
   dashboard: "대시보드",
   map: "지도·구간",
   records: "통계·목록",
+  detail: "사고 상세",
   video: "영상·궤적 분석",
   report: "보고서",
   data: "데이터·품질",
@@ -55,6 +58,24 @@ function displayRouteName(routeName) {
   return ROUTE_DISPLAY_NAMES[routeName] || routeName;
 }
 
+function displaySeverity(value) {
+  return {
+    fatal: "사망사고",
+    injury: "부상사고",
+    property_damage_only: "물적피해",
+  }[value] || value || "등급 미분류";
+}
+
+function displayTimestamp(value) {
+  if (!value) return "-";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return String(value);
+  return new Intl.DateTimeFormat("ko-KR", {
+    timeZone: "Asia/Seoul", year: "numeric", month: "2-digit", day: "2-digit",
+    hour: "2-digit", minute: "2-digit", hour12: false,
+  }).format(date);
+}
+
 function parseHashState() {
   const raw = location.hash.replace(/^#\/?/, "");
   const [rawPage = "dashboard", query = ""] = raw.split("?");
@@ -73,7 +94,7 @@ function updatePageLinks() {
     link.href = pageHash(page);
   });
   qs("[data-context-filter-link]").href = pageHash("dashboard");
-  for (const [id, page] of [["drilldown-map", "map"], ["drilldown-records", "records"], ["drilldown-report", "report"], ["report-map-link", "map"], ["report-records-link", "records"], ["taas-audit-map-link", "map"]]) {
+  for (const [id, page] of [["drilldown-map", "map"], ["drilldown-records", "records"], ["drilldown-report", "report"], ["report-map-link", "map"], ["report-records-link", "records"], ["taas-audit-map-link", "map"], ["detail-back", "records"]]) {
     const link = qs(`#${id}`);
     if (link) link.href = pageHash(page);
   }
@@ -97,6 +118,9 @@ function showPage(page) {
   }
   if (activePage === "dashboard" && dashboardMap) {
     setTimeout(() => dashboardMap.invalidateSize(), 0);
+  }
+  if (activePage === "detail" && detailMap) {
+    setTimeout(() => detailMap.invalidateSize(), 0);
   }
 }
 
@@ -178,6 +202,15 @@ async function clearSegmentSelection() {
   history.pushState(null, "", pageHash(activePage));
   updatePageLinks();
   await refresh();
+}
+
+async function openAccidentDetail(accidentUid) {
+  if (!accidentUid) return;
+  focusedAccidentUid = accidentUid;
+  showPage("detail");
+  history.pushState(null, "", pageHash("detail"));
+  updatePageLinks();
+  await loadAccidentDetail();
 }
 
 async function json(url, options = {}) {
@@ -416,24 +449,207 @@ async function loadAccidents() {
       row.append(cell);
     }
     const actionCell = document.createElement("td");
-    actionCell.className = `record-link-cell ${item.location_status === "matched_chainage_0_1km" ? "available" : "missing"}`;
-    if (item.location_status === "matched_chainage_0_1km" && item.kilometer_post !== null) {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "table-link-button";
-      button.textContent = "지도에서 보기";
-      button.addEventListener("click", () => {
-        const from = Math.floor(item.kilometer_post / 10) * 10;
-        selectSegment({from, to: from + 10}, item.accident_uid);
-      });
-      actionCell.append(button);
-    } else {
-      actionCell.textContent = "좌표 미결합";
-    }
+    actionCell.className = "record-link-cell available";
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "table-link-button";
+    button.textContent = "사고 상세";
+    button.addEventListener("click", () => openAccidentDetail(item.accident_uid));
+    actionCell.append(button);
     row.append(actionCell);
     body.append(row);
   }
   if (!data.items.length) body.innerHTML = '<tr><td colspan="8" class="empty">조회 결과가 없습니다.</td></tr>';
+}
+
+function detailValue(value, fallback = "-") {
+  return value === null || value === undefined || value === "" ? fallback : String(value);
+}
+
+function appendDetailDefinition(root, label, value) {
+  const item = document.createElement("div");
+  const term = document.createElement("dt");
+  const description = document.createElement("dd");
+  term.textContent = label;
+  description.textContent = detailValue(value);
+  item.append(term, description);
+  root.append(item);
+}
+
+function renderDetailStatus(root, badge, title, message) {
+  root.innerHTML = "";
+  const chip = document.createElement("span");
+  chip.className = `status-chip ${badge.className || ""}`.trim();
+  chip.textContent = badge.label;
+  const heading = document.createElement("strong");
+  heading.textContent = title;
+  const body = document.createElement("p");
+  body.textContent = message;
+  root.append(chip, heading, body);
+}
+
+function destroyDetailMap() {
+  if (detailMap) detailMap.remove();
+  detailMap = undefined;
+  detailMapLayer = undefined;
+}
+
+function renderDetailMap(location) {
+  const root = qs("#detail-map");
+  const note = qs("#detail-map-note");
+  const meta = qs("#detail-map-meta");
+  const hasLocation = location?.latitude !== null && location?.latitude !== undefined
+    && location?.longitude !== null && location?.longitude !== undefined;
+  meta.textContent = location?.label || "위치 정보";
+  note.textContent = location?.is_approximate
+    ? "이 지도는 도로 이정 기준으로 결합한 추정 위치입니다. 현장 위치 확정 근거로 사용하지 않습니다."
+    : "이 사고에는 지도 좌표가 결합되지 않았습니다.";
+  if (!hasLocation || typeof L === "undefined") {
+    destroyDetailMap();
+    root.className = "empty";
+    root.textContent = hasLocation ? "지도 라이브러리를 불러오지 못했습니다." : "좌표 미결합";
+    return;
+  }
+  root.className = "";
+  if (!detailMap) {
+    root.innerHTML = "";
+    detailMap = L.map("detail-map", {zoomControl: true, preferCanvas: true});
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }).addTo(detailMap);
+  }
+  if (detailMapLayer) detailMap.removeLayer(detailMapLayer);
+  detailMapLayer = L.featureGroup().addTo(detailMap);
+  const marker = L.circleMarker([location.latitude, location.longitude], {
+    radius: 10, color: "#fff", weight: 3, fillColor: cssColor("--data-fatal", "#8a1538"), fillOpacity: .9,
+  }).addTo(detailMapLayer);
+  marker.bindTooltip(location.label, {permanent: false});
+  detailMap.setView([location.latitude, location.longitude], 14, {animate: false});
+  setTimeout(() => detailMap?.invalidateSize(), 0);
+}
+
+function renderAccidentDetail(data) {
+  const accident = data.accident;
+  const source = data.provenance;
+  const location = data.location;
+  const report = data.report;
+  const quality = data.quality;
+  qs("#detail-empty").hidden = true;
+  qs("#detail-content").hidden = false;
+  qs("#detail-title").textContent = `${displayRouteName(accident.route_name)} ${detailValue(accident.kilometer_post)}km 사고`;
+  qs("#detail-subtitle").textContent = `${detailValue(accident.accident_date)} ${detailValue(accident.accident_time, "시간 미상")} · ${detailValue(accident.direction, "방향 미분류")}`;
+  qs("#detail-uid").textContent = `사고 UID: ${accident.accident_uid}`;
+  qs("#detail-source-badge").textContent = `자료 출처 · ${detailValue(source.source_name)}`;
+  qs("#detail-quality-badge").textContent = quality.location_level === "caution" ? "좌표 결합 · 추정" : "좌표 · 미결합";
+
+  const facts = qs("#detail-facts");
+  facts.innerHTML = "";
+  [
+    ["발생 일시", `${detailValue(accident.accident_date)} ${detailValue(accident.accident_time, "시간 미상")}`],
+    ["노선·이정", `${displayRouteName(accident.route_name)} · ${detailValue(accident.kilometer_post)}km`],
+    ["사고 원인", detailValue(accident.cause, "원인 미분류")],
+    ["사고 등급", displaySeverity(accident.severity)],
+    ["사망자", `${fmt.format(accident.deaths || 0)}명`],
+    ["부상자", `${fmt.format(accident.injuries || 0)}명`],
+  ].forEach(([label, value]) => appendDetailDefinition(facts, label, value));
+
+  const provenance = qs("#detail-provenance");
+  provenance.innerHTML = "";
+  [
+    ["수집 자료", source.source_name],
+    ["수집 시각", displayTimestamp(source.collected_at)],
+    ["원본 파일", source.source_file],
+    ["자료 식별값", source.source_sha256 ? `${source.source_sha256.slice(0, 12)}…` : "-"],
+  ].forEach(([label, value]) => appendDetailDefinition(provenance, label, value));
+
+  const segment = data.risk.local_segment;
+  const taas = data.risk.taas;
+  const riskMessage = segment
+    ? `${segment.from_km}~${segment.to_km}km 구간에 같은 연도 사고 ${fmt.format(segment.accidents)}건, 사망 ${fmt.format(segment.deaths)}명, 부상 ${fmt.format(segment.injuries)}명이 집계되었습니다. ${data.risk.notice}`
+    : data.risk.notice;
+  renderDetailStatus(qs("#detail-risk"), {
+    label: taas?.record_count ? "TAAS 적재" : "TAAS 대기",
+    className: taas?.record_count ? "" : "unavailable",
+  }, segment ? "동일 노선·10km 구간 집계" : "구간 집계 불가", riskMessage);
+
+  const mediaRoot = qs("#detail-media");
+  const mediaDemo = qs("#detail-media-demo");
+  const media = data.media.items || [];
+  if (media.length) {
+    const item = media[0];
+    renderDetailStatus(mediaRoot, {
+      label: item.data_mode === "real" ? "실제 영상" : "시연 자료",
+      className: item.data_mode === "real" ? "" : "caution",
+    }, item.title, item.data_mode === "real"
+      ? `분석 상태 ${detailValue(item.analysis_status)} · 검토 상태 ${detailValue(item.review_status)}`
+      : "시연 자료는 실제 사고 근거로 사용하지 않습니다.");
+    mediaDemo.hidden = item.data_mode === "real";
+  } else {
+    renderDetailStatus(mediaRoot, {label: "영상 미확보", className: "unavailable"}, "연결된 실제 영상 없음", data.media.demo_notice);
+    mediaDemo.hidden = window.ExaiPublicData?.mode === "readonly";
+  }
+  mediaDemo.href = data.media.demo_url || "/trajectory-prototype/#/trajectory?t=1";
+
+  const latestReport = report.latest;
+  const reportOpen = qs("#detail-report-open");
+  const reportCreate = qs("#detail-report-create");
+  if (latestReport) {
+    renderDetailStatus(qs("#detail-report"), {label: latestReport.status, className: latestReport.status === "approved" ? "" : "caution"}, latestReport.title, `버전 ${latestReport.version} · 최근 갱신 ${detailValue(latestReport.updated_at)}`);
+    reportOpen.hidden = false;
+    reportOpen.textContent = "보고서 출력";
+    reportOpen.href = `${API_BASE}/api/assist/reports/${encodeURIComponent(latestReport.report_uid)}/export`;
+    reportOpen.target = "_blank";
+    reportCreate.hidden = true;
+  } else {
+    renderDetailStatus(qs("#detail-report"), {label: "검토 대기", className: "unavailable"}, "사고 단위 보고서 미생성", "원본 자료와 좌표 결합 상태를 근거로 보고서 초안을 생성한 뒤 검토·승인할 수 있습니다.");
+    reportOpen.hidden = true;
+    reportCreate.hidden = window.ExaiPublicData?.mode === "readonly";
+    reportCreate.disabled = window.ExaiPublicData?.mode === "readonly";
+  }
+  renderDetailMap(location);
+}
+
+async function loadAccidentDetail() {
+  const empty = qs("#detail-empty");
+  const content = qs("#detail-content");
+  if (!focusedAccidentUid) {
+    content.hidden = true;
+    empty.hidden = false;
+    destroyDetailMap();
+    return;
+  }
+  empty.hidden = false;
+  empty.textContent = "사고 상세 정보를 불러오는 중입니다.";
+  try {
+    const data = await json(`/api/accidents/${encodeURIComponent(focusedAccidentUid)}/workspace`);
+    if (data.accident_uid !== focusedAccidentUid) throw new Error("사고 식별자가 일치하지 않습니다.");
+    renderAccidentDetail(data);
+  } catch (error) {
+    content.hidden = true;
+    empty.hidden = false;
+    empty.textContent = `사고 상세 정보를 불러오지 못했습니다: ${error.message}`;
+    destroyDetailMap();
+  }
+}
+
+async function createAccidentReportDraft() {
+  if (!focusedAccidentUid || window.ExaiPublicData?.mode === "readonly") return;
+  const button = qs("#detail-report-create");
+  button.disabled = true;
+  const previous = button.textContent;
+  button.textContent = "초안 생성 중";
+  try {
+    const report = await json(`/api/accidents/${encodeURIComponent(focusedAccidentUid)}/report-draft`, {method: "POST"});
+    await window.ExaiWorkflow?.reportCreated?.(report);
+    showPage("report");
+    history.pushState(null, "", pageHash("report"));
+    updatePageLinks();
+  } catch (error) {
+    alert(`보고서 초안을 만들지 못했습니다: ${error.message}`);
+    button.disabled = false;
+    button.textContent = previous;
+  }
 }
 
 function ensureMap() {
@@ -554,6 +770,10 @@ function popupContent(item) {
   note.textContent = `이정 좌표 변환거리 ${item.location_match_distance_km ?? 0}km · 실제 위치 정확도가 아님`;
   const actions = document.createElement("div");
   actions.className = "map-popup-actions";
+  const detailLink = document.createElement("a");
+  detailLink.textContent = "사고 상세";
+  detailLink.href = `#/detail?${new URLSearchParams({...Object.fromEntries(queryParams()), accident: item.accident_uid})}`;
+  actions.append(detailLink);
   for (const [label, page] of [["구간 사고목록", "records"], ["보고서 작성", "report"]]) {
     const link = document.createElement("a");
     link.textContent = label;
@@ -1445,6 +1665,7 @@ document.querySelectorAll("[data-record-sort]").forEach((button) => {
 qs("#interpret-query").addEventListener("click", interpretNaturalQuery);
 qs("#apply-interpreted").addEventListener("click", applyInterpretedQuery);
 qs("#create-report").addEventListener("click", createReport);
+qs("#detail-report-create").addEventListener("click", createAccidentReportDraft);
 qs("#map-view-country").addEventListener("click", () => setMapViewMode("country"));
 qs("#map-view-route").addEventListener("click", () => setMapViewMode("route"));
 qs("#taas-layer-toggle").addEventListener("click", () => {
@@ -1469,6 +1690,7 @@ window.addEventListener("hashchange", async () => {
     await refresh();
     if (window.ExaiPublicData?.mode !== "readonly") connectRealtime();
   }
+  if (state.page === "detail") await loadAccidentDetail();
 });
 
 Promise.all([loadMetadata(), loadDataSources(), loadVideoCases()]).then(async () => {
@@ -1476,6 +1698,7 @@ Promise.all([loadMetadata(), loadDataSources(), loadVideoCases()]).then(async ()
   applyHashFilters(state.filters, state.filters.size > 0);
   showPage(state.page);
   await refresh();
+  if (state.page === "detail") await loadAccidentDetail();
   connectRealtime();
 }).catch((error) => {
   console.error(error);
