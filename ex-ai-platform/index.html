@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>교통사고 분석·관리 플랫폼</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <link rel="stylesheet" href="./styles.css?v=20260809-1">
+  <link rel="stylesheet" href="./workflow.css?v=20260806-1">
+  <link rel="stylesheet" href="./video.css?v=20260806-4">
+  <link rel="stylesheet" href="./dashboard.css?v=20260806-3">
+  <link rel="stylesheet" href="./concept-demo.css?v=20260806-2">
+</head>
+<body>
+  <a class="skip-link" href="#workspace">본문 바로가기</a>
+  <div class="platform-shell">
+    <aside class="sidebar" aria-label="플랫폼 탐색">
+      <a class="brand-lockup" href="#/dashboard" aria-label="교통사고 분석·관리 홈">
+        <span class="brand-mark" aria-hidden="true">EX</span>
+        <span class="brand-name"><strong>교통안전 분석</strong></span>
+      </a>
+      <div class="sidebar-rule"></div>
+      <p class="nav-label">업무 메뉴</p>
+      <nav class="section-nav" aria-label="주요 화면">
+        <a href="#/dashboard" data-page-link="dashboard"><span class="nav-index">01</span><span><strong>통합 대시보드</strong></span></a>
+        <a href="#/map" data-page-link="map"><span class="nav-index">02</span><span><strong>지도·구간</strong></span></a>
+        <a href="#/records" data-page-link="records"><span class="nav-index">03</span><span><strong>통계·사고목록</strong></span></a>
+        <a href="#/video" data-page-link="video"><span class="nav-index">04</span><span><strong>영상·궤적 분석</strong></span></a>
+        <a href="#/report" data-page-link="report"><span class="nav-index">05</span><span><strong>분석 보고서</strong></span></a>
+        <a href="#/data" data-page-link="data"><span class="nav-index">06</span><span><strong>데이터·품질</strong></span></a>
+      </nav>
+      <div class="sidebar-footer">
+        <span class="system-state"><i aria-hidden="true"></i> 서비스 정상</span>
+        <strong>내부 운영</strong>
+      </div>
+    </aside>
+
+    <div class="platform-main">
+      <header class="utility-bar" aria-label="서비스 안내">
+        <div class="utility-title"><span class="live-dot" aria-hidden="true"></span><strong>교통안전 데이터 연구환경</strong></div>
+        <div class="utility-actions">
+          <span class="environment-badge">내부 운영</span>
+          <span id="realtime-status" class="realtime-status" data-state="pending" aria-live="polite"><i aria-hidden="true"></i><span class="realtime-label">실시간 연결 확인 중</span></span>
+          <label class="role-switch" for="active-role"><span>현재 권한</span><select id="active-role" aria-label="현재 권한"><option value="viewer">조회자</option><option value="analyst" selected>분석 담당자</option><option value="reviewer">검토·승인자</option><option value="admin">관리자</option></select></label>
+          <a href="#/data">데이터 품질</a>
+          <a href="./">API 문서 <span aria-hidden="true">↗</span></a>
+        </div>
+      </header>
+
+      <section class="hero" aria-labelledby="platform-title">
+        <div class="hero-copy">
+          <h1 id="platform-title">교통사고 분석·관리 플랫폼</h1>
+        </div>
+        <div class="hero-facts" aria-label="데이터 현황">
+          <span><small>적재 사고</small><strong id="hero-accidents">불러오는 중</strong></span>
+          <span><small>자료 기간</small><strong id="hero-period">-</strong></span>
+          <span><small>좌표 기준</small><strong id="hero-coordinate-year">-</strong></span>
+        </div>
+      </section>
+
+      <div class="workspace-context" aria-label="현재 조회조건" aria-live="polite">
+        <span class="context-label">조회 조건</span>
+        <strong id="workspace-filter">조건을 불러오는 중</strong>
+        <span class="context-metric"><strong id="workspace-total">-</strong>건</span>
+        <span class="context-metric">좌표결합 <strong id="workspace-match-rate">-</strong></span>
+        <a href="#/dashboard" data-context-filter-link>조회조건 변경</a>
+      </div>
+
+      <main id="workspace" tabindex="-1">
+    <section id="drilldown-context" class="drilldown-context" aria-label="연계 분석 범위" hidden>
+      <div><span>선택 구간</span><strong id="drilldown-title">선택 구간</strong></div>
+      <nav aria-label="선택 구간 연계 화면">
+        <a id="drilldown-map" href="#/map">지도</a><a id="drilldown-records" href="#/records">사고목록</a><a id="drilldown-report" href="#/report">보고서</a>
+        <button id="clear-drilldown" class="secondary-button" type="button">구간 해제</button>
+      </nav>
+    </section>
+    <section class="app-page" data-page="dashboard" id="page-dashboard">
+      <header class="page-heading">
+        <div><h2>통합 대시보드</h2></div>
+      </header>
+
+      <section class="filter-panel" aria-label="검색 조건">
+        <div class="filter-heading">
+          <div><h2>조회 조건</h2></div>
+          <span id="active-filter-summary">조건을 불러오는 중</span>
+        </div>
+        <div class="filters primary-filters">
+          <label>연도<select id="year"><option value="">전체</option></select></label>
+          <label>노선<select id="route"><option value="">전체</option></select></label>
+          <label>원인<select id="cause"><option value="">전체</option></select></label>
+          <button id="apply">조건 조회</button>
+        </div>
+        <div id="route-support-note" class="route-support-note" aria-live="polite">지도 상태 확인 중</div>
+
+        <details class="query-tool" id="assist">
+          <summary><span>문장으로 조건 찾기</span><small>선택</small></summary>
+          <div class="query-tool-body">
+            <div>
+              <label for="natural-query">검색 문장</label>
+              <textarea id="natural-query" rows="2" placeholder="예: 경부선 2024년 졸음 사고"></textarea>
+            </div>
+            <div class="assist-actions">
+              <button id="interpret-query">입력 내용 해석</button>
+              <button id="apply-interpreted" class="secondary" disabled>이 조건으로 적용</button>
+            </div>
+          </div>
+          <div id="query-interpretation" class="assist-result" aria-live="polite">연도·노선·원인을 문장으로 찾습니다.</div>
+        </details>
+      </section>
+
+      <section class="situation-board" aria-labelledby="situation-board-title">
+        <header class="situation-board-head">
+          <div>
+            <h2 id="situation-board-title">사고 상황</h2>
+          </div>
+          <nav aria-label="시각화 상세 화면">
+            <a href="#/map" data-page-card="map">상세 지도</a>
+            <a href="#/video" data-page-card="video">영상·궤적</a>
+          </nav>
+        </header>
+
+        <div class="situation-grid">
+          <article class="dashboard-map-card">
+            <header>
+              <div><span class="visual-index">01</span><h3>사고 위치 분포</h3></div>
+              <span id="dashboard-map-meta" class="visual-meta">지도 불러오는 중</span>
+            </header>
+            <div class="dashboard-map-frame">
+              <div id="dashboard-map" aria-label="현재 조회조건 사고 위치 요약 지도"></div>
+              <div id="dashboard-map-empty" class="dashboard-map-empty" hidden>노선 선택 필요</div>
+              <div class="dashboard-map-legend" aria-label="사고 위치 범례"><span><i class="fatal"></i>사망</span><span><i class="injury"></i>부상</span><span><i class="property"></i>기타</span></div>
+            </div>
+            <footer><span>좌표 결합 결과</span><a href="#/map" data-page-card="map">지도에서 분석 →</a></footer>
+          </article>
+
+          <div class="situation-side">
+            <article class="dashboard-corridor-card">
+              <header>
+                <div><span class="visual-index">02</span><h3>10km 구간별 사고 분포</h3></div>
+                <a href="#/map" data-page-card="map">구간 분석 →</a>
+              </header>
+              <div id="dashboard-corridor-strip" class="dashboard-corridor-strip" aria-label="10km 구간 사고분포 요약"></div>
+              <div id="dashboard-corridor-summary" class="dashboard-corridor-summary">노선 선택 필요</div>
+            </article>
+
+            <a class="trajectory-preview-card" href="#/video" data-page-card="video" aria-label="영상 궤적 분석으로 이동">
+              <header><div><span class="visual-index">03</span><h3>영상 기반 차량 거동</h3></div><span class="analysis-status-badge">분석 완료</span></header>
+              <div class="trajectory-preview" aria-hidden="true">
+                <svg viewBox="0 0 640 210" role="img">
+                  <defs>
+                    <linearGradient id="roadGlow" x1="0" x2="1"><stop offset="0" stop-color="#123654"/><stop offset="1" stop-color="#071c31"/></linearGradient>
+                    <filter id="trailGlow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                  </defs>
+                  <rect width="640" height="210" rx="6" fill="url(#roadGlow)"/>
+                  <path d="M0 70H640M0 140H640" stroke="#6e879d" stroke-width="2" stroke-dasharray="22 18" opacity=".55"/>
+                  <path d="M54 160 C170 160 220 103 330 103 S470 57 590 57" fill="none" stroke="#47d5df" stroke-width="5" stroke-linecap="round" filter="url(#trailGlow)"/>
+                  <path d="M60 62 C180 62 236 112 345 112 S460 154 588 154" fill="none" stroke="#ffb347" stroke-width="5" stroke-linecap="round" filter="url(#trailGlow)"/>
+                  <g fill="#47d5df"><circle cx="54" cy="160" r="5"/><circle cx="181" cy="142" r="5"/><circle cx="330" cy="103" r="5"/><circle cx="466" cy="72" r="5"/></g>
+                  <g fill="#ffb347"><circle cx="60" cy="62" r="5"/><circle cx="184" cy="78" r="5"/><circle cx="345" cy="112" r="5"/><circle cx="485" cy="150" r="5"/></g>
+                  <g transform="translate(438 48) rotate(72)"><rect x="-18" y="-10" width="36" height="20" rx="5" fill="#ecf9ff" stroke="#47d5df" stroke-width="3"/></g>
+                  <g transform="translate(455 145) rotate(108)"><rect x="-18" y="-10" width="36" height="20" rx="5" fill="#fff4dc" stroke="#ffb347" stroke-width="3"/></g>
+                  <circle cx="446" cy="108" r="24" fill="none" stroke="#ff5d5d" stroke-width="3" opacity=".85"/><circle cx="446" cy="108" r="8" fill="#ff5d5d"/>
+                </svg>
+              </div>
+              <footer><span>검출 → 평면좌표 → 궤적 → 지표</span><strong>분석 보기 →</strong></footer>
+            </a>
+          </div>
+        </div>
+
+        <ol class="analysis-pipeline" aria-label="사고 분석 흐름">
+          <li><span>01</span><strong>사고·영상</strong><small>자료 결합</small></li>
+          <li><span>02</span><strong>차량 인식</strong><small>검출·추적</small></li>
+          <li><span>03</span><strong>거동 분석</strong><small>좌표·속도·궤적</small></li>
+          <li><span>04</span><strong>교통류 검증</strong><small>시뮬레이션</small></li>
+          <li><span>05</span><strong>보고서</strong><small>근거 검토·승인</small></li>
+        </ol>
+      </section>
+
+      <section class="kpis" aria-label="핵심 지표">
+        <article data-tone="blue"><span>조회 사고</span><strong id="kpi-accidents">-</strong><small>건</small></article>
+        <article data-tone="slate"><span>사망자</span><strong id="kpi-deaths">-</strong><small>명</small></article>
+        <article data-tone="amber"><span>부상자</span><strong id="kpi-injuries">-</strong><small>명</small></article>
+        <article data-tone="red"><span>사망사고</span><strong id="kpi-fatal">-</strong><small>건</small></article>
+        <article data-tone="green" class="quality-kpi"><span>좌표 결합 품질</span><strong id="kpi-match-rate">-</strong><small id="kpi-quality-label">확인 중</small></article>
+      </section>
+
+      <section class="page-links" aria-label="업무 화면 선택">
+        <a href="#/map" data-page-card="map"><span>01</span><div><strong>지도·구간</strong></div><b>열기 →</b></a>
+        <a href="#/records" data-page-card="records"><span>02</span><div><strong>통계·목록</strong></div><b>열기 →</b></a>
+        <a href="#/video" data-page-card="video"><span>03</span><div><strong>영상·궤적</strong></div><b>열기 →</b></a>
+        <a href="#/report" data-page-card="report"><span>04</span><div><strong>보고서</strong></div><b>열기 →</b></a>
+        <a href="#/data" data-page-card="data"><span>05</span><div><strong>데이터·품질</strong></div><b>열기 →</b></a>
+      </section>
+    </section>
+
+    <section class="app-page" data-page="map" id="page-map" hidden>
+      <header class="page-heading">
+        <div><h2>지도·구간</h2></div>
+      </header>
+
+      <section class="panel map-panel" id="map-analysis">
+        <div class="panel-head">
+          <div><h2 id="map-title">경부선 사고 위치 지도</h2></div>
+          <div class="map-head-tools">
+            <span id="map-meta"></span>
+            <div class="map-view-toggle" aria-label="지도 축척 전환">
+              <button id="map-view-country" class="map-view-button" aria-pressed="true">전국 보기</button>
+              <button id="map-view-route" class="map-view-button" aria-pressed="false">선택 노선 확대</button>
+            </div>
+          </div>
+        </div>
+        <div class="map-scope" id="map-scope">대한민국 전체</div>
+        <div class="taas-layer-bar" aria-label="TAAS 도로위험지수 레이어 설정">
+          <div class="taas-layer-copy">
+            <span class="taas-source-mark">TAAS P0</span>
+            <div><strong>고속도로 구간별 도로위험지수</strong><small id="taas-map-status">연계 상태 확인 중</small></div>
+          </div>
+          <div class="taas-layer-controls">
+            <label for="taas-vehicle-type">차종</label>
+            <select id="taas-vehicle-type" aria-label="TAAS 위험지수 차종">
+              <option value="01">승용차</option><option value="02">버스</option><option value="03">택시</option><option value="04">화물차</option>
+            </select>
+            <button id="taas-layer-toggle" class="secondary-button" type="button" aria-pressed="false" disabled>위험도 표시</button>
+          </div>
+        </div>
+        <p class="map-note" id="map-note">이정 기반 추정 위치</p>
+        <div id="map-empty" class="empty" hidden>노선 선택 필요</div>
+        <div id="accident-map" aria-label="고속도로 사고 위치 지도"></div>
+        <div id="map-quality-summary" class="map-quality-summary" aria-label="지도 품질 요약"></div>
+        <div class="map-legend" aria-label="지도 범례">
+          <span><i class="fatal"></i>사망사고</span><span><i class="injury"></i>부상사고</span><span><i class="property"></i>기타사고</span><span><i class="overlap"></i>숫자=중첩 건수</span>
+          <span id="taas-risk-legend" class="taas-risk-legend" hidden><i class="risk-safe"></i>안전 <i class="risk-caution"></i>주의 <i class="risk-danger"></i>위험 <i class="risk-critical"></i>심각</span>
+        </div>
+      </section>
+
+      <section class="panel corridor-panel">
+        <div class="panel-head">
+          <div><h2 id="corridor-title">경부선 이정 구간 분석</h2></div>
+          <span id="corridor-meta"></span>
+        </div>
+        <div id="corridor-empty" class="empty" hidden>노선 선택 필요</div>
+        <div id="corridor-content">
+          <div class="corridor-legend"><span>사고 적음</span><i></i><i></i><i></i><i></i><i></i><span>사고 많음</span></div>
+          <div id="corridor-strip" class="corridor-strip" aria-label="이정 10km 구간별 사고분포"></div>
+          <div class="corridor-grid">
+            <div><h3>사고 건수 상위 구간</h3><ol id="top-segments" class="linked-segment-list"></ol></div>
+            <div><h3>방향별 사고</h3><div id="direction-chart" class="bars"></div></div>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <section class="app-page" data-page="records" id="page-records" hidden>
+      <header class="page-heading">
+        <div><h2>통계·목록</h2></div>
+      </header>
+
+      <section class="grid" id="statistics">
+        <article class="panel">
+          <div class="panel-head"><div><h2>노선별 사고</h2></div></div>
+          <div id="route-chart" class="bars"></div>
+        </article>
+        <article class="panel">
+          <div class="panel-head"><div><h2>원인별 사고</h2></div></div>
+          <div id="cause-chart" class="bars"></div>
+        </article>
+      </section>
+
+      <section class="panel" id="records">
+        <div class="panel-head">
+          <div><h2>사고 목록</h2></div>
+          <div class="record-page-tools"><span id="result-count" aria-live="polite"></span><label for="record-page-size">페이지당<select id="record-page-size"><option value="25" selected>25건</option><option value="50">50건</option><option value="100">100건</option></select></label></div>
+        </div>
+        <div class="records-search">
+          <label for="search">목록 검색</label>
+          <input id="search" placeholder="노선, 방향, 원인">
+          <button id="record-search-apply">검색</button>
+        </div>
+        <div class="table-wrap" tabindex="0" aria-label="사고 목록 표, 좌우로 스크롤 가능">
+          <table>
+            <caption>현재 조회조건의 사고 목록</caption>
+            <thead><tr><th scope="col"><button class="sort-button" data-record-sort="date">일자·시각</button></th><th scope="col"><button class="sort-button" data-record-sort="route">노선</button></th><th scope="col">방향</th><th scope="col"><button class="sort-button" data-record-sort="kilometer_post">이정</button></th><th scope="col"><button class="sort-button" data-record-sort="cause">원인</button></th><th scope="col"><button class="sort-button" data-record-sort="deaths">사망</button></th><th scope="col"><button class="sort-button" data-record-sort="injuries">부상</button></th><th scope="col">연계</th></tr></thead>
+            <tbody id="accident-rows"></tbody>
+          </table>
+        </div>
+        <nav class="record-pagination" aria-label="사고목록 페이지 이동"><button id="record-prev" class="secondary-button" type="button">이전</button><span id="record-page-status" aria-live="polite">1 / 1 페이지</span><button id="record-next" class="secondary-button" type="button">다음</button></nav>
+      </section>
+    </section>
+
+    <section class="app-page" data-page="video" id="page-video" hidden>
+      <header class="page-heading">
+        <div><h2>영상·궤적 분석</h2></div>
+      </header>
+
+      <section class="video-demo-hero" aria-labelledby="video-demo-title">
+        <div class="video-demo-copy">
+          <div class="demo-status-line"><span class="analysis-status-badge">분석 처리 완료</span><span id="video-demo-sync">DB 상태 확인 중</span></div>
+          <h2 id="video-demo-title">사고 장면·차량 거동 분석</h2>
+          <div class="video-demo-actions">
+            <a id="trajectory-demo-link" class="primary-link-button" href="./trajectory-prototype/#/trajectory?t=1" target="_blank" rel="noopener">궤적 분석 열기</a>
+            <a href="#/report" data-page-link="report" class="secondary-link-button">보고서 연결</a>
+          </div>
+        </div>
+        <dl class="video-demo-metrics" id="video-demo-metrics" aria-label="분석 데이터 요약">
+          <div><dt>사례</dt><dd>-</dd></div><div><dt>장면 이벤트</dt><dd>-</dd></div><div><dt>궤적 포인트</dt><dd>-</dd></div><div><dt>차량</dt><dd>-</dd></div>
+        </dl>
+      </section>
+
+      <section class="video-flow" aria-label="영상분석 데이터 흐름">
+        <article><span>01</span><strong>영상 등록</strong></article>
+        <i aria-hidden="true">→</i>
+        <article><span>02</span><strong>검출·추적</strong></article>
+        <i aria-hidden="true">→</i>
+        <article><span>03</span><strong>좌표·거동</strong></article>
+        <i aria-hidden="true">→</i>
+        <article><span>04</span><strong>사람 검토</strong></article>
+        <i aria-hidden="true">→</i>
+        <article><span>05</span><strong>보고서 연결</strong></article>
+      </section>
+
+      <section class="panel video-case-panel">
+        <div class="panel-head"><div><h2>영상 분석 결과</h2></div><span id="video-case-count"></span></div>
+        <div id="video-case-list" class="video-case-list" aria-live="polite">영상 분석 사례를 불러오는 중입니다.</div>
+      </section>
+
+      <section class="concept-lab" aria-labelledby="concept-lab-title">
+        <header class="concept-lab-head">
+          <div><h2 id="concept-lab-title">사고 재구성·안전지표</h2></div>
+          <span class="analysis-status-badge">분석 완료</span>
+        </header>
+        <div class="concept-lab-grid">
+          <article class="reconstruction-demo">
+            <header><span>01 · 역추적</span><strong>충돌 전후 궤적</strong><output id="reconstruction-time-label">충돌 4초 전</output></header>
+            <div class="reconstruction-canvas">
+              <svg viewBox="0 0 760 300" role="img" aria-label="차량 충돌 역추적 분석">
+                <rect width="760" height="300" fill="#263441"/>
+                <path d="M0 100H760M0 200H760" stroke="#84919a" stroke-width="3" stroke-dasharray="38 28" opacity=".72"/>
+                <path d="M80 65 C260 72 370 110 505 152" fill="none" stroke="#54d6e1" stroke-width="5" stroke-dasharray="12 10"/>
+                <path d="M85 235 C260 225 380 185 505 152" fill="none" stroke="#ffb348" stroke-width="5" stroke-dasharray="12 10"/>
+                <path d="M505 152 C570 122 625 95 710 84" fill="none" stroke="#738391" stroke-width="3"/>
+                <path d="M505 152 C585 178 640 205 710 230" fill="none" stroke="#738391" stroke-width="3"/>
+                <g id="reconstruction-car-a" class="demo-car demo-car-a"><rect x="-28" y="-14" width="56" height="28" rx="7"/><path d="M-12 -9H14V9H-12Z"/></g>
+                <g id="reconstruction-car-b" class="demo-car demo-car-b"><rect x="-28" y="-14" width="56" height="28" rx="7"/><path d="M-12 -9H14V9H-12Z"/></g>
+                <g class="impact-mark" transform="translate(505 152)"><circle r="28"/><path d="M-42 0H42M0-42V42M-30-30L30 30M30-30L-30 30"/></g>
+              </svg>
+            </div>
+            <label class="demo-timeline" for="reconstruction-time"><span>−4초</span><input id="reconstruction-time" type="range" min="-4" max="2" value="-4" step="1"><span>+2초</span></label>
+          </article>
+
+          <article class="safety-indicator-demo">
+            <header><span>02 · 대리 안전지표</span><strong>시간대별 지표</strong><small id="safety-demo-state">접근</small></header>
+            <div class="safety-gauges">
+              <div><span>TTC</span><strong id="demo-ttc">4.8</strong><small>초</small><i><b id="demo-ttc-bar"></b></i></div>
+              <div><span>PET</span><strong id="demo-pet">3.2</strong><small>초</small><i><b id="demo-pet-bar"></b></i></div>
+              <div><span>DRAC</span><strong id="demo-drac">1.4</strong><small>m/s²</small><i><b id="demo-drac-bar"></b></i></div>
+            </div>
+            <div class="risk-matrix" aria-label="위험도 매트릭스">
+              <span>낮음</span><span>보통</span><span>주의</span><span>높음</span><i id="demo-risk-point"></i>
+            </div>
+            <footer>시간축 연동</footer>
+          </article>
+        </div>
+      </section>
+
+    </section>
+
+    <section class="app-page" data-page="report" id="page-report" hidden>
+      <header class="page-heading">
+        <div><h2>보고서</h2></div>
+      </header>
+
+      <section class="panel report-panel" id="report">
+        <div class="panel-head">
+          <div><h2>현재 조회조건 보고서 초안</h2></div>
+          <span class="status-pill warn">검토·승인 전</span>
+        </div>
+        <div class="report-layout">
+          <div class="report-guidance">
+            <strong>분석 결과 확인</strong>
+            <div class="report-context-actions"><a id="report-map-link" href="#/map">지도 재확인</a><a id="report-records-link" href="#/records">사고목록 재확인</a></div>
+            <button id="create-report" data-capability="report_create">검토 전 초안 생성</button>
+            <div class="report-action-stack" id="report-actions" hidden>
+              <button id="save-report" type="button">초안 저장</button>
+              <button id="submit-report" type="button">검토 요청</button>
+              <button id="approve-report" type="button">승인</button>
+              <button id="request-report-changes" type="button" class="secondary-button">수정 요청</button>
+              <button id="print-report" type="button" class="secondary-button">인쇄·PDF 저장</button>
+              <a id="export-report" class="button-link" href="#">HTML 내려받기</a>
+            </div>
+          </div>
+          <div class="report-editor-wrap">
+            <div id="report-preview" class="report-preview" aria-live="polite">초안 없음</div>
+            <form id="report-editor" class="report-editor" hidden>
+              <label for="report-title">보고서 제목<input id="report-title" maxlength="160"></label>
+              <label for="report-body">보고서 본문<textarea id="report-body" rows="16" maxlength="50000"></textarea></label>
+              <label for="report-notes">검토 메모<textarea id="report-notes" rows="3" maxlength="4000" placeholder="검토자에게 전달할 메모"></textarea></label>
+              <label for="report-comment">승인·수정요청 의견<textarea id="report-comment" rows="2" maxlength="2000"></textarea></label>
+              <div id="report-history" class="workflow-history" aria-live="polite"></div>
+            </form>
+          </div>
+        </div>
+        <section class="recent-reports" aria-labelledby="recent-report-title"><div class="subsection-head"><h3 id="recent-report-title">최근 보고서</h3><button id="refresh-reports" type="button" class="text-button">새로고침</button></div><div id="report-list" class="workflow-list">보고서 없음</div></section>
+      </section>
+    </section>
+
+    <section class="app-page" data-page="data" id="page-data" hidden>
+      <header class="page-heading">
+        <div><h2>데이터·품질</h2></div>
+      </header>
+
+      <section class="panel source-panel" id="data-sources">
+        <div class="panel-head">
+          <div><h2>데이터 확보처·적용 상태</h2></div>
+          <span id="source-count"></span>
+        </div>
+        <div class="source-summary" id="source-summary" aria-label="데이터 연계 요약"></div>
+        <section class="taas-integration-audit" aria-labelledby="taas-audit-title">
+          <div><span class="taas-source-mark">TAAS P0</span><div><h3 id="taas-audit-title">실데이터 연계 상태</h3><p id="taas-audit-message">확인 중</p></div></div>
+          <dl id="taas-audit-metrics"></dl>
+          <a href="#/map" id="taas-audit-map-link">지도 반영 확인 →</a>
+        </section>
+        <div class="table-wrap" tabindex="0" aria-label="데이터 확보처 표, 좌우로 스크롤 가능">
+          <table class="source-table">
+            <caption>연계 검토 대상 데이터와 현재 적용 상태</caption>
+            <thead><tr><th scope="col">데이터</th><th scope="col">용도</th><th scope="col">확보방법</th><th scope="col">최신범위·주기</th><th scope="col">적용상태</th><th scope="col">웹 적용 및 제한</th></tr></thead>
+            <tbody id="data-source-rows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="extraction-demo" aria-labelledby="extraction-demo-title">
+        <header class="concept-lab-head">
+          <div><h2 id="extraction-demo-title">비정형 사고정보 구조화</h2></div>
+          <div class="analysis-badge-group"><span class="analysis-method-badge">규칙 기반</span><span id="demo-extraction-status" class="analysis-status-badge">분석 대기</span></div>
+        </header>
+        <div class="extraction-grid">
+          <div class="extraction-source">
+            <label for="demo-source-text">사고 문장</label>
+            <textarea id="demo-source-text" rows="5">2024년 5월 21일 14시 35분, 경부선 부산방향 173.2km에서 승용차와 화물차 추돌. 부상자 2명.</textarea>
+            <button id="run-demo-extraction" type="button">정보 추출</button>
+          </div>
+          <div class="extraction-arrow" aria-hidden="true">→</div>
+          <div id="demo-extraction-output" class="extraction-output" aria-live="polite">
+            <span>입력 대기</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel quality" id="quality-panel">
+        <div class="panel-head">
+          <div><h2>품질·좌표 결합 현황</h2></div>
+          <span id="quality-status"></span>
+        </div>
+        <div id="quality"></div>
+        <div class="quality-detail-grid">
+          <div><h3>품질 이슈</h3><ul id="quality-issues"></ul></div>
+          <div><h3>미결합 상위 노선</h3><ul id="unmatched-routes"></ul></div>
+        </div>
+        <div class="lineage" id="lineage"></div>
+      </section>
+
+      <section class="panel quality-workflow" id="quality-workflow" aria-labelledby="quality-workflow-title">
+        <div class="panel-head">
+          <div><h2 id="quality-workflow-title">품질조치 워크플로</h2></div>
+          <button id="sync-quality-actions" type="button" data-capability="quality_manage">현재 이슈 불러오기</button>
+        </div>
+        <div class="quality-action-filter"><label for="quality-action-status">상태<select id="quality-action-status"><option value="">전체</option><option value="open">미배정</option><option value="in_progress">조치중</option><option value="resolved">승인대기</option><option value="approved">승인완료</option><option value="rejected">재조치</option></select></label><span id="quality-action-count"></span></div>
+        <div id="quality-action-list" class="quality-action-list" aria-live="polite">품질조치 항목을 불러오는 중입니다.</div>
+      </section>
+    </section>
+      </main>
+
+      <footer class="app-footer">
+        <span>교통사고 분석·관리 플랫폼</span>
+        <span>내부 운영</span>
+      </footer>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="./public-data.js"></script>
+  <script src="./workflow.js?v=20260806-3"></script>
+  <script src="./app.js?v=20260809-1"></script>
+</body>
+</html>
