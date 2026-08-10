@@ -1407,7 +1407,7 @@ async function refresh({silent = false} = {}) {
     if (!silent) alert(`데이터를 불러오지 못했습니다: ${error.message}`);
   } finally {
     workspace.setAttribute("aria-busy", "false");
-    applyButton.disabled = false;
+    applyButton.disabled = window.ExaiPublicData?.mode === "readonly";
     applyButton.textContent = originalApplyLabel;
     recordButton.disabled = false;
   }
