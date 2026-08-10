@@ -235,7 +235,11 @@ function startRealtimePolling() {
 
 function connectRealtime() {
   if (window.ExaiPublicData?.mode === "readonly") {
-    setRealtimeStatus("공개 읽기 전용", "readonly");
+    setRealtimeStatus("정적 스냅샷", "readonly");
+    const sidebarState = qs(".sidebar-footer strong");
+    const footerState = qs(".app-footer span:last-child");
+    if (sidebarState) sidebarState.textContent = "공개 배포";
+    if (footerState) footerState.textContent = "공개 배포";
     return;
   }
   if (!("EventSource" in window)) {
@@ -346,6 +350,13 @@ async function loadMetadata() {
     if (naturalSearchButton) {
       naturalSearchButton.disabled = true;
       naturalSearchButton.title = "공개 페이지에서는 문장 검색 결과를 저장하지 않습니다.";
+    }
+    for (const selector of ["#year", "#route", "#cause", "#apply"]) {
+      const control = qs(selector);
+      if (control) {
+        control.disabled = true;
+        control.title = "공개 배포본은 2024년 경부선 정적 스냅샷입니다.";
+      }
     }
   }
   fillSelect("year", data.years);

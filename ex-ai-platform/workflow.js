@@ -317,6 +317,7 @@
   document.addEventListener("DOMContentLoaded", () => {
     const select = document.querySelector("#active-role");
     if (!select) return;
+    if (isPublicReadonly()) role = "viewer";
     select.value = role;
     if (isPublicReadonly()) select.disabled = true;
     select.addEventListener("change", async () => {
