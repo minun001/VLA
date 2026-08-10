@@ -320,6 +320,15 @@
     if (isPublicReadonly()) role = "viewer";
     select.value = role;
     if (isPublicReadonly()) select.disabled = true;
+    if (isPublicReadonly()) {
+      for (const selector of ["#refresh-reports", "#sync-quality-actions", "#quality-action-status"]) {
+        const control = document.querySelector(selector);
+        if (control) {
+          control.disabled = true;
+          control.title = "공개 배포본에서는 이 작업을 제공하지 않습니다.";
+        }
+      }
+    }
     select.addEventListener("change", async () => {
       role = allowedRoles.has(select.value) ? select.value : "viewer";
       sessionStorage.setItem("exai-role", role);
