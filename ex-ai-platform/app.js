@@ -185,6 +185,12 @@ async function json(url, options = {}) {
   requestOptions.headers = window.ExaiWorkflow
     ? ExaiWorkflow.headers(options.headers || {})
     : (options.headers || {});
+  const isReadOnlyRequest = !requestOptions.method || requestOptions.method.toUpperCase() === "GET";
+  const publicResolver = window.ExaiPublicData?.resolve;
+  if (isReadOnlyRequest && typeof publicResolver === "function") {
+    const fallback = window.ExaiPublicData.resolve(url);
+    if (fallback !== undefined) return fallback;
+  }
   try {
     const response = await fetch(`${API_BASE}${url}`, requestOptions);
     if (!response.ok) {
@@ -199,10 +205,8 @@ async function json(url, options = {}) {
     }
     return response.json();
   } catch (error) {
-    const isReadOnlyRequest = !requestOptions.method || requestOptions.method.toUpperCase() === "GET";
-    const publicResolver = window.ExaiPublicData?.resolve;
     if (isReadOnlyRequest && typeof publicResolver === "function") {
-      const fallback = publicResolver(url);
+      const fallback = window.ExaiPublicData.resolve(url);
       if (fallback !== undefined) return fallback;
     }
     throw error;
@@ -337,6 +341,11 @@ async function loadMetadata() {
       reportButton.disabled = true;
       reportButton.textContent = "공개 읽기 전용";
       reportButton.title = "공개 페이지에서는 보고서 저장·승인을 사용할 수 없습니다.";
+    }
+    const naturalSearchButton = qs("#interpret-query");
+    if (naturalSearchButton) {
+      naturalSearchButton.disabled = true;
+      naturalSearchButton.title = "공개 페이지에서는 문장 검색 결과를 저장하지 않습니다.";
     }
   }
   fillSelect("year", data.years);

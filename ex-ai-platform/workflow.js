@@ -9,6 +9,10 @@
   let currentReport = null;
   let qualityActions = [];
 
+  function isPublicReadonly() {
+    return window.ExaiPublicData?.mode === "readonly";
+  }
+
   function headers(extra = {}) {
     return {"X-EXAI-Role": role, ...extra};
   }
@@ -30,6 +34,14 @@
   }
 
   async function loadCapabilities() {
+    if (isPublicReadonly()) {
+      capabilitySet = new Set();
+      document.body.dataset.role = "viewer";
+      document.querySelectorAll("[data-capability]").forEach((element) => { element.hidden = true; });
+      const data = {role: "viewer", capabilities: [], readonly: true};
+      for (const listener of listeners) listener(data);
+      return data;
+    }
     const data = await api("/api/session/capabilities");
     capabilitySet = new Set(data.capabilities || []);
     document.body.dataset.role = data.role;
@@ -128,6 +140,10 @@
   async function loadReports() {
     const root = document.querySelector("#report-list");
     if (!root) return;
+    if (isPublicReadonly()) {
+      root.textContent = "공개 버전에서는 보고서 작성·승인 기능을 제공하지 않습니다.";
+      return;
+    }
     const data = await api("/api/assist/reports?limit=12");
     root.innerHTML = "";
     if (!data.items.length) {
@@ -265,6 +281,13 @@
   }
 
   async function loadQualityActions() {
+    if (isPublicReadonly()) {
+      const root = document.querySelector("#quality-action-list");
+      const count = document.querySelector("#quality-action-count");
+      if (root) root.textContent = "공개 버전에서는 품질조치 이력을 제공하지 않습니다.";
+      if (count) count.textContent = "";
+      return;
+    }
     const status = document.querySelector("#quality-action-status")?.value || "";
     const data = await api(`/api/quality/actions${status ? `?status=${encodeURIComponent(status)}` : ""}`);
     renderQualityActions(data);
@@ -295,6 +318,7 @@
     const select = document.querySelector("#active-role");
     if (!select) return;
     select.value = role;
+    if (isPublicReadonly()) select.disabled = true;
     select.addEventListener("change", async () => {
       role = allowedRoles.has(select.value) ? select.value : "viewer";
       sessionStorage.setItem("exai-role", role);
