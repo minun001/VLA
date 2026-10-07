@@ -37,6 +37,7 @@
         root.append(svg("polyline",{points:component.map(p=>p.join(",")).join(" "),fill:"none",stroke:"#ffe064","stroke-width":4}));
       }
     }
+    if(stage==="lane")return;
     for(const [i,obj] of frame.objects.entries()){
       const [x1,y1,x2,y2]=obj.box;const selected=obj.id===vehicle.id;
       const g=svg("g",{});const color=selected?"#4df3eb":obj.lane_allowed?"#76edb4":"#ffbe70";
@@ -67,6 +68,12 @@
         chain.append(node((seconds===0?"현재 관측":seconds.toFixed(3)+"초 전 관측")+" · 차량 위치 기록"));
       }
       root.append(chain,text("p","같은 추적 결과라는 뜻이며, 같은 실제 차량이나 차로 변경이 확인됐다는 뜻은 아니다."));
+    }else if(stage==="lane"){
+      $("graphTitle").textContent="차선과 도로로 구성한 차로 후보";
+      const corridorIds=new Set(frame.corridors.filter(c=>c.status==="candidate").map(c=>c.candidate_id));
+      shown=allEdges.filter(e=>corridorIds.has(e.subject)&&["left_image_boundary_candidate","right_image_boundary_candidate","corridor_has_visible_road_support"].includes(e.predicate));
+      root.append(node("검출된 좌우 차선 경계와 도로 영역"),arrow("공통 관측 범위에서 구성"),node("영상 차로 후보 "+corridorIds.size+"개"));
+      root.append(text("p","차로 후보를 만든 뒤 차량의 소속을 별도로 검사한다. 후보 개수가 실제 차로 수를 뜻하지는 않는다."));
     }else if(stage==="road"){
       $("graphTitle").textContent="차량 주변의 도로 근거";
       shown=allEdges.filter(e=>e.subject===vehicle.id&&["visible_road_support_image_candidate","has_structure_visibility_evidence"].includes(e.predicate));
