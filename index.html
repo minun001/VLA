@@ -2,30 +2,33 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="실제 주행 영상에 차량 탐지·추적, 도로·차선·깊이 추정과 공간·시간 그래프를 적용한 연구 영상 모음.">
+<meta name="description" content="주행 장면마다 원본·차량/도로/차선 인식·Depth·관계/Temporal KG의 4개 영상을 비교합니다.">
 <meta name="theme-color" content="#f7f8f6">
 <title>Temporal KG · 적용 영상</title>
-<link rel="stylesheet" href="public.css?v=b8b1ae431132"><script src="app.js?v=ad4b7dc7663c" defer></script>
+<link rel="stylesheet" href="public.css?v=panels-1"><script src="app.js?v=panels-1" defer></script>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%23177570'/%3E%3Cpath d='M10 12H30L20 30Z' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E">
 </head>
 <body>
 <a class="skip-link" href="#pipelineVideo">적용 영상으로 이동</a>
 <header><div class="header-inner"><a class="brand" href="#pipelineVideo"><span class="brand-mark" aria-hidden="true">△</span><span>Temporal KG<small>VIAT LAB · DRIVING SCENE RESEARCH</small></span></a><a class="source-link" href="https://github.com/minun001/VLA" target="_blank" rel="noopener noreferrer">GitHub ↗</a></div></header>
 <main class="wrap" id="pipelineVideo">
-<div class="intro"><p class="eyebrow">APPLIED VIDEO COLLECTION</p><h1>주행 영상에서 그래프까지</h1><p>차량·도로·차로·깊이와 그래프를 함께 봅니다.</p></div>
-<section class="player-section" aria-labelledby="videoTitle">
-<div class="player-top"><span id="videoPosition">01 / 05</span><span>PREVENTION · 1080p</span></div>
-<video id="pipelinePlayer" controls preload="metadata" playsinline poster="assets/processed-techniques.jpg" aria-label="차량 탐지·도로·차선·깊이·그래프를 함께 표시한 적용 영상"><source src="assets/processed-techniques.mp4" type="video/mp4">영상 재생을 지원하는 브라우저로 열어 주세요.</video>
-<div class="video-caption"><div><h2 id="videoTitle">차량·차로·시간 관계</h2><p id="videoMeta">30초 · 300프레임 · 1,834개 차량 관측</p></div><a id="videoDownload" href="assets/processed-techniques.mp4" download>영상 다운로드 ↓</a></div>
+<div class="intro"><p class="eyebrow">ONE SCENE · FOUR VIEWS</p><h1>한 장면, 네 개의 영상</h1><p>원본부터 인식·깊이·그래프까지, 보고 싶은 결과를 고릅니다.</p></div>
+<nav id="panelSelector" class="panel-selector" aria-label="결과 영상 종류 선택"></nav>
+<p id="panelDescription" class="panel-description">같은 장면의 원본 영상입니다. 인식 결과와 그래프를 비교할 때 사용합니다.</p>
+<section id="playerSection" class="player-section" data-panel="original" aria-labelledby="videoTitle">
+<div class="player-top"><span id="videoPosition">장면 01 / 05</span><span id="videoResolution">원본 · 1920 × 600</span></div>
+<div class="player-stage"><video id="pipelinePlayer" controls preload="metadata" playsinline poster="assets/panels/r1d1-original.jpg" aria-label="차량·차로·시간 관계 — 원본"><source src="assets/panels/r1d1-original.mp4" type="video/mp4">영상 재생을 지원하는 브라우저로 열어 주세요.</video></div>
+<div class="frame-controls"><span id="framePosition" aria-live="off">검수 재생 0.0초 · 1 / 300프레임</span><div><button id="previousFrame" type="button" aria-label="이전 프레임">← 이전 프레임</button><button id="nextFrame" type="button" aria-label="다음 프레임">다음 프레임 →</button></div></div>
+<div class="video-caption"><div><h2 id="videoTitle">차량·차로·시간 관계 · 원본</h2><p id="videoMeta">30초 · 300프레임 · 1,834개 차량 관측</p></div><a id="videoDownload" href="assets/panels/r1d1-original.mp4" download>이 영상 다운로드 ↓</a></div>
 <p id="videoError" role="alert" hidden></p>
 </section>
 <section class="collection" aria-labelledby="collectionTitle">
-<div class="collection-heading"><h2 id="collectionTitle">다른 장면 보기</h2><span id="collectionCount">적용 영상 5개</span></div>
+<div class="collection-heading"><h2 id="collectionTitle">주행 장면 선택</h2><span id="collectionCount">5개 장면 · 장면마다 4개 영상</span></div>
 <div id="videoCollection" class="video-collection" aria-label="적용 영상 선택"></div>
 <p id="collectionError" class="collection-error" role="status" hidden></p>
 </section>
 <div class="techniques" aria-label="영상에 적용한 모델"><span>YOLO26m + BoT-SORT</span><i aria-hidden="true">/</i><span>Mask2Former</span><i aria-hidden="true">/</i><span>CLRerNet</span><i aria-hidden="true">/</i><span>MetricAnything</span><i aria-hidden="true">/</i><span>Spatial + Temporal Graph</span></div>
-<details class="video-details"><summary>영상 정보</summary><p>모든 영상에 실제 계산 결과를 표시했습니다. 소속 후보는 녹색, 보류는 주황색이며, 가려진 차량도 관측에 남깁니다. 점선은 하단 중심의 픽셀 연결로, 확정 교통 관계와 구분합니다.</p><p>새 주행 4개는 기존 모델과 최종 차로 소속 관문을 적용한 구성요소 검증입니다. 첫 영상 전용 메인 실행부의 전체 이식이나 VLM 추론·학습은 수행하지 않았습니다. 깊이는 미검증 가시 표면 추정이며, 실제 차로·방향·물리 연결성의 정확도는 별도 검증 대상입니다.</p><p>10 fps 검수 재생입니다. 다른 주행의 시간은 영상 재생 시계이며 실제 센서 촬영 시각으로 확정하지 않습니다. 원영상 경과 시간은 각 영상 안에 따로 표시합니다.</p></details>
+<details class="video-details"><summary>영상 정보</summary><p>5개 장면마다 원본·인식·Depth·관계/Temporal KG의 4종, 총 20개 영상입니다. 원본은 동일한 카메라 구간에서 읽었으며, 나머지는 기존 계산 결과를 재구성했습니다. 새 추론이나 관계 변경은 없습니다. 같은 장면에서 결과 종류를 바꾸면 재생 위치를 유지합니다.</p><p>소속 후보는 녹색, 보류는 주황색입니다. 관계 영상에는 인식 화면·하단 중심 연결·공간 그래프·시간 그래프가 함께 나옵니다. 선은 영상 좌표 참조, 차로 소속은 영상 후보, 시간 연결은 추적 가설입니다. 실제 차로·방향·물리 연결성과 Depth 거리 정확도는 미검증이며, 자동 제외는 0개입니다.</p><p>원본은 1920 × 600, 인식은 1280 × 400, Depth는 624 × 196, 관계 영상은 1280 × 752입니다. Depth는 기존 패널에 하단 1픽셀만 덧붙였으며 새 고해상도 추론이 아닙니다. 추가 4개 주행은 구성요소 검증으로, 첫 영상 전용 메인 실행부의 전체 이식이나 VLM 추론·학습은 수행하지 않았습니다. 10 fps 검수 재생 시계는 실제 센서 촬영 시각과 구분합니다.</p></details>
 </main>
 <footer class="wrap"><span>Ontology-Based Temporal Knowledge Graphs</span><p><a href="https://prevention-dataset.uah.es/" target="_blank" rel="noopener noreferrer">PREVENTION</a> · CC BY-NC-SA 3.0 · 연구용 적용 영상</p></footer>
 </body>

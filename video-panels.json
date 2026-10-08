@@ -1,0 +1,253 @@
+{
+  "dataset": "PREVENTION",
+  "render_fps": 10,
+  "export_complete": true,
+  "source": "native_original_and_existing_review_panels",
+  "new_inference": false,
+  "physical_accuracy_verified": false,
+  "panels": [
+    {
+      "id": "original",
+      "title": "원본"
+    },
+    {
+      "id": "perception",
+      "title": "차량·도로·차선"
+    },
+    {
+      "id": "depth",
+      "title": "Depth"
+    },
+    {
+      "id": "graph",
+      "title": "관계·Temporal KG"
+    }
+  ],
+  "clips": [
+    {
+      "clip": "R1D1",
+      "title": "차량·차로·시간 관계",
+      "frames": 300,
+      "duration_s": 30,
+      "observations": 1834,
+      "media": {
+        "original": {
+          "video": "assets/panels/r1d1-original.mp4",
+          "poster": "assets/panels/r1d1-original.jpg",
+          "width": 1920,
+          "height": 600,
+          "verified_frames": 300,
+          "ssim_to_rendered_reference": null,
+          "original_sample_mae": 1.5839288234710693
+        },
+        "perception": {
+          "video": "assets/panels/r1d1-perception.mp4",
+          "poster": "assets/panels/r1d1-perception.jpg",
+          "width": 1280,
+          "height": 400,
+          "verified_frames": 300,
+          "ssim_to_rendered_reference": 0.990375,
+          "original_sample_mae": null
+        },
+        "depth": {
+          "video": "assets/panels/r1d1-depth.mp4",
+          "poster": "assets/panels/r1d1-depth.jpg",
+          "width": 624,
+          "height": 196,
+          "verified_frames": 300,
+          "ssim_to_rendered_reference": 0.994928,
+          "original_sample_mae": null
+        },
+        "graph": {
+          "video": "assets/panels/r1d1-graph.mp4",
+          "poster": "assets/panels/r1d1-graph.jpg",
+          "width": 1280,
+          "height": 752,
+          "verified_frames": 300,
+          "ssim_to_rendered_reference": 0.994963,
+          "original_sample_mae": null
+        }
+      }
+    },
+    {
+      "clip": "R2D1",
+      "title": "교차로 부근의 회전 장면",
+      "frames": 48,
+      "duration_s": 4.8,
+      "observations": 37,
+      "media": {
+        "original": {
+          "video": "assets/panels/r2d1-original.mp4",
+          "poster": "assets/panels/r2d1-original.jpg",
+          "width": 1920,
+          "height": 600,
+          "verified_frames": 48,
+          "ssim_to_rendered_reference": null,
+          "original_sample_mae": 1.680052399635315
+        },
+        "perception": {
+          "video": "assets/panels/r2d1-perception.mp4",
+          "poster": "assets/panels/r2d1-perception.jpg",
+          "width": 1280,
+          "height": 400,
+          "verified_frames": 48,
+          "ssim_to_rendered_reference": 0.990664,
+          "original_sample_mae": null
+        },
+        "depth": {
+          "video": "assets/panels/r2d1-depth.mp4",
+          "poster": "assets/panels/r2d1-depth.jpg",
+          "width": 624,
+          "height": 196,
+          "verified_frames": 48,
+          "ssim_to_rendered_reference": 0.994338,
+          "original_sample_mae": null
+        },
+        "graph": {
+          "video": "assets/panels/r2d1-graph.mp4",
+          "poster": "assets/panels/r2d1-graph.jpg",
+          "width": 1280,
+          "height": 752,
+          "verified_frames": 48,
+          "ssim_to_rendered_reference": 0.995333,
+          "original_sample_mae": null
+        }
+      }
+    },
+    {
+      "clip": "R3D1",
+      "title": "차량이 적은 도로",
+      "frames": 48,
+      "duration_s": 4.8,
+      "observations": 38,
+      "media": {
+        "original": {
+          "video": "assets/panels/r3d1-original.mp4",
+          "poster": "assets/panels/r3d1-original.jpg",
+          "width": 1920,
+          "height": 600,
+          "verified_frames": 48,
+          "ssim_to_rendered_reference": null,
+          "original_sample_mae": 1.4792590141296387
+        },
+        "perception": {
+          "video": "assets/panels/r3d1-perception.mp4",
+          "poster": "assets/panels/r3d1-perception.jpg",
+          "width": 1280,
+          "height": 400,
+          "verified_frames": 48,
+          "ssim_to_rendered_reference": 0.992332,
+          "original_sample_mae": null
+        },
+        "depth": {
+          "video": "assets/panels/r3d1-depth.mp4",
+          "poster": "assets/panels/r3d1-depth.jpg",
+          "width": 624,
+          "height": 196,
+          "verified_frames": 48,
+          "ssim_to_rendered_reference": 0.994882,
+          "original_sample_mae": null
+        },
+        "graph": {
+          "video": "assets/panels/r3d1-graph.mp4",
+          "poster": "assets/panels/r3d1-graph.jpg",
+          "width": 1280,
+          "height": 752,
+          "verified_frames": 48,
+          "ssim_to_rendered_reference": 0.996129,
+          "original_sample_mae": null
+        }
+      }
+    },
+    {
+      "clip": "R4D1",
+      "title": "분리대가 보이는 다차로 도로",
+      "frames": 48,
+      "duration_s": 4.8,
+      "observations": 755,
+      "media": {
+        "original": {
+          "video": "assets/panels/r4d1-original.mp4",
+          "poster": "assets/panels/r4d1-original.jpg",
+          "width": 1920,
+          "height": 600,
+          "verified_frames": 48,
+          "ssim_to_rendered_reference": null,
+          "original_sample_mae": 1.3974369764328003
+        },
+        "perception": {
+          "video": "assets/panels/r4d1-perception.mp4",
+          "poster": "assets/panels/r4d1-perception.jpg",
+          "width": 1280,
+          "height": 400,
+          "verified_frames": 48,
+          "ssim_to_rendered_reference": 0.993538,
+          "original_sample_mae": null
+        },
+        "depth": {
+          "video": "assets/panels/r4d1-depth.mp4",
+          "poster": "assets/panels/r4d1-depth.jpg",
+          "width": 624,
+          "height": 196,
+          "verified_frames": 48,
+          "ssim_to_rendered_reference": 0.994375,
+          "original_sample_mae": null
+        },
+        "graph": {
+          "video": "assets/panels/r4d1-graph.mp4",
+          "poster": "assets/panels/r4d1-graph.jpg",
+          "width": 1280,
+          "height": 752,
+          "verified_frames": 48,
+          "ssim_to_rendered_reference": 0.996457,
+          "original_sample_mae": null
+        }
+      }
+    },
+    {
+      "clip": "R5D1",
+      "title": "가까운 차량과 박스 겹침",
+      "frames": 48,
+      "duration_s": 4.8,
+      "observations": 515,
+      "media": {
+        "original": {
+          "video": "assets/panels/r5d1-original.mp4",
+          "poster": "assets/panels/r5d1-original.jpg",
+          "width": 1920,
+          "height": 600,
+          "verified_frames": 48,
+          "ssim_to_rendered_reference": null,
+          "original_sample_mae": 1.5412179231643677
+        },
+        "perception": {
+          "video": "assets/panels/r5d1-perception.mp4",
+          "poster": "assets/panels/r5d1-perception.jpg",
+          "width": 1280,
+          "height": 400,
+          "verified_frames": 48,
+          "ssim_to_rendered_reference": 0.993065,
+          "original_sample_mae": null
+        },
+        "depth": {
+          "video": "assets/panels/r5d1-depth.mp4",
+          "poster": "assets/panels/r5d1-depth.jpg",
+          "width": 624,
+          "height": 196,
+          "verified_frames": 48,
+          "ssim_to_rendered_reference": 0.994216,
+          "original_sample_mae": null
+        },
+        "graph": {
+          "video": "assets/panels/r5d1-graph.mp4",
+          "poster": "assets/panels/r5d1-graph.jpg",
+          "width": 1280,
+          "height": 752,
+          "verified_frames": 48,
+          "ssim_to_rendered_reference": 0.996407,
+          "original_sample_mae": null
+        }
+      }
+    }
+  ]
+}
