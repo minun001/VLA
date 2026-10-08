@@ -2,16 +2,21 @@
 
 Public research demonstration: https://minun001.github.io/VLA/
 
-The static page presents feature extraction, qualified image lane relations,
-temporal observations and the planned VLM training/evaluation workflow.
+The static page introduces the research through the driving video, six selectable
+scenes, four extraction/graph stages, and the planned VLM training/evaluation
+workflow. The displayed graph edges reference admitted edges in scene-data.json;
+held lane memberships remain unconnected. Video playback is separate from the
+selected frame graph, and representative-scene selection seeks the video.
 It includes six representative PREVENTION frames, their admitted calculation
 results, and a 30-second review playback. Physical lane membership, direction,
 distance and connectivity accuracy remain unverified. VLM training is not run.
 
 ## Update
 
-Run `python -B build.py --review-url URL --document PATH` against the existing
-review service and the current approved Notion HTML. The builder validates the
+Run `python -B build.py --review-url URL` against the existing review service
+to refresh the approved public data. Add `--document PATH` only when refreshing
+illustration assets from the approved Notion HTML. The builder preserves the
+authored `index.html`, `public.css` and `app.js`. It validates the
 camera, frame, coordinate and causal time scope, and exports only the fixed six
 PREVENTION frames. It does not run or change the research algorithm.
 
