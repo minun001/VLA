@@ -18,7 +18,7 @@
     vehicle_in_image_corridor_candidate:"영상 차로 후보 소속",
     previous_observed_track_hypothesis:"이전 관측과의 추적 연결"
   };
-  let data, frame, vehicle, stage="vehicle", imageReady=false, selectToken=0, pendingVideoTime=null;
+  let data, frame, vehicle, stage="vehicle", imageReady=false, selectToken=0, pendingVideoTime=null, pendingProcessedTime=null;
   const text=(tag,value,cls)=>{const e=document.createElement(tag);e.textContent=value;if(cls)e.className=cls;return e;};
   const svg=(tag,attrs={})=>{const e=document.createElementNS(ns,tag);for(const [k,v] of Object.entries(attrs))e.setAttribute(k,String(v));return e;};
   const number=v=>Number.isFinite(v)?Number(v).toFixed(1):"미확정";
@@ -52,7 +52,7 @@
     return payload;
   }
 
-  function selectFrame(next){
+  function selectFrame(next,syncProcessed=true){
     const token=++selectToken;frame=next;vehicle=frame.objects.find(o=>o.lane_allowed)||frame.objects[0];imageReady=false;
     $("sceneImage").onload=()=>{if(token!==selectToken)return;const image=$("sceneImage"),[w,h]=frame.image_size_xy;if(image.naturalWidth<=0||image.naturalHeight<=0||Math.abs(image.naturalWidth/image.naturalHeight-w/h)>1e-6){imageReady=false;renderCrop();$("decision").textContent="원영상의 종횡비가 좌표계와 일치하지 않습니다.";return;}imageReady=true;renderCrop();};
     $("sceneImage").onerror=()=>{if(token===selectToken){imageReady=false;renderCrop();$("decision").textContent="원영상 로드 실패";}};
@@ -61,7 +61,9 @@
     $("vehicleSelect").replaceChildren(...frame.objects.map(o=>{const e=text("option",objectLabel(o)+(o.lane_allowed?" · 소속 후보":" · 소속 보류"));e.value=o.id;return e;}));$("vehicleSelect").value=vehicle.id;
     document.querySelectorAll("#sceneButtons button").forEach(b=>b.setAttribute("aria-pressed",String(Number(b.dataset.sourceFrame)===frame.source_frame)));
     $("sceneTime").textContent="첫 관측부터 "+frame.capture_elapsed_s.toFixed(2)+"초";
-    const video=$("reviewVideo");video.pause();pendingVideoTime=frame.video_time_s;seekSelectedVideoFrame();
+    const video=$("reviewVideo");video.pause();pendingVideoTime=frame.video_time_s;
+    if(syncProcessed){$("processedVideo").pause();pendingProcessedTime=frame.video_time_s;}
+    seekSelectedVideoFrame();
     render();updateVideoState();
   }
 
@@ -164,6 +166,8 @@
   }
 
   function seekSelectedVideoFrame(){
+    const processed=$("processedVideo");
+    if(pendingProcessedTime!==null&&processed.readyState>=1&&Number.isFinite(processed.duration)&&processed.duration>=pendingProcessedTime){const target=pendingProcessedTime;pendingProcessedTime=null;processed.currentTime=target;}
     const v=$("reviewVideo");
     // Fragmented MP4 reports a growing duration while loading. Wait until the
     // selected time is available instead of letting the browser clamp to zero.
@@ -184,13 +188,13 @@
         const image=document.createElement("img");image.src="assets/frames/"+f.source_frame+".jpg";image.alt=titles[i]+" 원영상";image.loading="lazy";
         button.append(image,text("strong",titles[i]),text("span",f.capture_elapsed_s.toFixed(2)+"초 · 관측 "+f.objects.length+"개"));button.addEventListener("click",()=>selectFrame(f));$("sceneButtons").append(button);
       }
-      $("scopeSummary").textContent="PREVENTION · 대표 프레임 6개 · 차량 관측 "+data.frames.reduce((n,f)=>n+f.objects.length,0)+"개 · 30초 검수 재생";
+      $("scopeSummary").textContent="적용 영상 300프레임·1,834관측 / 상세 검수 6프레임·"+data.frames.reduce((n,f)=>n+f.objects.length,0)+"관측";
       $("vehicleSelect").addEventListener("change",()=>{vehicle=frame.objects.find(o=>o.id===$("vehicleSelect").value);ensure(vehicle,"Unknown selected vehicle");render();});$("rawOnly").addEventListener("change",renderOverlay);
       for(const b of document.querySelectorAll("[data-stage]"))b.addEventListener("click",()=>{stage=b.dataset.stage;document.querySelectorAll("[data-stage]").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));render();});
-      for(const name of ["loadedmetadata","durationchange","progress","canplay"])$("reviewVideo").addEventListener(name,seekSelectedVideoFrame);
+      for(const id of ["reviewVideo","processedVideo"]){for(const name of ["loadedmetadata","durationchange","progress","canplay"])$(id).addEventListener(name,seekSelectedVideoFrame);$(id).addEventListener("play",()=>$(id==="reviewVideo"?"processedVideo":"reviewVideo").pause());}
       for(const name of ["play","pause","seeked","timeupdate"])$("reviewVideo").addEventListener(name,updateVideoState);
       let compact=matchMedia("(max-width:640px)").matches;window.addEventListener("resize",()=>{const next=matchMedia("(max-width:640px)").matches;if(next!==compact){compact=next;if(frame)renderGraph();}});
-      selectFrame(data.frames.find(f=>f.source_frame===2123));
+      selectFrame(data.frames.find(f=>f.source_frame===2123),false);
     }catch(error){$("decision").textContent="데이터를 불러오지 못했습니다. 페이지를 새로고침해 주세요.";$("decision").className="demo-error";console.error(error);}
   }
   init();
