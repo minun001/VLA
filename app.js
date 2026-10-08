@@ -77,8 +77,10 @@
   function select(index, panel, preserve = false) {
     ensure(Number.isInteger(index) && index >= 0 && index < clips.length && Object.hasOwn(descriptions,panel), "Unknown scene/view");
     const sameScene = index === selected;
-    const seek = preserve && sameScene && Number.isFinite(player.currentTime) ? player.currentTime : 0;
-    const resume = preserve && sameScene && !player.paused;
+    // During a rapid view switch the new video has currentTime=0 until its
+    // metadata arrives. Retain the requested position, rather than that zero.
+    const seek = preserve && sameScene ? (pending ? pending.time : Number.isFinite(player.currentTime) ? player.currentTime : 0) : 0;
+    const resume = preserve && sameScene && (pending ? pending.resume : !player.paused);
     player.pause(); selected = index; mode = panel;
     const c = clips[index], m = active(), p = panels.find(p=>p.id===panel);
     $("videoError").hidden = true;
