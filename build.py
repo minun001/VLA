@@ -8,6 +8,7 @@ The authored showcase HTML/CSS/JavaScript is preserved during data refresh.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import shutil
@@ -119,6 +120,11 @@ def main():
     html = (ROOT / "index.html").read_text(encoding="utf-8-sig")
     assert all(f'id="{key}"' in html for key in ("viewer", "sceneImage", "graph", "reviewVideo"))
     assert "127.0.0.1" not in html and "/api/" not in html
+    for name in ("app.js", "public.css"):
+        version = hashlib.sha256((ROOT / name).read_bytes()).hexdigest()[:12]
+        html = re.sub(r'(["\'])' + re.escape(name) + r'(?:\?v=[^"\']*)?(["\'])',
+                      lambda m: m[1] + name + "?v=" + version + m[2], html)
+    (ROOT / "index.html").write_text(html, encoding="utf-8")
     (ROOT / ".nojekyll").touch()
     print(json.dumps({"public_frames": len(frames), "observations": sum(len(f["objects"]) for f in frames),
                       "graph_nodes": sum(len(f["nodes"]) for f in frames), "graph_edges": sum(len(f["edges"]) for f in frames),
